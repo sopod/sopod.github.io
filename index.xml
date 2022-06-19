@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Sopod</title>
+        <link>https://sopod.github.io/</link>
+        <description>Recent content on Sopod</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Tue, 01 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://sopod.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>About</title>
+        <link>https://sopod.github.io/about/</link>
+        <pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://sopod.github.io/about/</guid>
+        <description>&lt;hr&gt;
+&lt;h1 id=&#34;projects&#34;&gt;Projects&lt;/h1&gt;
+&lt;h2 id=&#34;fantasy-land&#34;&gt;Fantasy Land&lt;/h2&gt;
+&lt;p&gt;2021.4Q | Unity3D, C# | Windows&lt;/p&gt;
+&lt;div class=&#34;video-wrapper&#34;&gt;
+    &lt;iframe loading=&#34;lazy&#34; 
+            src=&#34;https://www.youtube.com/embed/amzeWNZxyxw&#34; 
+            allowfullscreen 
+            title=&#34;YouTube Video&#34;
+    &gt;
+    &lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;dragon-nest&#34;&gt;Dragon Nest&lt;/h2&gt;
+&lt;p&gt;2021.4Q | Unreal 4 3D, C++ | Windows&lt;/p&gt;
+&lt;div class=&#34;video-wrapper&#34;&gt;
+    &lt;iframe loading=&#34;lazy&#34; 
+            src=&#34;https://www.youtube.com/embed/dcFLSekzJWg&#34; 
+            allowfullscreen 
+            title=&#34;YouTube Video&#34;
+    &gt;
+    &lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;drink-stadium&#34;&gt;Drink Stadium&lt;/h2&gt;
+&lt;p&gt;2021.3Q | Unity3D, C# | Windows&lt;/p&gt;
+&lt;div class=&#34;video-wrapper&#34;&gt;
+    &lt;iframe loading=&#34;lazy&#34; 
+            src=&#34;https://www.youtube.com/embed/rk63gd4CGwc&#34; 
+            allowfullscreen 
+            title=&#34;YouTube Video&#34;
+    &gt;
+    &lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;bubble-bobble&#34;&gt;Bubble Bobble&lt;/h2&gt;
+&lt;p&gt;2021.3Q | WinAPI, C++ | Windows&lt;/p&gt;
+&lt;div class=&#34;video-wrapper&#34;&gt;
+    &lt;iframe loading=&#34;lazy&#34; 
+            src=&#34;https://www.youtube.com/embed/vzk4j18VeTM&#34; 
+            allowfullscreen 
+            title=&#34;YouTube Video&#34;
+    &gt;
+    &lt;/iframe&gt;
+&lt;/div&gt;
+
+</description>
+        </item>
+        
+    </channel>
+</rss>
