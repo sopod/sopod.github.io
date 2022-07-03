@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='세 점의 결합 Chapter 6에서 보았듯이, 아핀 결합은 여러개의 점을 결합해서 새로운 점을 생성하는 수식이다. 이 때 스칼라 값들은 그 합이 모두 $1$이어야 했다. 세 점 $P_1$, $P_2$, $P_3$를 결합하는 경우에도 스칼라값 3개의 합은 $1$이 되어야 할 것이다. $P&amp;rsquo; = s \cdot P_1 &#43; t \cdot P_2 &#43; (1 - s - t) \cdot P_3$ $(P&amp;rsquo; - P_3) = s(P_1 - P_3) &#43; t(P_2 - P_3)$ $\vec{w} = s \cdot \vec{u} &#43; t \cdot \vec{v}$ 이 때 벡터 $\vec{u}$와 $\vec{v}$가 선형 독립의 관계라면, 벡터 $\vec{w}$는 2차원 벡터 공간 $\mathbb{R}^2$에 존재하는 모든 벡터가 될 수 있다.'><title>[Game Math] Chapter 8. 삼각형: 물체를 구성하는 가장 작은 단위</title>
+
+<link rel='canonical' href='https://sopod.github.io/init/game-math-08/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[Game Math] Chapter 8. 삼각형: 물체를 구성하는 가장 작은 단위'>
+<meta property='og:description' content='세 점의 결합 Chapter 6에서 보았듯이, 아핀 결합은 여러개의 점을 결합해서 새로운 점을 생성하는 수식이다. 이 때 스칼라 값들은 그 합이 모두 $1$이어야 했다. 세 점 $P_1$, $P_2$, $P_3$를 결합하는 경우에도 스칼라값 3개의 합은 $1$이 되어야 할 것이다. $P&amp;rsquo; = s \cdot P_1 &#43; t \cdot P_2 &#43; (1 - s - t) \cdot P_3$ $(P&amp;rsquo; - P_3) = s(P_1 - P_3) &#43; t(P_2 - P_3)$ $\vec{w} = s \cdot \vec{u} &#43; t \cdot \vec{v}$ 이 때 벡터 $\vec{u}$와 $\vec{v}$가 선형 독립의 관계라면, 벡터 $\vec{w}$는 2차원 벡터 공간 $\mathbb{R}^2$에 존재하는 모든 벡터가 될 수 있다.'>
+<meta property='og:url' content='https://sopod.github.io/init/game-math-08/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Init' /><meta property='article:tag' content='Game Math' /><meta property='article:published_time' content='2022-04-07T18:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-04-07T18:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[Game Math] Chapter 8. 삼각형: 물체를 구성하는 가장 작은 단위">
+<meta name="twitter:description" content="세 점의 결합 Chapter 6에서 보았듯이, 아핀 결합은 여러개의 점을 결합해서 새로운 점을 생성하는 수식이다. 이 때 스칼라 값들은 그 합이 모두 $1$이어야 했다. 세 점 $P_1$, $P_2$, $P_3$를 결합하는 경우에도 스칼라값 3개의 합은 $1$이 되어야 할 것이다. $P&amp;rsquo; = s \cdot P_1 &#43; t \cdot P_2 &#43; (1 - s - t) \cdot P_3$ $(P&amp;rsquo; - P_3) = s(P_1 - P_3) &#43; t(P_2 - P_3)$ $\vec{w} = s \cdot \vec{u} &#43; t \cdot \vec{v}$ 이 때 벡터 $\vec{u}$와 $\vec{v}$가 선형 독립의 관계라면, 벡터 $\vec{w}$는 2차원 벡터 공간 $\mathbb{R}^2$에 존재하는 모든 벡터가 될 수 있다.">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/game-math/" >
+                Game Math
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/init/game-math-08/">[Game Math] Chapter 8. 삼각형: 물체를 구성하는 가장 작은 단위</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Apr 07, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    10 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br />  <br /></p>
+<h2 id="세-점의-결합">세 점의 결합</h2>
+<ul>
+<li>Chapter 6에서 보았듯이, 아핀 결합은 여러개의 점을 결합해서 새로운 점을 생성하는 수식이다. 이 때 스칼라 값들은 그 합이 모두 $1$이어야 했다.
+<ul>
+<li>세 점 $P_1$, $P_2$, $P_3$를 결합하는 경우에도 스칼라값 3개의 합은 $1$이 되어야 할 것이다.</li>
+<li>$P&rsquo; = s \cdot P_1 + t \cdot P_2 + (1 - s - t) \cdot P_3$</li>
+<li>$(P&rsquo; - P_3) = s(P_1 - P_3) + t(P_2 - P_3)$</li>
+<li>$\vec{w} = s \cdot \vec{u} + t \cdot \vec{v}$</li>
+<li>이 때 벡터 $\vec{u}$와 $\vec{v}$가 선형 독립의 관계라면, 벡터 $\vec{w}$는 2차원 벡터 공간 $\mathbb{R}^2$에 존재하는 모든 벡터가 될 수 있다. 즉, <strong>세 점의 아핀 결합은 평면의 모든 점을 만들어낸다.</strong> <br /><br>
+<img src="/postimg/gamemath/08-01-makePoint.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="두 벡터의 결합으로 만들어내는 평면의 점"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>여기서 $s$와 $t$의 값의 범위를 $[0, 1]$로 고정시키면 어떻게 될까?
+<ul>
+<li>해당 영역은 <strong>삼각형</strong>이 된다. <br /><br>
+<img src="/postimg/gamemath/08-02-triangle.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="세 점의 아핀 결합에서 범위를 제한한 경우"
+	
+	
+></li>
+<li>이렇게 <span style='background-color: #c293d8'>아핀 결합에서 모든 스칼라 값을 $[0, 1]$ 범위로 한정한 결합</span>을 <strong>컨벡스 결합(Convex combination)</strong> 이라고 부른다.</li>
+<li>컨벡스 결합은 Chapter 6의 아핀 결합식에 각 스칼라 범위를 $[0, 1]$로 제한하는 조건을 추가해서 다음과 같이 표현할 수 있다.</li>
+<li>$$\displaystyle\sum_{i=1}^{n} c_i \cdot P_i (s.t. \displaystyle\sum_{i=1}^{n} c_i = 1, 0 \leq c_i \leq 1)$$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>
+<p><strong>컨벡스 영역(Convex region)</strong></p>
+<ul>
+<li>선분이나 삼각형처럼 컨벡스 결합으로 만든 영역.</li>
+<li>컨벡스는 사전적으로 &lsquo;볼록한&rsquo;을 뜻한다.</li>
+<li>수학에서 정의하는 볼록함이란, <strong>영역 내 임의의 두 점을 연결한 선분을 만들었을 때, 그 선분은 언제나 해당 컨벡스 영역 안에 속하는 성질</strong>을 의미한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>컨케이브 영역(Concave region)</strong></p>
+<ul>
+<li>컨벡스 영역과 반대로, <strong>임의의 두 점을 연결한 선분이 영역 밖으로 벗어나는 경우가 있는</strong> 영역이다.</li>
+</ul>
+</li>
+<li>
+<p>아래 사진에서 왼쪽이 컨벡스 영역, 오른쪽이 컨케이브 영역이다. <br /><br>
+<img src="/postimg/gamemath/08-03-convexConcave.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="컨벡스 영역과 컨케이브 영역"
+	
+	
+></p>
+</li>
+</ul>
+<br />  
+<ul>
+<li>4개의 점을 결합하는 컨벡스 결합은 어떻게 구성될까?
+<ul>
+<li>$\vec{x} = a \cdot \vec{u} + b \cdot \vec{v} + c \cdot \vec{w}$</li>
+<li>세 벡터 $\vec{u}$, $\vec{v}$, $\vec{w}$가 선형 독립 관계를 이룬다면 3차원 공간의 모든 벡터를 생성할 수 있으므로, 벡터 $\vec{x}$는 3차원 공간의 벡터가 된다.</li>
+<li>여기서 스칼라 값을 $[0, 1]$ 범위로 제한한다면 <strong>삼각뿔(Tetrahedron)</strong> 영역이 형성된다.</li>
+<li>이 또한 컨벡스 성질을 가진다. <br /><br>
+<img src="/postimg/gamemath/08-04-tetrahedron.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="삼각뿔"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<p><br />  <br /></p>
+<h2 id="메시">메시</h2>
+<ul>
+<li><strong>메시(Mesh)</strong>
+<ul>
+<li>삼각형을 중심으로 물체에 관련된 정보를 기록한 데이터이다.</li>
+<li>메시는 다수의 삼각형으로 구성되고, 삼각형은 세 개의 점으로 구성되므로, 메시는 결국 다수의 점으로 구성된다고 볼 수 있다.</li>
+<li>메시는 삼각형으로 물체의 외형을 표현하므로 삼각형의 위치정보를 가지고 있어야 한다. 이에 추가로 위치 뿐만 아니라 색상, 방향과 같은 부가 정보도 함께 제공한다. 이렇게 <span style='background-color: #c293d8'>$위치 정보와 부가 정보를 묶은 특별한 점</span>을 <strong>정점(Vertex)</strong> 이라고 한다.</li>
+<li>즉, 메시는 정점들이 모인 데이터라고 할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>와이어 프레임(Wireframe)
+<ul>
+<li>삼각형의 외곽선만 그려 메시를 표현하는 방법을 와이어 프레임이라고 한다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li><strong>정점 버퍼(Vertex buffer)</strong>
+<ul>
+<li>메시의 정점 정보를 빠르게 읽기 위해서 메모리에 정점 정보를 일렬로 나열하는 배열의 형태로 관리한다. 이것을 정점 버퍼라고 한다.</li>
+</ul>
+</li>
+<li><strong>인덱스 버퍼(Index buffer)</strong>
+<ul>
+<li>정점 정보만으로는 삼각형을 만들 수 없으므로, 삼각형을 구성하는 정점의 인덱스(순번)만 기록한 배열을 별도로 만들어서 관리한다. 이것을 인덱스 버퍼라고 한다.</li>
+<li>인덱스 버퍼는 삼각형의 수만큼 필요하기 때문에 인덱스 버퍼의 크기는 항상 3의 배수이다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>다음은 정사각형의 와이어 프레임을 그리는 예제이다.
+<ul>
+<li>정사각형을 구성하는 메시 정보를 표현하면 다음과 같다.</li>
+<li>여기서 정점 0, 2번은 두 삼각형이 공유해 사용할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<p><img src="/postimg/gamemath/08-05-rect.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="정사각형"
+	
+	
+></p>
+<ul>
+<li>정점 버퍼</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>순서</th>
+<th>좌표</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>(-0.5, -0.5)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>(-0.5, 0.5)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>(0.5, 0.5)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>(0.5, -0.5)</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>인덱스 버퍼</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>순서</th>
+<th>삼각형</th>
+<th>정점 순서</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>5</td>
+<td>1</td>
+<td>3</td>
+</tr>
+</tbody>
+</table></div>
+<br />  
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 정점 배열
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">Vertex2D</span><span class="p">,</span> <span class="n">vertexCount</span><span class="o">&gt;</span> <span class="n">rawVertices</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vertex2D</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="o">-</span><span class="n">sqareHalfSize</span><span class="p">,</span> <span class="o">-</span><span class="n">squareHalfSize</span><span class="p">)),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vertex2D</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="o">-</span><span class="n">sqareHalfSize</span><span class="p">,</span> <span class="n">squareHalfSize</span><span class="p">)),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vertex2D</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="n">sqareHalfSize</span><span class="p">,</span> <span class="n">squareHalfSize</span><span class="p">)),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vertex2D</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="n">sqareHalfSize</span><span class="p">,</span> <span class="o">-</span><span class="n">squareHalfSize</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 인덱스 배열
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">size_t</span><span class="p">,</span> <span class="n">triangleCount</span> <span class="o">*</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">indices</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ... 아핀 변환행렬을 곱해서 최종 행렬 finalMatrix를 생성한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 최종 행렬을 곱해서 위치 지정
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex2D</span><span class="o">&gt;</span> <span class="n">vertices</span><span class="p">(</span><span class="n">vertexCount</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">vi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">vi</span> <span class="o">&lt;</span> <span class="n">vertexCount</span><span class="p">;</span> <span class="o">++</span><span class="n">vi</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">vertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">Position</span> <span class="o">=</span> <span class="n">finalMatrix</span> <span class="o">*</span> <span class="n">rawVertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">Position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 정점 배열과 인덱스 배열을 사용해서 삼각형의 점을 서로 이어준다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">ti</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ti</span> <span class="o">&lt;</span> <span class="n">triangleCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">size_t</span> <span class="n">bi</span> <span class="o">=</span> <span class="n">ti</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">DrawLine</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">bi</span><span class="p">]].</span><span class="n">Position</span><span class="p">,</span> <span class="n">vertices</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">bi</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]].</span><span class="n">Position</span><span class="p">,</span> <span class="n">_WireframeColor</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">DrawLine</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">bi</span><span class="p">]].</span><span class="n">Position</span><span class="p">,</span> <span class="n">vertices</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">bi</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]].</span><span class="n">Position</span><span class="p">,</span> <span class="n">_WireframeColor</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">DrawLine</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">bi</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]].</span><span class="n">Position</span><span class="p">,</span> <span class="n">vertices</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">bi</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]].</span><span class="n">Position</span><span class="p">,</span> <span class="n">_WireframeColor</span><span class="p">);</span>    
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br />  <br /></p>
+<h2 id="무게중심좌표">무게중심좌표</h2>
+<ul>
+<li><strong>무게중심좌표(Barycentric coordinate)</strong>
+<ul>
+<li>$P&rsquo; = s \cdot P_1 + t \cdot P_2 + (1 - s - t) \cdot P_3$</li>
+<li>위 식에서 스칼라 값 $s$, $t$, $1 - s - t$는 모두 실수이다. 이들을 묶어서 하나의 3차원 벡터로 생성할 수 있다.</li>
+<li>이렇게 <span style='background-color: #c293d8'>아핀 결합의 스칼라를 묶어서 만든 좌표</span>를 무게중심좌표라고 한다. <br />  <br>
+<img src="/postimg/gamemath/08-06-barycentricCoordinate.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="무게중심좌표의 의미"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />  
+<h3 id="무게중심좌표의-계산">무게중심좌표의 계산</h3>
+<ul>
+<li>
+<p>이전에 보았듯이 아핀 결합이 삼각형이 되려면 스칼라 값 $s$, $t$, $1 - s - t$는 $[0, 1]$ 범위 내에 있어야 한다.</p>
+<ul>
+<li>따라서 $[0, 1]$ 외부에 있다면 아핀 결합으로 생성된 점이 삼각형 외부에 있다고 볼 수 있다.</li>
+</ul>
+</li>
+<li>
+<p><strong>아핀 결합으로 생성된 점이 삼각형 내부에 있는지 판별하는 법</strong> <br />  <br>
+<img src="/postimg/gamemath/08-07-threeVectors.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="삼각형을 구성하는 세 벡터"
+	
+	
+></p>
+</li>
+<li>
+<p>$\vec{w} = s \cdot \vec{u} + t \cdot \vec{v}$ 이전에 보았던 이 수식에 벡터 $\vec{u}$와 $\vec{v}$를 내적해보자.</p>
+<ul>
+<li>$\vec{w} \cdot \vec{u} = ( s \cdot \vec{u} + t \cdot \vec{v}) \cdot \vec{u}$ <br /><br>
+$\vec{w} \cdot \vec{v} = ( s \cdot \vec{u} + t \cdot \vec{v}) \cdot \vec{v}$</li>
+</ul>
+</li>
+<li>
+<p>이것을 분배법칙에 따라 풀어준다.</p>
+<ul>
+<li>$ \vec{w} \cdot \vec{u} = s(\vec{u} \cdot \vec{u}) + t (\vec{u} \cdot \vec{v})$ <br /><br>
+$ \vec{w} \cdot \vec{v} = s(\vec{u} \cdot \vec{v}) + t (\vec{v} \cdot \vec{v})$</li>
+</ul>
+</li>
+<li>
+<p>위의 식에는 $(\vec{u} \cdot \vec{v})$를, 및에 식에는 $(\vec{u} \cdot \vec{u})$를 곱해 각각 전개해보자.</p>
+<ul>
+<li>$(\vec{w} \cdot \vec{u})(\vec{u} \cdot \vec{v}) = s(\vec{u} \cdot \vec{u})(\vec{u} \cdot \vec{v}) + t(\vec{u} \cdot \vec{v})(\vec{u} \cdot \vec{v})$ <br /><br>
+$(\vec{w} \cdot \vec{v})(\vec{u} \cdot \vec{u}) = s(\vec{u} \cdot \vec{v})(\vec{u} \cdot \vec{u}) + t(\vec{v} \cdot \vec{v})(\vec{u} \cdot \vec{u})$</li>
+</ul>
+</li>
+<li>
+<p>위에 식에서 아래식을 빼 $s$를 소거하고 $t$만 남긴다.</p>
+<ul>
+<li>$$ t = \frac{ (\vec{w} \cdot \vec{u})(\vec{u} \cdot \vec{v}) - (\vec{w} \cdot \vec{v})(\vec{u} \cdot \vec{u}) }{ (\vec{u} \cdot \vec{v})^2 - (\vec{u} \cdot \vec{u})(\vec{v} \cdot \vec{v}) }$$</li>
+</ul>
+</li>
+<li>
+<p>예전 식에서 이번에는 위의 식에 $(\vec{v} \cdot \vec{v})$를, 및에 식에는 $(\vec{u} \cdot \vec{v})$를 곱해 각각 전개해보자.</p>
+<ul>
+<li>$(\vec{w} \cdot \vec{u})(\vec{v} \cdot \vec{v}) = s(\vec{u} \cdot \vec{u})(\vec{v} \cdot \vec{v}) + t(\vec{u} \cdot \vec{v})(\vec{v} \cdot \vec{v})$ <br /><br>
+$(\vec{w} \cdot \vec{v})(\vec{u} \cdot \vec{v}) = s(\vec{u} \cdot \vec{v})(\vec{u} \cdot \vec{v}) + t(\vec{v} \cdot \vec{v})(\vec{u} \cdot \vec{v})$</li>
+</ul>
+</li>
+<li>
+<p>위의 식에서 아래 식을 빼 $t$를 소거하고 $s$만 남긴다.</p>
+<ul>
+<li>$$ s = \frac{ (\vec{w} \cdot \vec{v})(\vec{u} \cdot \vec{v}) - (\vec{w} \cdot \vec{u})(\vec{v} \cdot \vec{v}) }{ (\vec{u} \cdot \vec{v})^2 - (\vec{u} \cdot \vec{u})(\vec{v} \cdot \vec{v}) }$$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>이렇게 얻어진 <span style='background-color: #c293d8'>무게중심좌표 $(s, t, 1-s-t)$의 세 값 모두 $[0, 1]$ 범위 내에 있다면</span> 새로 생성된 점은 <span style='background-color: #c293d8'>삼각형 안에 있다</span>고 할 수 있다. 반대로 그 범위를 벗어난다면, 삼각형 밖에 있다고 판단할 수 있다.</li>
+<li>공통분모 $(\vec{u} \cdot \vec{v})^2 - (\vec{u} \cdot \vec{u})(\vec{v} \cdot \vec{v})$의 결과가 $0$이 나올 수도 있으므로 주의해야한다. <span style='background-color: #c293d8'>분모 값이 $0$이면 무게중심좌표를 구할 수가 없다.</span>
+<ul>
+<li>공통분모에서 내적을 $\cos$공식으로 변경하면 다음과 같아진다.</li>
+<li>$(|\vec{u}||\vec{v}|)^2 \cdot \cos^2\theta - (|\vec{u}||\vec{v}|)^2$</li>
+<li>이 값이 $0$이 되기 위한 조건은 $\vec{u}$ 혹은 $\vec{v}$의 크기가 $0$이거나, 그 두 벡터가 이루는 각 $\theta$가 $0^{\circ}$ 혹은 $180^{\circ}$일 때다. 이것은 두 벡터가 평행함을 의미한다.</li>
+<li>두 벡터가 평행하면 선형 종속의 관계를 가지며 삼각형이 아니라 선분을 만들어낸다. 이런 삼각형을 <strong>퇴화삼각형(Degenerate triangle)</strong> 이라고 하며, 퇴화삼각형은 <strong>그리기에서 제외</strong>한다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>다음은 무게중심좌표를 사용해서 정사각형을 칠하는 예제이다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// ... 이전 예제와 똑같은 과정을 거친다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">ti</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ti</span> <span class="o">&lt;</span> <span class="n">triangleCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">size_t</span> <span class="n">bi</span> <span class="o">=</span> <span class="n">ti</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1">// 삼각형의 세 점
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">Vertex2D</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">tv</span> <span class="o">=</span> <span class="p">{</span><span class="n">vertices</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">bi</span><span class="p">]],</span> <span class="n">vertices</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">bi</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">vertices</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">bi</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]]};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// ... 삼각형의 세 점을 통해 minX, minY, maxX, maxY를 구한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// u벡터와 v벡터
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Vector2</span> <span class="n">u</span> <span class="o">=</span> <span class="n">tv</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">Position</span> <span class="o">-</span> <span class="n">tv</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vector2</span> <span class="n">v</span> <span class="o">=</span> <span class="n">tv</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">Position</span> <span class="o">-</span> <span class="n">tv</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 공통분모 구하기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">float</span> <span class="n">uDotv</span> <span class="o">=</span> <span class="n">u</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">vDotv</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">uDotu</span> <span class="o">=</span> <span class="n">u</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">u</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">denominator</span> <span class="o">=</span> <span class="n">uDotv</span> <span class="o">*</span> <span class="n">uDotv</span> <span class="o">-</span> <span class="n">vDotv</span> <span class="o">*</span> <span class="n">uDotu</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 퇴화삼각형은 그리지 않는다!!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="n">denominator</span> <span class="o">==</span> <span class="mf">0.0f</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">invDenominator</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="n">denominator</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// ... minX, minY, maxX, maxY를 스크린 좌표계로 옮기고, 화면을 넘어서면 클리핑한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 삼각형을 둘러싸는 사각형 영역의 픽셀을 모두 순회한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 스크린 좌표계와 데카르트 좌표계
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">ScreenPoint</span> <span class="n">fragment</span> <span class="o">=</span> <span class="n">ScreenPoint</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Vector2</span> <span class="n">pointToTest</span> <span class="o">=</span> <span class="n">fragment</span><span class="p">.</span><span class="n">ToCartesianCoordinate</span><span class="p">(</span><span class="n">_ScreenSize</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">            <span class="c1">// w벡터
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">Vector2</span> <span class="n">w</span> <span class="o">=</span> <span class="n">pointToTest</span> <span class="o">-</span> <span class="n">tv</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">float</span> <span class="n">wDotu</span> <span class="o">=</span> <span class="n">w</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">u</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">float</span> <span class="n">wDotv</span> <span class="o">=</span> <span class="n">w</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">            <span class="c1">// s, t, 1-s-t 구하기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="kt">float</span> <span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="n">wDotv</span> <span class="o">*</span> <span class="n">uDotv</span> <span class="o">-</span> <span class="n">wDotu</span> <span class="o">*</span> <span class="n">vDotv</span><span class="p">)</span> <span class="o">*</span> <span class="n">invDenominator</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">float</span> <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">wDotu</span> <span class="o">*</span> <span class="n">uDotv</span> <span class="o">-</span> <span class="n">wDotv</span> <span class="o">*</span> <span class="n">uDotu</span><span class="p">)</span> <span class="o">*</span> <span class="n">invDenominator</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">float</span> <span class="n">oneMinusST</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">-</span> <span class="n">s</span> <span class="o">-</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">            <span class="c1">// 컨벡스 조건을 만족할 때만 점 찍기!!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">if</span> <span class="p">(((</span><span class="n">s</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">s</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">t</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span><span class="p">((</span><span class="n">oneMinusST</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">oneMinusST</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">r</span><span class="p">.</span><span class="n">DrawPoint</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">LinearColor</span><span class="o">::</span><span class="n">Blue</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />  
+<h3 id="정점에-설정된-부가-정보의-활용">정점에 설정된 부가 정보의 활용</h3>
+<ul>
+<li>무게중심좌표의 값은 주어진 <strong>픽셀이 삼각형의 세 점으로부터 얼마나 영향을 받는지</strong> 파악하는 용도로도 활용할 수 있다.
+<ul>
+<li>예를 들어 어떤점의 무게중심좌표가 $(0.333, 0.333, 0.333)$이라면 삼각형의 세 점이 균일하게 영향을 미치는 삼각형의 무게중심에 그 점이 위치한다고 볼 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>다음은 무게중심좌표를 사용해서 삼각형에 색상을 입히는 예제이다.</li>
+</ul>
+<p><img src="/postimg/gamemath/08-08-ex.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="색상정보를 추가한 정점 데이터"
+	
+	
+></p>
+<ul>
+<li>정점 버퍼</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>인덱스</th>
+<th>좌표</th>
+<th>색상(RGB)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>(0, 0.25)</td>
+<td>(1, 0, 0) Red</td>
+</tr>
+<tr>
+<td>1</td>
+<td>(-0.5, -0.25)</td>
+<td>(0, 1, 0) Green</td>
+</tr>
+<tr>
+<td>2</td>
+<td>(0.5, -0.25)</td>
+<td>(0, 0, 1) Blue</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>인덱스 버퍼</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>순서</th>
+<th>삼각형</th>
+<th>정점 순서</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 정점 배열에 색상정보도 추가한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">Vertex2D</span><span class="p">,</span> <span class="n">vertexCount</span><span class="o">&gt;</span> <span class="n">rawVertices</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vertex2D</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="mf">0.f</span><span class="p">,</span> <span class="mf">0.25f</span><span class="p">),</span> <span class="n">LinearColor</span><span class="p">(</span><span class="mf">1.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">)),</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">Vertex2D</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5f</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25f</span><span class="p">),</span> <span class="n">LinearColor</span><span class="p">(</span><span class="mf">0.f</span><span class="p">,</span> <span class="mf">1.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">)),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vertex2D</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="mf">0.5f</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25f</span><span class="p">),</span> <span class="n">LinearColor</span><span class="p">(</span><span class="mf">0.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">,</span> <span class="mf">1.f</span><span class="p">))</span>    
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 인덱스 배열
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">size_t</span><span class="p">,</span> <span class="n">triangleCount</span> <span class="o">*</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">indices</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ... 아핀 변환행렬을 곱해서 최종 행렬 finalMatrix를 생성한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 최종 행렬을 곱해서 위치 지정. 색상 정보도 함께 복사한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex2D</span><span class="o">&gt;</span> <span class="n">vertices</span><span class="p">(</span><span class="n">vertexCount</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">vi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">vi</span> <span class="o">&lt;</span> <span class="n">vertexCount</span><span class="p">;</span> <span class="o">++</span><span class="n">vi</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">vertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">Position</span> <span class="o">=</span> <span class="n">finalMatrix</span> <span class="o">*</span> <span class="n">rawVertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">Position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">vertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">Color</span> <span class="o">=</span> <span class="n">rawVertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">Color</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">ti</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ti</span> <span class="o">&lt;</span> <span class="n">triangleCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                
+</span></span><span class="line"><span class="cl">            <span class="c1">// 무게중심좌표와 정점의 색상정보를 선형 보간해서 최종 픽셀 색상값을 계산한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">if</span> <span class="p">(((</span><span class="n">s</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">s</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">t</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span><span class="p">((</span><span class="n">oneMinusST</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">oneMinusST</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">LinearColor</span> <span class="n">outColor</span> <span class="o">=</span> <span class="n">tv</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Color</span> <span class="o">*</span> <span class="n">oneMinusST</span> <span class="o">+</span> <span class="n">tv</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">Color</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">tv</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">Color</span> <span class="o">*</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                
+</span></span><span class="line"><span class="cl">                <span class="n">r</span><span class="p">.</span><span class="n">DrawPoint</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">outColor</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br />  <br /></p>
+<h2 id="텍스처-매핑">텍스처 매핑</h2>
+<ul>
+<li>
+<p>무게중심좌표는 메시에 이미지를 입하는 용도로도 활용할 수 있다.</p>
+</li>
+<li>
+<p><strong>텍스처(Texture)</strong></p>
+<ul>
+<li>메시에 이미지를 입히기 위해 변환된 데이터.</li>
+</ul>
+</li>
+<li>
+<p><strong>텍스처 매핑(Texture mapping)</strong></p>
+<ul>
+<li>메시에 이미지를 입하는 작업.</li>
+</ul>
+</li>
+<li>
+<p><strong>UV 좌표계</strong></p>
+<ul>
+<li>사진이나 그림을 저장한 이미지는 각기 고유한 해상도를 가진다. 메시에 이것을 입히기 위해서 텍스처로 변환하면 관리 방식을 통일하기 위해 이미지 고유의 <span style='background-color: #c293d8'>해상도에 관계없이 가로, 세로 크기가 $1$로 정규화</span>된다.</li>
+<li>이처럼 렌더링 과정에서 텍스처를 사용할 때는 <span style='background-color: #c293d8'>$[0, 1]$범위로 구성된 2차원 좌표계</span>를 사용하는 데 이 좌표계를 UV좌표계라고 한다.</li>
+<li>U는 가로정보, V는 세로정보를 나타낸다.</li>
+<li>예를 들어, 왼쪽 하단을 원점으로 잡고 우상단으로 증가하는 방식의 UV좌표계는 다음과 같을 것이다. <br /><br>
+<img src="/postimg/gamemath/08-09-uv.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="텍스처의 UV좌푯값"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>텍스처 매핑 방법
+<ul>
+<li>삼각형의 세 정점에 UV 좌표 정보를 추가한다. 그리고 삼각형을 구성하는 각 픽셀들의 <strong>무게중심좌표를 계산해서 UV좌표와 선형보간</strong>한다. 이렇게 하면 <strong>해당 픽셀에 해당하는 UV값</strong>을 얻어낼 수 있다.</li>
+<li>이 UV값에 대응하는 텍스처의 색상 정보를 얻은 후에 이것을 최정 픽셀의 색상으로 지정하면 텍스처 매핑이 완성된다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>다음은 무게중심좌표와 UV좌표를 사용해서 정사각형에 얼굴 텍스처를 입히는 예제이다.</li>
+</ul>
+<p><img src="/postimg/gamemath/08-10-uvVertex.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="UV값"
+	
+	
+></p>
+<ul>
+<li>정점 버퍼</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>인덱스</th>
+<th>좌표</th>
+<th>UV좌표</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>(-0.5, -0.5)</td>
+<td>(0.125, 0.75)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>(-0.5, 0.5)</td>
+<td>(0.125, 0.875)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>(0.5, 0.5)</td>
+<td>(0.25, 0.75)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>(0.5, -0.5)</td>
+<td>(0.25, 0.875)</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>인덱스 버퍼</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>순서</th>
+<th>삼각형</th>
+<th>정점 순서</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>5</td>
+<td>1</td>
+<td>3</td>
+</tr>
+</tbody>
+</table></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 텍스쳐를 가져온다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">texture</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetTexture</span><span class="p">(</span><span class="n">GameEngine</span><span class="o">::</span><span class="n">BaseTexture</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 정점 배열에 UV값도 추가한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">Vertex2D</span><span class="p">,</span> <span class="n">vertexCount</span><span class="o">&gt;</span> <span class="n">rawVertices</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vertex2D</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="o">-</span><span class="n">sqareHalfSize</span><span class="p">,</span> <span class="o">-</span><span class="n">squareHalfSize</span><span class="p">),</span> <span class="n">LinearColor</span><span class="p">(),</span> <span class="n">Vector2</span><span class="p">(</span><span class="mf">0.125f</span><span class="p">,</span> <span class="mf">0.75f</span><span class="p">)),</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">Vertex2D</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="o">-</span><span class="n">sqareHalfSize</span><span class="p">,</span> <span class="n">squareHalfSize</span><span class="p">),</span> <span class="n">LinearColor</span><span class="p">(),</span> <span class="n">Vector2</span><span class="p">(</span><span class="mf">0.125f</span><span class="p">,</span> <span class="mf">0.875f</span><span class="p">)),</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">Vertex2D</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="n">sqareHalfSize</span><span class="p">,</span> <span class="n">squareHalfSize</span><span class="p">),</span> <span class="n">LinearColor</span><span class="p">(),</span> <span class="n">Vector2</span><span class="p">(</span><span class="mf">0.25f</span><span class="p">,</span> <span class="mf">0.875f</span><span class="p">)),</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">Vertex2D</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="n">sqareHalfSize</span><span class="p">,</span> <span class="o">-</span><span class="n">squareHalfSize</span><span class="p">),</span> <span class="n">LinearColor</span><span class="p">(),</span> <span class="n">Vector2</span><span class="p">(</span><span class="mf">0.25f</span><span class="p">,</span> <span class="mf">0.75f</span><span class="p">)),</span> 
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 인덱스 배열
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">size_t</span><span class="p">,</span> <span class="n">triangleCount</span> <span class="o">*</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">indices</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ... 아핀 변환행렬을 곱해서 최종 행렬 finalMatrix를 생성한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 최종 행렬을 곱해서 위치 지정. UV 정보도 함께 복사한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex2D</span><span class="o">&gt;</span> <span class="n">vertices</span><span class="p">(</span><span class="n">vertexCount</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">vi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">vi</span> <span class="o">&lt;</span> <span class="n">vertexCount</span><span class="p">;</span> <span class="o">++</span><span class="n">vi</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">vertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">Position</span> <span class="o">=</span> <span class="n">finalMatrix</span> <span class="o">*</span> <span class="n">rawVertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">Position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">vertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">UV</span> <span class="o">=</span> <span class="n">rawVertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">UV</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 정점 배열과 인덱스 배열을 사용해서 삼각형의 점을 서로 이어준다.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">ti</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ti</span> <span class="o">&lt;</span> <span class="n">triangleCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        
+</span></span><span class="line"><span class="cl">            <span class="c1">// 무게중심좌표와 정점의 UV좌표를 선형 보간해서 최종 UV값을 계산한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">if</span> <span class="p">(((</span><span class="n">s</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">s</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">t</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span><span class="p">((</span><span class="n">oneMinusST</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">oneMinusST</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Vector2</span> <span class="n">targetUV</span> <span class="o">=</span> <span class="n">tv</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">oneMinusST</span> <span class="o">+</span> <span class="n">tv</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">tv</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                
+</span></span><span class="line"><span class="cl">                <span class="n">r</span><span class="p">.</span><span class="n">DrawPoint</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">targetUV</span><span class="p">.</span><span class="n">GetSample</span><span class="p">(</span><span class="n">targetUV</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br />  <br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/game-math/">Game Math</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/init/game-math-07/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 7. 내적: 벡터 공간의 분석과 응용</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-06/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 6. 아핀 공간: 움직이는 가상 세계의 구축</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-05/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 5. 행렬: 가상 세계의 변환 도구</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-04/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 4. 삼각함수: 회전을 위한 수학</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-03/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 3. 벡터: 가상 공간의 탄생</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#세-점의-결합">세 점의 결합</a></li>
+    <li><a href="#메시">메시</a></li>
+    <li><a href="#무게중심좌표">무게중심좌표</a>
+      <ol>
+        <li><a href="#무게중심좌표의-계산">무게중심좌표의 계산</a></li>
+        <li><a href="#정점에-설정된-부가-정보의-활용">정점에 설정된 부가 정보의 활용</a></li>
+      </ol>
+    </li>
+    <li><a href="#텍스처-매핑">텍스처 매핑</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

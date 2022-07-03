@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='원근 투영 변환의 원리 투시 원근법(Perspective projection drawing)
+시선을 한 점에 고정시키고, 고정된 점으로부터 화폭까지 곧게 뻗은 실을 활용해서 그림을 그려나가는 것이다. 원근 투영 변환(Perspective projection transformation)
+투시 원근법의 원리를 적용하기 위해서 공간의 모든 점이 한 점을 향해 모이는 형태로 변환하는 것이다. 즉, $x$, $y$, $z$축이 모두 직교하는 정육면체 형태를 가진 뷰 공간을 카메라의 한 점으로 모이는 사각뿔 형태를 가진 공간으로 변환하는 작업이다. 화각(Field of view)
+카메라를 통해서 이미지를 담을 수 있는 각을 말한다.'><title>[Game Math] Chapter 12. 원근 투영: 화면에 현실감을 부여하는 변환</title>
+
+<link rel='canonical' href='https://sopod.github.io/init/game-math-12/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[Game Math] Chapter 12. 원근 투영: 화면에 현실감을 부여하는 변환'>
+<meta property='og:description' content='원근 투영 변환의 원리 투시 원근법(Perspective projection drawing)
+시선을 한 점에 고정시키고, 고정된 점으로부터 화폭까지 곧게 뻗은 실을 활용해서 그림을 그려나가는 것이다. 원근 투영 변환(Perspective projection transformation)
+투시 원근법의 원리를 적용하기 위해서 공간의 모든 점이 한 점을 향해 모이는 형태로 변환하는 것이다. 즉, $x$, $y$, $z$축이 모두 직교하는 정육면체 형태를 가진 뷰 공간을 카메라의 한 점으로 모이는 사각뿔 형태를 가진 공간으로 변환하는 작업이다. 화각(Field of view)
+카메라를 통해서 이미지를 담을 수 있는 각을 말한다.'>
+<meta property='og:url' content='https://sopod.github.io/init/game-math-12/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Init' /><meta property='article:tag' content='Game Math' /><meta property='article:published_time' content='2022-04-15T17:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-04-15T17:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[Game Math] Chapter 12. 원근 투영: 화면에 현실감을 부여하는 변환">
+<meta name="twitter:description" content="원근 투영 변환의 원리 투시 원근법(Perspective projection drawing)
+시선을 한 점에 고정시키고, 고정된 점으로부터 화폭까지 곧게 뻗은 실을 활용해서 그림을 그려나가는 것이다. 원근 투영 변환(Perspective projection transformation)
+투시 원근법의 원리를 적용하기 위해서 공간의 모든 점이 한 점을 향해 모이는 형태로 변환하는 것이다. 즉, $x$, $y$, $z$축이 모두 직교하는 정육면체 형태를 가진 뷰 공간을 카메라의 한 점으로 모이는 사각뿔 형태를 가진 공간으로 변환하는 작업이다. 화각(Field of view)
+카메라를 통해서 이미지를 담을 수 있는 각을 말한다.">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/game-math/" >
+                Game Math
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/init/game-math-12/">[Game Math] Chapter 12. 원근 투영: 화면에 현실감을 부여하는 변환</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Apr 15, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    19 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br />  <br /></p>
+<h2 id="원근-투영-변환의-원리">원근 투영 변환의 원리</h2>
+<ul>
+<li>
+<p><strong>투시 원근법(Perspective projection drawing)</strong></p>
+<ul>
+<li>시선을 한 점에 고정시키고, 고정된 점으로부터 화폭까지 곧게 뻗은 실을 활용해서 그림을 그려나가는 것이다.</li>
+</ul>
+</li>
+<li>
+<p><strong>원근 투영 변환(Perspective projection transformation)</strong></p>
+<ul>
+<li>투시 원근법의 원리를 적용하기 위해서 공간의 모든 점이 한 점을 향해 모이는 형태로 변환하는 것이다.</li>
+<li>즉, $x$, $y$, $z$축이 모두 직교하는 정육면체 형태를 가진 뷰 공간을 카메라의 한 점으로 모이는 사각뿔 형태를 가진 공간으로 변환하는 작업이다.</li>
+</ul>
+</li>
+<li>
+<p><strong>화각(Field of view)</strong></p>
+<ul>
+<li>카메라를 통해서 이미지를 담을 수 있는 각을 말한다.</li>
+<li>카메라에 화각을 설정하면 좌우와 위아래가 균등한 사각뿔 영역이 만들어진다.</li>
+</ul>
+</li>
+<li>
+<p><strong>투영 평면(Projection plane)</strong></p>
+<ul>
+<li>3차원 공간을 원근 투영 변환한 후에는 그것을 2차원의 모니터 평면에 담아내야 한다. 이를 위해서 모든 물체의 상이 맺히는 가상의 평면을 생성해야 하는데 이것을 투영 평면이라고 한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>초점 거리(Focal length)</strong></p>
+<ul>
+<li>카메라로부터 투영 평면까지의 거리이다.</li>
+</ul>
+</li>
+</ul>
+<p><img src="/postimg/gamemath/12-01-fov.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="카메라의 화각, 투영 평면, 초점거리"
+	
+	
+></p>
+<br />  
+<ul>
+<li>
+<p><strong>NDC(Normalized device coordinate)</strong></p>
+<ul>
+<li>원근 투영 변환을 위해서는 먼저 투영 평면의 위치를 지정해야 한다. 일반적으로 투영 평면의 위치는 계산의 편의를 위해서 <span style='background-color: #c293d8'>위 아래의 크기가 각각 $1$</span>이 되는 지점으로 결정한다. 따라서 다음과 같이 좌우와 상하가 $[-1, 1]$의 범위를 가지는 정사각형의 모습을 띤다.</li>
+<li>이 정사각형 영역은 2차원 평면의 좌표 시스템을 가지는데 이를 NDC라고 한다.</li>
+<li>NDC는 가운데 중점을 원점으로 설정한다.</li>
+</ul>
+</li>
+<li>
+<p>NDC가 언제나 일정한 값을 가진다면, 화각에 따라 초점 거리가 달라질 수밖에 없다.</p>
+<ul>
+<li>화각이 커질 수록 초점 거리는 가까워지고, 화각이 작아질 수록 초점 거리는 멀어지겠다.</li>
+<li>$$\tan(\frac{\theta}{2}) = \frac{1}{d}$$ <br /><br>
+<span style='background-color: #c293d8'>$$ d = \frac{1}{\tan(\frac{\theta}{2})} $$ </span> <br /><br>
+<img src="/postimg/gamemath/12-02-d.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="초점 거리 구하기"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li><strong>사영 공간(Projective space)</strong>
+<ul>
+<li>지금까지의 공간 변환은 $x$, $y$, $z$축이 모두 직교하고 정육면체 형태의 3차원 공간이었다. 하지만 원근 투영 변환을 거치면 <strong>사각뿔</strong> 형태로 바뀌게 된다. 이것을 사영 공간이라고 한다.</li>
+<li>$x$, $y$축은 여전히 직교하므로 유클리드 공간과 동일한 성질을 가진다.</li>
+<li>하지만 $z$축은 독립적으로 행동하지 않고 $x$, $y$축에 모두 영향을 준다. 이것이 초점 거리에 따라 투영 평면의 면적이 달라지는 이유이기도 하겠다.</li>
+</ul>
+</li>
+<li>그렇다면 원근 투영 변환에 대응하는 행렬은 어떻게 설계할 수 있을까?
+<ul>
+<li>$x$축을 배제하고 $y$, $z$축으로 공간을 설정하고 투영 평면에 상이 맺히는 과정을 생각해보자.
+<ul>
+<li>뷰공간의 점 $P_{view}$가 투영 평면에 투영된 점을 $P_{ndc}$라고 한다면 좌표는 다음과 같다.</li>
+<li>$P_{view} = (0, v_y, v_z)$ <br /><br>
+$P_{ndc} = (0, n_y)$</li>
+<li>두 점의 관계를 닮은꼴 삼각형 두개로 알아보면 다음과 같은 비가 성립된다. <br /><br>
+<img src="/postimg/gamemath/12-03-projectiveSpace.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="두 개의 닮은꼴 삼각형"
+	
+	
+></li>
+<li>$n_y : d = v_y : -v_z$</li>
+<li>$n_y = \frac{d \cdot v_y}{-v_z}$</li>
+</ul>
+</li>
+<li>카메라의 좌우 상하 시야각은 동일하므로 NDC의 $x$값 또한 $y$값을 $0$으로 고정한 후 $x$, $z$축의 평면을 사용하는 방식으로 구할 수 있다.</li>
+<li>따라서 초점 거리와 뷰 좌표로부터 $P_{ndc}$를 구할 수 있다.</li>
+<li>$$P_{ndc} = (n_x, n_y) = (\frac{d \cdot v_x}{-v_z}, \frac{d \cdot v_y}{-v_z}) = -\frac{d}{v_z}(v_x, v_y)$$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>이제 NDC좌표를 계산했으니, 이 좌표를 모니터 해상도 만큼 가로 세로로 늘려주면 최종 스크린 좌표가 완성된다.
+<ul>
+<li>근데 가로 세로 해상도가 다르기 때문에 늘리면 물체가 찌그러지겠다.</li>
+<li>가로 세로의 비를 <strong>종횡비(Aspect ratio)</strong> 라고 한다. 종횡비를 파악해서 미리 NDC영역에서 찌그러트린 다음에 펼치면 문제 해결이 가능하겠다. <br /><br>
+<img src="/postimg/gamemath/12-04-aspectRatio.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="종횡비를 고려한 처리방법"
+	
+	
+></li>
+<li>예를 들어, $800 \times 600$해상도에서 세로 크기를 기준으로 잡은 종횡비는 $1.3333$이다. 이 종횡비를 $a$라고 하자.</li>
+<li>그러면 좌우로 찌그러트리기 위해서 $x$축에 종횡비의 역수 $\frac{1}{a}$를 곱하면 되겠다.</li>
+<li>$$P_{ndc} = -\frac{d}{v_z}(\frac{v_x}{a}, v_y)$$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>이렇게 최종 NDC값을 계산하는 원근 투영 행렬 $P$를 다음과 같이 설계할 수 있겠다.
+<ul>
+<li>$$P_{ndc} = P \cdot \vec{v} = \begin{bmatrix} \frac{1}{a} \cdot \frac{d}{-v_z} &amp; 0 \\ 0 &amp; \frac{d}{-v_z} \end{bmatrix} \begin{bmatrix} v_x \\ v_y \end{bmatrix}$$</li>
+</ul>
+</li>
+<li>하지만 한 가지 아쉽다. 변환할 점의 $z$값이 행렬에 사용되다보니 변환할 점마다 항상 행렬을 새롭게 생성해야 한다. Chapter 5에서 본것처럼 미리 곱해둔 행렬을 계속 사용한다면 굉장히 연산량을 줄일 수 있겠다.
+<ul>
+<li>이건 어떨까? $-\vec{v_z}$값을 행렬에서 제거하고 대신 행렬의 결괏값에서 $-\vec{v_z}$를 나누어 주는 거다.</li>
+<li>$$P_{ndc} = P \cdot \vec{v} = \begin{bmatrix} \frac{d}{a} &amp; 0 &amp; 0 \\ 0 &amp; d &amp; 0 \\ 0 &amp; 0 &amp; -1 \end{bmatrix} \begin{bmatrix} v_x \\ v_y \\ v_z \end{bmatrix} = \begin{bmatrix} \frac{d}{a} \cdot v_x \\ d \cdot v_y \\ -v_z\end{bmatrix}$$</li>
+</ul>
+</li>
+<li><strong>클립 좌표(Clip coordinate)</strong>
+<ul>
+<li>이렇게 <span style='background-color: #c293d8'> 원근 투영 행렬 $P$로 변환되는 좌표계</span>를 클립 좌표라고 부르며 다음과 같이 계산한다.</li>
+<li>$$P_{clip} = (\frac{d}{a} \cdot v_x , d \cdot v_y , -v_z)$$</li>
+</ul>
+</li>
+<li>이 클립좌표를 <span style='background-color: #c293d8'>세 번째 값인 $-v_z$로 나누면</span> <strong>NDC좌표</strong>를 얻을 수 있다.
+<ul>
+<li>$$P_{ndc} = (\frac{d \cdot v_x}{-v_z \cdot a}, \frac{d \cdot v_y}{-v_z}, 1)$$</li>
+</ul>
+</li>
+</ul>
+<p><br />  <br /></p>
+<h2 id="동차-좌표계">동차 좌표계</h2>
+<ul>
+<li><strong>동차 좌표계(Homogenous coordinate system)</strong>
+<ul>
+<li>동차란? 모든 항의 차수가 같음을 의미한다.</li>
+<li>한 차원 높인 벡터를 사용하는 것을 동차 좌표계라고 한다.</li>
+<li>사영 공간이 사용하는 좌표계는 동차 좌표계이다. 왜냐하면&hellip;</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>
+<p>3차원의 사영 공간에서 평행하게 점을 이동시키면?</p>
+<ul>
+<li>카메라에 멀어질 수록 투영된 좌푯값이 투영 평면의 원점에 가까워지고, 카메라에 가까워질수록 커진다.</li>
+<li>즉, <strong>사영 공간의 점</strong>과 <strong>투영된 점의</strong> 좌표는 <strong>반비례 관계</strong>이다. <br /><br>
+<img src="/postimg/gamemath/12-05-parellelMovement.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="사영 공간에서 점이 평행 이동할 때 투영된 점의 위치 변화"
+	
+	
+></li>
+<li>사영 공간의 점을 $(x&rsquo;, y&rsquo;, z&rsquo;)$라고 하고, 해당 점이 투영된 NDC좌표를 $(x, y)$라고 하자. 그러면 NDC 좌푯값은 마지막 차원값 $z&rsquo;$에 반비례로 영향을 받으므로 다음과 같은 관계가 성립한다.</li>
+<li>$$ x = \frac{x&rsquo;}{z&rsquo;}, y = \frac{y&rsquo;}{z&rsquo;}$$
+<br /></li>
+</ul>
+</li>
+<li>
+<p>사영 공간의 좌표로 직선의 방정식을 표현해보자. 위의 $x$, $y$를 직선의 방정식 $y = ax + b$에 대입해보자.</p>
+<ul>
+<li>$$\frac{y&rsquo;}{z&rsquo;} = a\frac{x&rsquo;}{z&rsquo;} + b$$</li>
+<li>$$ y&rsquo; = ax&rsquo; + bz&rsquo;$$</li>
+<li>위와 같이 세 미지수의 차수가 모두 1차식으로 동일한 방정식이 만들어진다. 이렇게 미지수에 대한 차수가 동일한 방정식을 동차 방정식이라고 한다.</li>
+<li>그래서 사영 공간이 사용하는 좌표계는 동차좌표계라고 부른다.</li>
+</ul>
+</li>
+<li>
+<p><strong>NDC의 원점 $(0, 0)$</strong></p>
+<ul>
+<li>카메라로 멀어질수록 투영된 NDC 좌푯값은 원점 $(0, 0)$에 가까워진다.</li>
+<li>이런 NDC의 원점은 회화의 투시 원근 기법에서 사용하는 <strong>소실점(Vanishing point)</strong> 에 해당한다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>
+<p>다음은 원근 투영 변환행렬을 사용해서 원근감을 준 코드이다. 또한 입력에 따라 화각을 달리하여 변화되는 모습을 볼 수 있다.</p>
+</li>
+<li>
+<p>클립 좌표 값 얻기</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">CameraObject</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">FORCEINLINE</span> <span class="n">Matrix4x4</span> <span class="n">GetPerspectiveMatrix</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">_FOV</span> <span class="o">=</span> <span class="mf">60.f</span><span class="p">;</span>  <span class="c1">// 시야각
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 원근 투영 행렬 P를 생성한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">FORCEINLINE</span> <span class="n">Matrix4x4</span> <span class="n">CameraObject</span><span class="o">::</span><span class="n">GetPerspectiveMatrix</span><span class="p">()</span> <span class="k">const</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">invA</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="n">_ViewportSize</span><span class="p">.</span><span class="n">AspectRatio</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">d</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="n">tanf</span><span class="p">(</span><span class="n">Math</span><span class="o">::</span><span class="n">Deg2Rad</span><span class="p">(</span><span class="n">_FOV</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5f</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">Matrix4x4</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector4</span><span class="o">::</span><span class="n">UnitX</span> <span class="o">*</span> <span class="n">invA</span> <span class="o">*</span> <span class="n">d</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector4</span><span class="o">::</span><span class="n">UnitY</span> <span class="o">*</span> <span class="n">d</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector4</span><span class="p">(</span><span class="mf">0.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector4</span><span class="p">(</span><span class="mf">0.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.f</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 게임 로직을 담당하는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">Update3D</span><span class="p">(</span><span class="kt">float</span> <span class="n">InDeltaSeconds</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 게임 로직에서 사용하는 모듈 내 주요 레퍼런스
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">GameEngine</span><span class="o">&amp;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">Get3DGameEngine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">InputManager</span><span class="o">&amp;</span> <span class="n">input</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetInputManager</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 게임 로직의 로컬 변수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">static</span> <span class="kt">float</span> <span class="n">moveSpeed</span> <span class="o">=</span> <span class="mf">500.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">float</span> <span class="n">fovSpeed</span> <span class="o">=</span> <span class="mf">100.f</span><span class="p">;</span>  <span class="c1">// 시야각 조절 속도
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">static</span> <span class="kt">float</span> <span class="n">minFOV</span> <span class="o">=</span> <span class="mf">15.f</span><span class="p">;</span>  <span class="c1">// 최소 시야각
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">static</span> <span class="kt">float</span> <span class="n">maxFOV</span> <span class="o">=</span> <span class="mf">150.f</span><span class="p">;</span>  <span class="c1">// 최대 시야각
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 게임 로직에서 사용할 게임 오브젝트 레퍼런스
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">goPlayer</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetGameObject</span><span class="p">(</span><span class="n">PlayerGo</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">CameraObject</span><span class="o">&amp;</span> <span class="n">camera</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetMainCamera</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TransformComponent</span><span class="o">&amp;</span> <span class="n">playerTransform</span> <span class="o">=</span> <span class="n">goPlayer</span><span class="p">.</span><span class="n">GetTransform</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 입력에 따른 플레이어 트랜스폼의 변경
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Vector3</span> <span class="n">inputVector</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">input</span><span class="p">.</span><span class="n">GetAxis</span><span class="p">(</span><span class="n">InputAxis</span><span class="o">::</span><span class="n">XAxis</span><span class="p">),</span> <span class="n">input</span><span class="p">.</span><span class="n">GetAxis</span><span class="p">(</span><span class="n">InputAxis</span><span class="o">::</span><span class="n">YAxis</span><span class="p">),</span> <span class="n">input</span><span class="p">.</span><span class="n">GetAxis</span><span class="p">(</span><span class="n">InputAxis</span><span class="o">::</span><span class="n">ZAxis</span><span class="p">)).</span><span class="n">GetNormalize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">playerTransform</span><span class="p">.</span><span class="n">AddPosition</span><span class="p">(</span><span class="n">inputVector</span> <span class="o">*</span> <span class="n">moveSpeed</span> <span class="o">*</span> <span class="n">InDeltaSeconds</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 입력에 따른 카메라 트랜스폼의 변경
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// deltaFOV로 시야각 변화량을 계산하고
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// 최소, 최댓값 사이로 시야각을 설정한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">camera</span><span class="p">.</span><span class="n">SetLookAtRotation</span><span class="p">(</span><span class="n">playerTransform</span><span class="p">.</span><span class="n">GetPosition</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">deltaFOV</span> <span class="o">=</span> <span class="n">input</span><span class="p">.</span><span class="n">GetAxis</span><span class="p">(</span><span class="n">InputAxis</span><span class="o">::</span><span class="n">WAxis</span><span class="p">)</span> <span class="o">*</span> <span class="n">fovSpeed</span> <span class="o">*</span> <span class="n">InDeltaSeconds</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">camera</span><span class="p">.</span><span class="n">SetFOV</span><span class="p">(</span><span class="n">Math</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="n">camera</span><span class="p">.</span><span class="n">GetFOV</span><span class="p">()</span> <span class="o">+</span> <span class="n">deltaFOV</span><span class="p">,</span> <span class="n">minFOV</span><span class="p">,</span> <span class="n">maxFOV</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 렌더링 로직을 담당하는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">Render3D</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 렌더링 로직에서 사용하는 모듈 내 주요 레퍼런스
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">const</span> <span class="n">GameEngine</span><span class="o">&amp;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">Get3DGameEngine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">GetRenderer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">CameraObject</span><span class="o">&amp;</span> <span class="n">mainCamera</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetMainCamera</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 배경에 기즈모 그리기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">DrawGizmo3D</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 렌더링 로직의 로컬 변수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">const</span> <span class="n">Matrix4x4</span> <span class="n">vMatrix</span> <span class="o">=</span> <span class="n">mainCamera</span><span class="p">.</span><span class="n">GetViewMatrix</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">Matrix4x4</span> <span class="n">pMatrix</span> <span class="o">=</span> <span class="n">mainCamera</span><span class="p">.</span><span class="n">GetPerspectiveMatrix</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">SceneBegin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">g</span><span class="p">.</span><span class="n">SceneEnd</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">gameObject</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">gameObject</span><span class="p">.</span><span class="n">HasMesh</span><span class="p">()</span> <span class="o">||</span> <span class="o">!</span><span class="n">gameObject</span><span class="p">.</span><span class="n">IsVisible</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 렌더링에 필요한 게임 오브젝트의 주요 레퍼런스를 얻기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">const</span> <span class="n">Mesh</span><span class="o">&amp;</span> <span class="n">mesh</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetMesh</span><span class="p">(</span><span class="n">gameObject</span><span class="p">.</span><span class="n">GetMeshKey</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="n">TransformComponent</span><span class="o">&amp;</span> <span class="n">transform</span> <span class="o">=</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">GetTransform</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 원근투영행렬 * 뷰행렬 * 모델링행렬
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// (1) 결과는 클립 좌표의 값이겠다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">Matrix4x4</span> <span class="n">finalMatrix</span> <span class="o">=</span> <span class="n">pMatrix</span> <span class="o">*</span> <span class="n">vMatrix</span> <span class="o">*</span> <span class="n">transform</span><span class="p">.</span><span class="n">GetModelingMatrix</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 메시 그리기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">DrawMesh3D</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">finalMatrix</span><span class="p">,</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">GetColor</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">gameObject</span> <span class="o">==</span> <span class="n">PlayerGo</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 플레이어의 위치
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;Player: &#34;</span> <span class="o">+</span> <span class="n">transform</span><span class="p">.</span><span class="n">GetPosition</span><span class="p">().</span><span class="n">ToString</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;Camera: &#34;</span> <span class="o">+</span> <span class="n">mainCamera</span><span class="p">.</span><span class="n">GetTransform</span><span class="p">().</span><span class="n">GetPosition</span><span class="p">().</span><span class="n">ToString</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;FOV : &#34;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">mainCamera</span><span class="p">.</span><span class="n">GetFOV</span><span class="p">()));</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />  
+<ul>
+<li>클립 좌표 값을 NDC로 변환하고 해상도 크기로 늘려주기.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 삼각형을 그리는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">DrawTriangle3D</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex3D</span><span class="o">&gt;&amp;</span> <span class="n">InVertices</span><span class="p">,</span> <span class="k">const</span> <span class="n">LinearColor</span><span class="o">&amp;</span> <span class="n">InColor</span><span class="p">,</span> <span class="n">FillMode</span> <span class="n">InFillMode</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">GetRenderer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">GameEngine</span><span class="o">&amp;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">Get3DGameEngine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// (2) 클립 좌표를 NDC 좌표로 변경
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">v</span> <span class="p">:</span> <span class="n">InVertices</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 무한 원점인 경우, 약간 보정해준다.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">Position</span><span class="p">.</span><span class="n">Z</span> <span class="o">==</span> <span class="mf">0.f</span><span class="p">)</span> <span class="n">v</span><span class="p">.</span><span class="n">Position</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="n">SMALL_NUMBER</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="kt">float</span> <span class="n">invZ</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="n">v</span><span class="p">.</span><span class="n">Position</span><span class="p">.</span><span class="n">Z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">v</span><span class="p">.</span><span class="n">Position</span><span class="p">.</span><span class="n">X</span> <span class="o">*=</span> <span class="n">invZ</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">v</span><span class="p">.</span><span class="n">Position</span><span class="p">.</span><span class="n">Y</span> <span class="o">*=</span> <span class="n">invZ</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">v</span><span class="p">.</span><span class="n">Position</span><span class="p">.</span><span class="n">Z</span> <span class="o">*=</span> <span class="n">invZ</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 백페이스 컬링
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Vector3</span> <span class="n">edge1</span> <span class="o">=</span> <span class="p">(</span><span class="n">InVertices</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">Position</span> <span class="o">-</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">).</span><span class="n">ToVector3</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vector3</span> <span class="n">edge2</span> <span class="o">=</span> <span class="p">(</span><span class="n">InVertices</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">Position</span> <span class="o">-</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">).</span><span class="n">ToVector3</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vector3</span> <span class="n">faceNormal</span> <span class="o">=</span> <span class="o">-</span><span class="n">edge1</span><span class="p">.</span><span class="n">Cross</span><span class="p">(</span><span class="n">edge2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vector3</span> <span class="n">viewDirection</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">UnitZ</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">faceNormal</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">viewDirection</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// (3) NDC 좌표를 화면 좌표로 늘리기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">v</span> <span class="p">:</span> <span class="n">InVertices</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">v</span><span class="p">.</span><span class="n">Position</span><span class="p">.</span><span class="n">X</span> <span class="o">*=</span> <span class="n">_ScreenSize</span><span class="p">.</span><span class="n">X</span> <span class="o">*</span> <span class="mf">0.5f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">v</span><span class="p">.</span><span class="n">Position</span><span class="p">.</span><span class="n">Y</span> <span class="o">*=</span> <span class="n">_ScreenSize</span><span class="p">.</span><span class="n">Y</span> <span class="o">*</span> <span class="mf">0.5f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">LinearColor</span> <span class="n">finalColor</span> <span class="o">=</span> <span class="n">_WireframeColor</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">InColor</span> <span class="o">!=</span> <span class="n">LinearColor</span><span class="o">::</span><span class="n">Error</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">finalColor</span> <span class="o">=</span> <span class="n">InColor</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">DrawLine</span><span class="p">(</span><span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">,</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">Position</span><span class="p">,</span> <span class="n">finalColor</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">DrawLine</span><span class="p">(</span><span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">,</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">Position</span><span class="p">,</span> <span class="n">finalColor</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">DrawLine</span><span class="p">(</span><span class="n">InVertices</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">Position</span><span class="p">,</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">Position</span><span class="p">,</span> <span class="n">finalColor</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br />  <br /></p>
+<h2 id="깊이-값">깊이 값</h2>
+<ul>
+<li><strong>깊이(Depth) 값</strong>의 필요성
+<ul>
+<li>우리에게 보이는 화면은 결국 2차원 평면이므로 가장 카메라에서 멀리 있는 나중에 그린 물체가 앞에 보일 수 밖에 없다.</li>
+<li>이 문제를 해결하기 위해서는 <strong>카메라로부터 물체가 얼마나 떨어졌는지</strong>에 대한 깊이 값이 필요하다.</li>
+<li>깊이 값을 추가하면 2차원 평면이었던 NDC영역이 3차원으로 확장된다. 여기서 깊이값의 범위는 동일하게 $[-1, 1]$ 이다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>
+<p><strong>절두체(Frustum)</strong></p>
+<ul>
+<li>카메라에 가장 가까이 있는, 깊이 값이 $-1$인 평면을 <strong>근평면(Near plane)</strong> 이라고 한다.</li>
+<li>반대로 가장 멀리에 있는, 깊이 값이 $1$인 평면을 <strong>원평면(Far plane)</strong> 이라고 한다.</li>
+<li>사영 공간을 근평면과 원평면으로 잘라서 만들어진 부분을 절두체라고 한다. <br /><br>
+<img src="/postimg/gamemath/12-06-frustum.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="카메라에 설정한 절두체"
+	
+	
+></li>
+</ul>
+</li>
+<li>
+<p>절두체로 생성되는 3차원의 NDC영역의 범위는 다음과 같다. NDC 깊이 값은 멀어질수록 증가하기 때문에 <strong>왼손좌표계</strong>를 사용한다. <br /><br>
+<img src="/postimg/gamemath/12-07-3dNdc.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="3차원으로 확장한 NDC의 범위"
+	
+	
+></p>
+</li>
+</ul>
+<br />  
+<ul>
+<li>원근 투영 행렬에 깊이 값을 넣기 위해 3행을 4행으로 옮기고 3행을 깊이값을 구하는 용도로 변경하자.
+<ul>
+<li>뷰 공간의 점이 $\vec{v} = (v_x, v_y, v_z, 1)$일 때 다음과 같이 구할 수 있다.</li>
+<li>$$ P \cdot \vec{v} = \begin{bmatrix} \frac{d}{a} &amp; 0 &amp; 0 &amp; 0\\ 0 &amp; d &amp; 0 &amp; 0\\ ? &amp; ? &amp; ? &amp; ? \\ 0 &amp; 0 &amp; -1 &amp; 0 \end{bmatrix} \begin{bmatrix} v_x \\ v_y \\ v_z \\ 1 \end{bmatrix} = \begin{bmatrix} \frac{d}{a} \cdot v_x \\ d \cdot v_y \\ ? \\ -v_z\end{bmatrix}$$</li>
+<li>여기서 깊이 값은 뷰 좌표계의 $x$, $y$축과 직교하므로 영향을 받지 않는다. 그러므로 3행의 앞의 두 요소는 $0$으로 설정할 수 있겠다.</li>
+<li>$$ P \cdot \vec{v} = \begin{bmatrix} \frac{d}{a} &amp; 0 &amp; 0 &amp; 0\\ 0 &amp; d &amp; 0 &amp; 0\\ 0 &amp; 0 &amp; ? &amp; ? \\ 0 &amp; 0 &amp; -1 &amp; 0 \end{bmatrix} \begin{bmatrix} v_x \\ v_y \\ v_z \\ 1 \end{bmatrix} = \begin{bmatrix} \frac{d}{a} \cdot v_x \\ d \cdot v_y \\ ? \\ -v_z\end{bmatrix}$$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>이제 여기에서 근평면과 원평면의 값을 사용해보자.
+<ul>
+<li>근평면에 있는 점을 $P_1$, 원평면에 있는 점을 $P_2$라고 하자.</li>
+<li>그리고 카메라부터 근평면까지의 거리를 $n$, 원평면까지의 거리를 $f$라고 하자. <br /><br>
+<img src="/postimg/gamemath/12-08-nearFarSpace.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="뷰 공간 좌표와 NDC값의 비교"
+	
+	
+></li>
+<li>근평면의 경우
+<ul>
+<li>뷰 공간의 좌표는 $(0, 0, -n, 1)$이 된다.</li>
+<li>근평면은 깊이 값의 시작부분이므로 NDC좌표의 $(0, 0, -1)$에 대응한다.</li>
+<li>따라서 다음과 같이 만들어진다.</li>
+<li>$$ P_1 = \begin{bmatrix} \frac{d}{a} &amp; 0 &amp; 0 &amp; 0\\ 0 &amp; d &amp; 0 &amp; 0\\ 0 &amp; 0 &amp; ? &amp; ? \\ 0 &amp; 0 &amp; -1 &amp; 0 \end{bmatrix} \begin{bmatrix} 0 \\ 0 \\ -n \\ 1 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ ? \\ n \end{bmatrix}$$</li>
+<li>클립 좌표의 경우 세번째 원소를 마지막 네번째 원소로 나눈 값이 NDC의 세번째 원소인 $-1$이 되므로, $?$는 $-n$이 된다.</li>
+<li>$$ P_1 = \begin{bmatrix} \frac{d}{a} &amp; 0 &amp; 0 &amp; 0\\ 0 &amp; d &amp; 0 &amp; 0\\ 0 &amp; 0 &amp; ? &amp; ? \\ 0 &amp; 0 &amp; -1 &amp; 0 \end{bmatrix} \begin{bmatrix} 0 \\ 0 \\ -n \\ 1 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ -n \\ n \end{bmatrix}$$</li>
+</ul>
+</li>
+<li>원평면의 경우
+<ul>
+<li>동일한 방식으로 다음과 같이 구할 수 있겠다.</li>
+<li>$$ P_2 = \begin{bmatrix} \frac{d}{a} &amp; 0 &amp; 0 &amp; 0\\ 0 &amp; d &amp; 0 &amp; 0\\ 0 &amp; 0 &amp; ? &amp; ? \\ 0 &amp; 0 &amp; -1 &amp; 0 \end{bmatrix} \begin{bmatrix} 0 \\ 0 \\ -f \\ 1 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ f \\ f \end{bmatrix}$$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>여기서 두행렬의 3행과 뷰 공간의 점을 내적한 후 수식을 정리하면 다음과 같이 최종 원근 투영 행렬을 구할 수 있다. <br />
+<ul>
+<li>$$ P = \begin{bmatrix} \frac{d}{a} &amp; 0 &amp; 0 &amp; 0\\ 0 &amp; d &amp; 0 &amp; 0\\ 0 &amp; 0 &amp; \frac{n + f}{n - f} &amp; \frac{2nf}{n - f} \\ 0 &amp; 0 &amp; -1 &amp; 0 \end{bmatrix} $$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>위에서 봤던 예제 코드에다가 깊이 값까지 계산하는 코드이다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">CameraObject</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">FORCEINLINE</span> <span class="n">Matrix4x4</span> <span class="n">GetPerspectiveMatrix</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">FORCEINLINE</span> <span class="n">Matrix4x4</span> <span class="nf">GetPerspectiveViewMatrix</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">_FOV</span> <span class="o">=</span> <span class="mf">60.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">_NearZ</span> <span class="o">=</span> <span class="mf">5.5f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">_FarZ</span> <span class="o">=</span> <span class="mf">5000.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 깊이 값을 계산하는 최종 원근 투영 행렬
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">FORCEINLINE</span> <span class="n">Matrix4x4</span> <span class="n">CameraObject</span><span class="o">::</span><span class="n">GetPerspectiveMatrix</span><span class="p">()</span> <span class="k">const</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 투영 행렬. 깊이 값의 범위는 -1~1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">float</span> <span class="n">invA</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="n">_ViewportSize</span><span class="p">.</span><span class="n">AspectRatio</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">d</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="n">tanf</span><span class="p">(</span><span class="n">Math</span><span class="o">::</span><span class="n">Deg2Rad</span><span class="p">(</span><span class="n">_FOV</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5f</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 근평면과 원평면에 반대 부호를 붙여서 계산
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">float</span> <span class="n">invNF</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="p">(</span><span class="n">_NearZ</span> <span class="o">-</span> <span class="n">_FarZ</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">_FarZ</span> <span class="o">+</span> <span class="n">_NearZ</span><span class="p">)</span> <span class="o">*</span> <span class="n">invNF</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">l</span> <span class="o">=</span> <span class="mf">2.f</span> <span class="o">*</span> <span class="n">_FarZ</span> <span class="o">*</span> <span class="n">_NearZ</span> <span class="o">*</span> <span class="n">invNF</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">Matrix4x4</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector4</span><span class="o">::</span><span class="n">UnitX</span> <span class="o">*</span> <span class="n">invA</span> <span class="o">*</span> <span class="n">d</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector4</span><span class="o">::</span><span class="n">UnitY</span> <span class="o">*</span> <span class="n">d</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector4</span><span class="p">(</span><span class="mf">0.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.f</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector4</span><span class="p">(</span><span class="mf">0.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 원근투영 행렬과 뷰 행렬을 곱한 행렬
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">FORCEINLINE</span> <span class="n">Matrix4x4</span> <span class="n">CameraObject</span><span class="o">::</span><span class="n">GetPerspectiveViewMatrix</span><span class="p">()</span> <span class="k">const</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 뷰 행렬 관련 요소
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Vector3</span> <span class="n">viewX</span><span class="p">,</span> <span class="n">viewY</span><span class="p">,</span> <span class="n">viewZ</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">GetViewAxes</span><span class="p">(</span><span class="n">viewX</span><span class="p">,</span> <span class="n">viewY</span><span class="p">,</span> <span class="n">viewZ</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vector3</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">_Transform</span><span class="p">.</span><span class="n">GetPosition</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">zPos</span> <span class="o">=</span> <span class="n">viewZ</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">pos</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 투영 행렬 관련 요소
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">float</span> <span class="n">invA</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="n">_ViewportSize</span><span class="p">.</span><span class="n">AspectRatio</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">d</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="n">tanf</span><span class="p">(</span><span class="n">Math</span><span class="o">::</span><span class="n">Deg2Rad</span><span class="p">(</span><span class="n">_FOV</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5f</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">dx</span> <span class="o">=</span> <span class="n">invA</span> <span class="o">*</span> <span class="n">d</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">invNF</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="p">(</span><span class="n">_NearZ</span> <span class="o">-</span> <span class="n">_FarZ</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">_FarZ</span> <span class="o">+</span> <span class="n">_NearZ</span><span class="p">)</span> <span class="o">*</span> <span class="n">invNF</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">l</span> <span class="o">=</span> <span class="mf">2.f</span> <span class="o">*</span> <span class="n">_FarZ</span> <span class="o">*</span> <span class="n">_NearZ</span> <span class="o">*</span> <span class="n">invNF</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">Matrix4x4</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector4</span><span class="p">(</span><span class="n">dx</span> <span class="o">*</span> <span class="n">viewX</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">d</span> <span class="o">*</span> <span class="n">viewY</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">k</span> <span class="o">*</span> <span class="n">viewZ</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="o">-</span><span class="n">viewZ</span><span class="p">.</span><span class="n">X</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector4</span><span class="p">(</span><span class="n">dx</span> <span class="o">*</span> <span class="n">viewX</span><span class="p">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">d</span> <span class="o">*</span> <span class="n">viewY</span><span class="p">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">k</span> <span class="o">*</span> <span class="n">viewZ</span><span class="p">.</span><span class="n">Y</span><span class="p">,</span> <span class="o">-</span><span class="n">viewZ</span><span class="p">.</span><span class="n">Y</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector4</span><span class="p">(</span><span class="n">dx</span> <span class="o">*</span> <span class="n">viewX</span><span class="p">.</span><span class="n">Z</span><span class="p">,</span> <span class="n">d</span> <span class="o">*</span> <span class="n">viewY</span><span class="p">.</span><span class="n">Z</span><span class="p">,</span> <span class="n">k</span> <span class="o">*</span> <span class="n">viewZ</span><span class="p">.</span><span class="n">Z</span><span class="p">,</span> <span class="o">-</span><span class="n">viewZ</span><span class="p">.</span><span class="n">Z</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector4</span><span class="p">(</span><span class="o">-</span><span class="n">dx</span> <span class="o">*</span> <span class="n">viewX</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="o">-</span><span class="n">d</span> <span class="o">*</span> <span class="n">viewY</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="o">-</span><span class="n">k</span> <span class="o">*</span> <span class="n">zPos</span> <span class="o">+</span> <span class="n">l</span><span class="p">,</span> <span class="n">zPos</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 렌더링 로직을 담당하는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">Render3D</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 렌더링 로직에서 사용하는 모듈 내 주요 레퍼런스
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">const</span> <span class="n">GameEngine</span><span class="o">&amp;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">Get3DGameEngine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">GetRenderer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">CameraObject</span><span class="o">&amp;</span> <span class="n">mainCamera</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetMainCamera</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 배경에 기즈모 그리기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">DrawGizmo3D</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 원근 투영 행렬 * 뷰행렬의 결과 행렬
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">const</span> <span class="n">Matrix4x4</span> <span class="n">pvMatrix</span> <span class="o">=</span> <span class="n">mainCamera</span><span class="p">.</span><span class="n">GetPerspectiveViewMatrix</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">SceneBegin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">g</span><span class="p">.</span><span class="n">SceneEnd</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">gameObject</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">gameObject</span><span class="p">.</span><span class="n">HasMesh</span><span class="p">()</span> <span class="o">||</span> <span class="o">!</span><span class="n">gameObject</span><span class="p">.</span><span class="n">IsVisible</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 렌더링에 필요한 게임 오브젝트의 주요 레퍼런스를 얻기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">const</span> <span class="n">Mesh</span><span class="o">&amp;</span> <span class="n">mesh</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetMesh</span><span class="p">(</span><span class="n">gameObject</span><span class="p">.</span><span class="n">GetMeshKey</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="n">TransformComponent</span><span class="o">&amp;</span> <span class="n">transform</span> <span class="o">=</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">GetTransform</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 원근 투영 행렬 * 뷰행렬 * 모델링 행렬
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">Matrix4x4</span> <span class="n">finalMatrix</span> <span class="o">=</span> <span class="n">pvMatrix</span> <span class="o">*</span> <span class="n">transform</span><span class="p">.</span><span class="n">GetModelingMatrix</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 메시 그리기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">DrawMesh3D</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">finalMatrix</span><span class="p">,</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">GetColor</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">gameObject</span> <span class="o">==</span> <span class="n">PlayerGo</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 플레이어 관련 정보 나타내기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            
+</span></span><span class="line"><span class="cl">            <span class="c1">// 플레이어의 클립 좌표 구하기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">Vector4</span> <span class="n">clippedPos</span> <span class="o">=</span> <span class="n">pvMatrix</span> <span class="o">*</span> <span class="n">Vector4</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">GetPosition</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 클립 좌표의 네번째 요소 -Vz
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="kt">float</span> <span class="n">cameraDepth</span> <span class="o">=</span> <span class="n">clippedPos</span><span class="p">.</span><span class="n">W</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// -Vz가 0인 경우 0이 되지 않도록 보완해주기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">if</span> <span class="p">(</span><span class="n">cameraDepth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">cameraDepth</span> <span class="o">=</span> <span class="n">SMALL_NUMBER</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            
+</span></span><span class="line"><span class="cl">            <span class="c1">// NDC의 깊이값 계산: 클립좌표의 세번째 요소 / 클립좌표의 네번째 요소
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="kt">float</span> <span class="n">ndcZ</span> <span class="o">=</span> <span class="n">clippedPos</span><span class="p">.</span><span class="n">Z</span> <span class="o">/</span> <span class="n">cameraDepth</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;Player: &#34;</span> <span class="o">+</span> <span class="n">transform</span><span class="p">.</span><span class="n">GetPosition</span><span class="p">().</span><span class="n">ToString</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">            <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;Depth: &#34;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">ndcZ</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">            <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;Distance: &#34;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">clippedPos</span><span class="p">.</span><span class="n">W</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;Camera: &#34;</span> <span class="o">+</span> <span class="n">mainCamera</span><span class="p">.</span><span class="n">GetTransform</span><span class="p">().</span><span class="n">GetPosition</span><span class="p">().</span><span class="n">ToString</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;FOV : &#34;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">mainCamera</span><span class="p">.</span><span class="n">GetFOV</span><span class="p">()));</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br />  <br /></p>
+<h2 id="원근-보정-매핑">원근 보정 매핑</h2>
+<ul>
+<li>문제가 한 가지 있다. 투영 전과 투영 후의 무게중심좌표가 달라져서 텍스처 매핑을 하면 이상하게 나온다.
+<ul>
+<li>예를 들어, 사영 공간의 점 $P_1$, $P_3$가 카메라 시야각에 걸쳐 있고, 카메라 정면에 위치한 점 $P_2$가 있다고 하자.</li>
+<li>그러면 $P_2$를 투영한 후에 NDC좌표는 투영 평면의 정 중앙에 위치하며 무게중심좌표가 $0.5$가 된다.</li>
+<li>하지만 투영 전을 보면 $0.5$보다 더 작은 값이 나올 것이다. <br /><br>
+<img src="/postimg/gamemath/12-09-projDots.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="시야각에 걸쳐 있는 두 점과 이를 투영한 결과"
+	
+	
+></li>
+<li>이것은 변환 과정에서 사영 공간의 마지막 요소인 <span style='background-color: #c293d8'>$-v_z$로 나눴기 때문</span>이다. 이런 <span style='background-color: #c293d8'>반비례 관계</span>때문에 이런 문제가 발생하였다.</li>
+<li>따라서 NDC에서의 무게중심좌표가 아니라 투영 전 사영 공간의 무게중심좌표를 써야 한다.</li>
+<li>만약 <strong>NDC에서의 무게중심좌표를 가지고 투영 전 사영 공간의 무게중심좌표를 알아낼 수 있다면</strong> 좋을 것이다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li><strong>투영 보정 보간(Perspective correction interpolation)</strong>
+<ul>
+<li><strong>투영 전의 무게중심좌표 값을 계산</strong>해서 텍스처를 매핑하는 것이다.</li>
+<li>반비례 함수 $y = -\frac{1}{x}$가 가진 성질을 먼저 살펴보자. <br /><br>
+<img src="/postimg/gamemath/12-10-inverse.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="반비례 함수 그래프"
+	
+	
+></li>
+<li>$x$축에 위치한 세 수 중에서 가운데 위치한 $4$의 무게중심좌표 $a$는 다음 식에 의해 구할 수 있으며 $a = 0.5$가 된다.
+<ul>
+<li>$ 4 = a \cdot 2 + (1-a) \cdot 6 $</li>
+</ul>
+</li>
+<li>그리고 $y$축에서 가운데 위치한 $-\frac{1}{4}$의 경우 다음과 같으며 $a = 0.25$가 된다.
+<ul>
+<li>$ -\frac{1}{4} = a \cdot - \frac{1}{2} + (1 - a) \cdot -\frac{1}{6}$</li>
+</ul>
+</li>
+<li>이 둘을 다음과 같이 나타내 보자.
+<ul>
+<li>$$ x&rsquo; = t_1 \cdot x_1 + t_2 \cdot x_2 (t_1 + t_2 = 1) $$</li>
+<li>$$ y&rsquo; = q_1 \cdot y_1 + q_2 \cdot y_2 (q_1 + q_2 = 1) $$</li>
+</ul>
+</li>
+<li>$x&rsquo;$, $y&rsquo;$는 서로 반비례 관계이므로 $y$값을 $\frac{1}{x}$로 나타낼 수 있다.
+<ul>
+<li>$$ \frac{1}{x&rsquo;} = q_1 \cdot \frac{1}{x_1} + q_2 \cdot \frac{1}{x_2} $$</li>
+<li>$$ x&rsquo; = \frac{1}{ q_1 \cdot \frac{1}{x_1} + q_2 \cdot \frac{1}{x_2} }$$</li>
+</ul>
+</li>
+<li>이 식을 다시 변환해보자.
+<ul>
+<li>$$ q_1 \cdot \frac{x&rsquo;}{x_1} + q_2 \cdot \frac{x&rsquo;}{x_2} = 1 = t_1 + t_2 $$</li>
+</ul>
+</li>
+<li>따라서 다음 식을 도출할 수 있다.
+<ul>
+<li>$$ t_1 = \frac{x&rsquo;}{x_1}q_1 $$</li>
+<li>$$ t_2 = \frac{x&rsquo;}{x_2}q_2 $$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>위의 식이 올바르게 적용되는지 확인해보자.
+<ul>
+<li>$y$축에서 $q_1 = \frac{1}{4}, q_2 = \frac{3}{4}$ 이다.</li>
+<li>$x$축에서 $x_1 = 2, x_2 = 6, x&rsquo; = 4$이다.</li>
+<li>$t_1 = \frac{x&rsquo;}{x_1}q_1 = \frac{4}{2} \cdot \frac{1}{4} = 0.5$</li>
+<li>$t_2 = \frac{x&rsquo;}{x_2}q_2 = \frac{4}{6} \cdot \frac{3}{4} = 0.5$</li>
+<li>따라서 $t_1$, $t_2$가 $0.5$임을 알 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>두 점이 아닌 삼각형의 세 점으로 확장하고, $x$를 $-z$로 치환하면 <span style='background-color: #c293d8'>최종 투영 보정 보간식</span>을 얻을 수 있다.
+<ul>
+<li>$$ z&rsquo; = \frac{1}{ q_1 \cdot \frac{1}{z_1} + q_2 \cdot \frac{1}{z_2} + q_3 \cdot \frac{1}{z_3}}$$</li>
+<li>$$ t_1 = \frac{z&rsquo;}{z_1}q_1 $$</li>
+<li>$$ t_2 = \frac{z&rsquo;}{z_2}q_2 $$</li>
+<li>$$ t_3 = \frac{z&rsquo;}{z_3}q_3 $$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>다음은 <strong>원근 보정 매핑(Perspective correction mapping)</strong> 을 하는 코드이다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 삼각형을 그리는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">DrawTriangle3D</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex3D</span><span class="o">&gt;&amp;</span> <span class="n">InVertices</span><span class="p">,</span> <span class="k">const</span> <span class="n">LinearColor</span><span class="o">&amp;</span> <span class="n">InColor</span><span class="p">,</span> <span class="n">FillMode</span> <span class="n">InFillMode</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 두 점이 화면 밖을 벗어나는 경우 클리핑 처리
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">X</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">Y</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Min</span><span class="p">(</span><span class="n">_ScreenSize</span><span class="p">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Min</span><span class="p">(</span><span class="n">_ScreenSize</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">X</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">Y</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 각 정점마다 보존된 뷰 공간의 z값: 1/z1, 1/z2, 1/z3
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kt">float</span> <span class="n">invZ0</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">.</span><span class="n">W</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">float</span> <span class="n">invZ1</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">Position</span><span class="p">.</span><span class="n">W</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">float</span> <span class="n">invZ2</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">Position</span><span class="p">.</span><span class="n">W</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 삼각형 영역 내 모든 점을 점검하고 색칠
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="o">++</span><span class="n">y</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">ScreenPoint</span> <span class="n">fragment</span> <span class="o">=</span> <span class="n">ScreenPoint</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Vector2</span> <span class="n">pointToTest</span> <span class="o">=</span> <span class="n">fragment</span><span class="p">.</span><span class="n">ToCartesianCoordinate</span><span class="p">(</span><span class="n">_ScreenSize</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Vector2</span> <span class="n">w</span> <span class="o">=</span> <span class="n">pointToTest</span> <span class="o">-</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">.</span><span class="n">ToVector2</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">float</span> <span class="n">wdotu</span> <span class="o">=</span> <span class="n">w</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">u</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">float</span> <span class="n">wdotv</span> <span class="o">=</span> <span class="n">w</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                <span class="kt">float</span> <span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="n">wdotv</span> <span class="o">*</span> <span class="n">udotv</span> <span class="o">-</span> <span class="n">wdotu</span> <span class="o">*</span> <span class="n">vdotv</span><span class="p">)</span> <span class="o">*</span> <span class="n">invDenominator</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">float</span> <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">wdotu</span> <span class="o">*</span> <span class="n">udotv</span> <span class="o">-</span> <span class="n">wdotv</span> <span class="o">*</span> <span class="n">udotu</span><span class="p">)</span> <span class="o">*</span> <span class="n">invDenominator</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">float</span> <span class="n">oneMinusST</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">-</span> <span class="n">s</span> <span class="o">-</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(((</span><span class="n">s</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">s</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">t</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">oneMinusST</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">oneMinusST</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="c1">// 투영보정에 사용할 공통 분모: z&#39;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="kt">float</span> <span class="n">z</span> <span class="o">=</span> <span class="n">invZ0</span> <span class="o">*</span> <span class="n">oneMinusST</span> <span class="o">+</span> <span class="n">invZ1</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">invZ2</span> <span class="o">*</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                    <span class="kt">float</span> <span class="n">invZ</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">/</span> <span class="n">z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                    
+</span></span><span class="line"><span class="cl">                    <span class="n">Vector2</span> <span class="n">targetUV</span> <span class="o">=</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">oneMinusST</span> <span class="o">*</span> <span class="n">invZ0</span> <span class="o">+</span> <span class="c1">// q1/z1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                        <span class="n">InVertices</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">s</span> <span class="o">*</span> <span class="n">invZ1</span> <span class="o">+</span>   <span class="c1">// q2/z2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                        <span class="n">InVertices</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">invZ2</span>  <span class="c1">// q3/z3
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="p">)</span> <span class="o">*</span> <span class="n">invZ</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                    
+</span></span><span class="line"><span class="cl">                    <span class="n">r</span><span class="p">.</span><span class="n">DrawPoint</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">FragmentShader3D</span><span class="p">(</span><span class="n">mainTexture</span><span class="p">.</span><span class="n">GetSample</span><span class="p">(</span><span class="n">targetUV</span><span class="p">),</span> <span class="n">LinearColor</span><span class="o">::</span><span class="n">White</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br />  <br /></p>
+<h2 id="깊이-버퍼">깊이 버퍼</h2>
+<ul>
+<li><strong>깊이 테스팅(Depth testing)</strong>
+<ul>
+<li>이전에 깊이 값을 구해서 멀리 떨어진 물체를 먼저 그렸다. 하지만 물체가 겹쳐 있다면 어떻게 할 것인가?</li>
+<li>근본적인 해결방법은 게임 오브젝트 단위가 아니라, 삼각형의 픽셀단위로 깊이를 비교하고, 가까운 곳에 있는 픽셀만 그리는 것이다.</li>
+<li>화면의 픽셀마다 깊이 값을 별도로 보관하는 <strong>깊이 버퍼(Depth buffer)</strong> 를 사용하면 되겠다.</li>
+<li><strong>현재 깊이 값을 깊이 버퍼에 저장된 값과 비교</strong>해서 <strong>현재 깊이 값이 작은 경우에만 픽셀을 찍도록</strong> 하면 된다. 이 작업을 깊이 테스팅이라고 한다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>삼각형을 구성하는 세 점의 깊이 값 $z_1$, $z_2$, $z_3$(범위: $[-1, 1]$)으로부터 각 픽셀의 무게중심좌표 $q_1$, $q_2$, $q_3$(범위: $[0, 1]$)을 사용해서 픽셀의 깊이 값을 구할 수 있겠다.
+<ul>
+<li>$$ z&rsquo; = q_1 \cdot z_1 + q_2 \cdot z_2 + q_3 \cdot z_3$$</li>
+<li>$z&rsquo;$ 값의 범위는 $[-1, 1]$이 된다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 삼각형을 그리는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">DrawTriangle3D</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex3D</span><span class="o">&gt;&amp;</span> <span class="n">InVertices</span><span class="p">,</span> <span class="k">const</span> <span class="n">LinearColor</span><span class="o">&amp;</span> <span class="n">InColor</span><span class="p">,</span> <span class="n">FillMode</span> <span class="n">InFillMode</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    
+</span></span><span class="line"><span class="cl">        <span class="c1">// 삼각형 영역 내 모든 점을 점검하고 색칠
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="o">++</span><span class="n">y</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">//...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(((</span><span class="n">s</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">s</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">t</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">oneMinusST</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">oneMinusST</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="c1">//...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">                    <span class="c1">// 깊이 버퍼 테스팅
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="k">if</span> <span class="p">(</span><span class="n">toggleDepthTesting</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="c1">// 깊이 테스팅
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                        <span class="kt">float</span> <span class="n">newDepth</span> <span class="o">=</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">.</span><span class="n">Z</span> <span class="o">*</span> <span class="n">oneMinusST</span> <span class="o">+</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">Position</span><span class="p">.</span><span class="n">Z</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">Position</span><span class="p">.</span><span class="n">Z</span> <span class="o">*</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                        
+</span></span><span class="line"><span class="cl">                        <span class="kt">float</span> <span class="n">prevDepth</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">GetDepthBufferValue</span><span class="p">(</span><span class="n">fragment</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                        
+</span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="p">(</span><span class="n">newDepth</span> <span class="o">&lt;</span> <span class="n">prevDepth</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="c1">// 픽셀을 처리하기 전 깊이 값을 버퍼에 보관
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                            <span class="n">r</span><span class="p">.</span><span class="n">SetDepthBufferValue</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">newDepth</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                        <span class="k">else</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="c1">// 이미 앞에 무언가 그려져있으므로 픽셀그리기는 생략
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                            <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                    <span class="n">Vector2</span> <span class="n">targetUV</span> <span class="o">=</span> <span class="p">(</span><span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">oneMinusST</span> <span class="o">*</span> <span class="n">invZ0</span> <span class="o">+</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">s</span> <span class="o">*</span> <span class="n">invZ1</span> <span class="o">+</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">invZ2</span><span class="p">)</span> <span class="o">*</span> <span class="n">invZ</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                    
+</span></span><span class="line"><span class="cl">                    <span class="n">r</span><span class="p">.</span><span class="n">DrawPoint</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">FragmentShader3D</span><span class="p">(</span><span class="n">mainTexture</span><span class="p">.</span><span class="n">GetSample</span><span class="p">(</span><span class="n">targetUV</span><span class="p">),</span> <span class="n">LinearColor</span><span class="o">::</span><span class="n">White</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />  
+<ul>
+<li>깊이 값은 카메라에서 멀어질 수록 급격히 $1$과 가까워진다.
+<ul>
+<li>이것은 NDC공간에서 깊이 값의 변화가 $y = -\frac{1}{x}$로 비선형 형태를 띠기 때문이다. <br /><br>
+<img src="/postimg/gamemath/12-11-depthAndDistance.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="깊이 값에 따른 비선형 변화 그래프 예시"
+	
+	
+></li>
+<li>따라서 이를 해결하기 위해 이전에 다뤘던 원근 보정 매핑 방식을 이용해서 뷰 공간의 깊이 값을 활용할 수 있겠다.</li>
+<li>$$ z&rsquo; = \frac{1}{ q_1 \cdot \frac{1}{z_1} + q_2 \cdot \frac{1}{z_2} + q_3 \cdot \frac{1}{z_3}}$$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>다음은 깊이 값을 $[0, 1]$범위로 바꾸어서 그 값에 따라 흑백 이미지로 출력하는 예제이다.
+<ul>
+<li>뷰 공간에서 절두체가 가지는 깊이의 범위는 원평면에서 근평면을 뺀 $f-n$이다.</li>
+<li>따라서 이때 사용할 깊이값은 다음과 같다.</li>
+<li>$$c_{depth} = \frac{z&rsquo; - n}{f - n}$$</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 삼각형을 그리는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">DrawTriangle3D</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex3D</span><span class="o">&gt;&amp;</span> <span class="n">InVertices</span><span class="p">,</span> <span class="k">const</span> <span class="n">LinearColor</span><span class="o">&amp;</span> <span class="n">InColor</span><span class="p">,</span> <span class="n">FillMode</span> <span class="n">InFillMode</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">GetRenderer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">GameEngine</span><span class="o">&amp;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">Get3DGameEngine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">CameraObject</span><span class="o">&amp;</span> <span class="n">mainCamera</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetMainCamera</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 카메라의 근평면과 원평면 값
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">float</span> <span class="n">n</span> <span class="o">=</span> <span class="n">mainCamera</span><span class="p">.</span><span class="n">GetNearZ</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">f</span> <span class="o">=</span> <span class="n">mainCamera</span><span class="p">.</span><span class="n">GetFarZ</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">//...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    
+</span></span><span class="line"><span class="cl">        <span class="c1">// 삼각형 영역 내 모든 점을 점검하고 색칠
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="o">++</span><span class="n">y</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">//...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(((</span><span class="n">s</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">s</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">t</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">oneMinusST</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">oneMinusST</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="c1">//...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="p">(</span><span class="n">IsDepthBufferDrawing</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="kt">float</span> <span class="n">grayScale</span> <span class="o">=</span> <span class="p">(</span><span class="n">newDepth</span> <span class="o">+</span> <span class="mf">1.f</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="p">(</span><span class="n">useLinearVisualization</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="c1">// 카메라로부터의 거리에 따라 균일하게 증감하는 흑백 값으로 변환
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                            <span class="n">grayScale</span> <span class="o">=</span> <span class="p">(</span><span class="n">invZ</span> <span class="o">-</span> <span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">f</span> <span class="o">-</span> <span class="n">n</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                        <span class="c1">// 뎁스 버퍼 그리기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                        <span class="n">r</span><span class="p">.</span><span class="n">DrawPoint</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">LinearColor</span><span class="o">::</span><span class="n">White</span> <span class="o">*</span> <span class="n">grayScale</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">else</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="c1">// 최종 보정보간된 UV 좌표
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                        <span class="n">Vector2</span> <span class="n">targetUV</span> <span class="o">=</span> <span class="p">(</span><span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">oneMinusST</span> <span class="o">*</span> <span class="n">invZ0</span> <span class="o">+</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">s</span> <span class="o">*</span> <span class="n">invZ1</span> <span class="o">+</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">invZ2</span><span class="p">)</span> <span class="o">*</span> <span class="n">invZ</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">r</span><span class="p">.</span><span class="n">DrawPoint</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">FragmentShader3D</span><span class="p">(</span><span class="n">mainTexture</span><span class="p">.</span><span class="n">GetSample</span><span class="p">(</span><span class="n">targetUV</span><span class="p">),</span> <span class="n">LinearColor</span><span class="o">::</span><span class="n">White</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br />  <br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/game-math/">Game Math</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/init/game-math-11/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 11. 외적: 3차원 공간의 분석과 응용</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-10/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 10. 3차원 공간: 입체 공간의 생성</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-09/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 9. 게임 엔진: 콘텐츠를 만드는 기술</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-08/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 8. 삼각형: 물체를 구성하는 가장 작은 단위</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-07/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 7. 내적: 벡터 공간의 분석과 응용</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#원근-투영-변환의-원리">원근 투영 변환의 원리</a></li>
+    <li><a href="#동차-좌표계">동차 좌표계</a></li>
+    <li><a href="#깊이-값">깊이 값</a></li>
+    <li><a href="#원근-보정-매핑">원근 보정 매핑</a></li>
+    <li><a href="#깊이-버퍼">깊이 버퍼</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

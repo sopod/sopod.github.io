@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='데이터의 종류 C#에서 데이터는 이렇게 나뉠 수도 있고 기본 데이터 형식(Primitive Type) 복합 데이터 형식(Complex Data Type) 이렇게 나뉠 수도 있다. 값 형식(Value Type) 참조 형식(Reference Type) 즉, 기본 데이터 형식이면서 값 형식일 수도 있고, 참조 형식일 수도 있는 것이다. 이 장에서는 기본 데이터 형식 데이터만 살펴 본다. 값 형식과 참조 형식 값 형식
+스택에 저장된다. 중괄호를 만나면 메모리에서 제거된다. 참조 형식
+힙에 데이터가 저장되고, 스택에 그 주소가 저장된다. 더이상 참조되지 않으면 가비지 컬렉터가 메모리를 수거해 간다.'><title>[This is C#] Chapter 3. 데이터 보관하기</title>
+
+<link rel='canonical' href='https://sopod.github.io/init/this_is_c_sharp-03/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[This is C#] Chapter 3. 데이터 보관하기'>
+<meta property='og:description' content='데이터의 종류 C#에서 데이터는 이렇게 나뉠 수도 있고 기본 데이터 형식(Primitive Type) 복합 데이터 형식(Complex Data Type) 이렇게 나뉠 수도 있다. 값 형식(Value Type) 참조 형식(Reference Type) 즉, 기본 데이터 형식이면서 값 형식일 수도 있고, 참조 형식일 수도 있는 것이다. 이 장에서는 기본 데이터 형식 데이터만 살펴 본다. 값 형식과 참조 형식 값 형식
+스택에 저장된다. 중괄호를 만나면 메모리에서 제거된다. 참조 형식
+힙에 데이터가 저장되고, 스택에 그 주소가 저장된다. 더이상 참조되지 않으면 가비지 컬렉터가 메모리를 수거해 간다.'>
+<meta property='og:url' content='https://sopod.github.io/init/this_is_c_sharp-03/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Init' /><meta property='article:tag' content='This is C-Sharp' /><meta property='article:published_time' content='2022-05-06T10:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-05-06T10:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[This is C#] Chapter 3. 데이터 보관하기">
+<meta name="twitter:description" content="데이터의 종류 C#에서 데이터는 이렇게 나뉠 수도 있고 기본 데이터 형식(Primitive Type) 복합 데이터 형식(Complex Data Type) 이렇게 나뉠 수도 있다. 값 형식(Value Type) 참조 형식(Reference Type) 즉, 기본 데이터 형식이면서 값 형식일 수도 있고, 참조 형식일 수도 있는 것이다. 이 장에서는 기본 데이터 형식 데이터만 살펴 본다. 값 형식과 참조 형식 값 형식
+스택에 저장된다. 중괄호를 만나면 메모리에서 제거된다. 참조 형식
+힙에 데이터가 저장되고, 스택에 그 주소가 저장된다. 더이상 참조되지 않으면 가비지 컬렉터가 메모리를 수거해 간다.">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/c-sharp/" >
+                C-Sharp
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/init/this_is_c_sharp-03/">[This is C#] Chapter 3. 데이터 보관하기</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">May 06, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    4 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br /><br /></p>
+<h2 id="데이터의-종류">데이터의 종류</h2>
+<ul>
+<li>C#에서 데이터는 이렇게 나뉠 수도 있고
+<ol>
+<li>기본 데이터 형식(Primitive Type)</li>
+<li>복합 데이터 형식(Complex Data Type)</li>
+</ol>
+</li>
+<li>이렇게 나뉠 수도 있다.
+<ol>
+<li>값 형식(Value Type)</li>
+<li>참조 형식(Reference Type)</li>
+</ol>
+</li>
+<li>즉, 기본 데이터 형식이면서 값 형식일 수도 있고, 참조 형식일 수도 있는 것이다.</li>
+</ul>
+<br />
+<ul>
+<li>이 장에서는 기본 데이터 형식 데이터만 살펴 본다.</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="값-형식과-참조-형식">값 형식과 참조 형식</h2>
+<ul>
+<li>
+<p>값 형식</p>
+<ul>
+<li>스택에 저장된다.</li>
+<li>중괄호를 만나면 메모리에서 제거된다.</li>
+</ul>
+</li>
+<li>
+<p>참조 형식</p>
+<ul>
+<li>힙에 데이터가 저장되고, 스택에 그 주소가 저장된다.</li>
+<li>더이상 참조되지 않으면 가비지 컬렉터가 메모리를 수거해 간다.</li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="기본-데이터-형식">기본 데이터 형식</h2>
+<ul>
+<li>기본 데이터 형식은 모두 15가지가 있는데 크게 다음과 같이 나뉜다.
+<ol>
+<li>숫자 형식 - 값 형식</li>
+<li>논리 형식 - 값 형식</li>
+<li>문자열 형식 - 참조 형식</li>
+<li><code>object</code> 형식 - 참조 형식</li>
+</ol>
+</li>
+</ul>
+<br />
+<h3 id="숫자-형식">숫자 형식</h3>
+<ul>
+<li>(1) 정수 계열</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>데이터 형식</th>
+<th>크기(byte)</th>
+<th>값의 범위</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sbyte</code></td>
+<td>1</td>
+<td>-128 ~ 127</td>
+</tr>
+<tr>
+<td><code>byte</code></td>
+<td>1</td>
+<td>0 ~ 255</td>
+</tr>
+<tr>
+<td><code>short</code></td>
+<td>2</td>
+<td>-32,768 ~ 32,767</td>
+</tr>
+<tr>
+<td><code>ushort</code></td>
+<td>2</td>
+<td>0 ~ 65,535</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td>4</td>
+<td>-2,147,483,648 ~ 2,147,483,647</td>
+</tr>
+<tr>
+<td><code>uint</code></td>
+<td>4</td>
+<td>0 ~ 4,294,967,295</td>
+</tr>
+<tr>
+<td><code>long</code></td>
+<td>8</td>
+<td>-922,377,203,685,477,508 ~ 922,377,203,685,477,507</td>
+</tr>
+<tr>
+<td><code>ulong</code></td>
+<td>8</td>
+<td>0 ~ 18,446,744,073,709,551,615</td>
+</tr>
+<tr>
+<td><code>char</code></td>
+<td>2</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<br />
+<ul>
+<li>
+<p>자릿수 구분자(<code>_</code>)를 사용하면 타이핑할 때 편리하다.</p>
+<ul>
+<li><code>int val = -1000_0000;</code></li>
+</ul>
+</li>
+<li>
+<p>2진수, 10진수, 16진수 리터럴</p>
+<ul>
+<li>리터럴(Literal)이란 문자 그대로의 고정값을 나타낸다.</li>
+<li>2진수: <code>0b</code>를 앞에 붙인다.</li>
+<li>10진수: 아무것도 붙이지 않는다.</li>
+<li>16진수: <code>0X</code> 또는 <code>0x</code>를 앞에 붙인다.</li>
+</ul>
+</li>
+<li>
+<p>음수를 표현하는 방식</p>
+<ul>
+<li>부호와 절대값(Sign-and-magnitude)
+<ul>
+<li>단순히 맨 왼쪽 비트를 부호를 나타내는 데 사용한다.</li>
+<li>$+0$과 $-0$이 두 가지로 존재하는 문제가 있다. 그래서 2의 보수법을 사용한다.</li>
+</ul>
+</li>
+<li>2의 보수법(2&rsquo;s Complement)
+<ol>
+<li>수 부분 비트를 채운다.</li>
+<li>전체 비트를 반전시킨다.</li>
+<li>반전된 비트에 $1$을 더한다.</li>
+</ol>
+<ul>
+<li>따라서 <code>sbyte</code>의 <code>11111111</code>의 값은 $-1$이 된다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>오버플로우(Overflow)</p>
+<ul>
+<li>최대값보다 큰 데이터를 저장할 때 발생한다.</li>
+<li>예를 들면, <code>byte</code> 형식 변수에 $256$을 담으면, $0$이 담기게 된다.</li>
+</ul>
+</li>
+<li>
+<p>언더플로우(Underflow)</p>
+<ul>
+<li>최저값보다 작은 데이터를 저장할 때 발생한다.</li>
+<li>예를 들면, <code>byte</code> 형식 변수에 $-1$을 담으면, $255$가 담기게 된다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>(2) 부동 소수 및 소수 계열
+<ul>
+<li>부동 소수점 형식(Floating Point Type)
+<ul>
+<li>소수점이 움직이면서 수를 표현한다는 뜻이다.</li>
+</ul>
+</li>
+<li><code>decimal</code>은 부동 소수점과는 다른 방식으로 소수를 다루며, 정밀도가 훨씬 높다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<p>| 데이터 형식 | 설명 | 크기(byte) | 접미사 | 값의 범위 |
+|&mdash;|&mdash;|&mdash;|&mdash;|
+| <code>float</code> | 7개의 자릿수(단일 정밀도) | 4 | f | -3.402823e38 ~ -3.402823e38 |
+| <code>double</code> | 15~16개의 자릿수(복수 정밀도) | 8 | 없음 | -1.79769313486232e308 ~ -1.79769313486232e308 |
+| <code>decimal</code> | 29개의 자릿수 | 16 | m | |</p>
+<br />
+<ul>
+<li>정밀도(Precision)
+<ul>
+<li>정보 손실 없이 나타낼 수 있는 유의한 자릿수.</li>
+</ul>
+</li>
+<li>C#의 <code>float</code>과 <code>double</code>은 IEEE754라는 표준 알고리즘에 기반한다.
+<ul>
+<li>이에 따르면 <code>float</code>형식은 다음과 같이 구성된다.
+<ul>
+<li>1비트: 부호(Sign) 비트</li>
+<li>8비트: 지수부(Exponent)</li>
+<li>23비트: 가수부(Mantissa)</li>
+</ul>
+</li>
+<li>가수부가 23비트이기 때문에 이것으로는 총 7자리의 수를 만들 수 있으며, 즉 유효숫자가 7자리인 셈이다. 따라서 한정된 정밀도를 가진다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<h3 id="문자-형식과-문자열-형식">문자 형식과 문자열 형식</h3>
+<ul>
+<li><code>char</code> 형식
+<ul>
+<li>문자를 다루며 따옴표로 문자를 감싸줘야 한다.</li>
+</ul>
+</li>
+<li><code>string</code> 형식
+<ul>
+<li>문자열을 다루며 큰 따옴표로 문자열을 감싸줘야 한다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<h3 id="논리-형식">논리 형식</h3>
+<ul>
+<li><code>bool</code>은 <code>True</code>혹은 <code>False</code>값을 가지며 크기는 $1$바이트이다.</li>
+</ul>
+<br />
+<h3 id="object-형식">object 형식</h3>
+<ul>
+<li>
+<p>모든 데이터 형식의 조상이다.</p>
+</li>
+<li>
+<p>박싱(Boxing)</p>
+<ul>
+<li>값 형식의 데이터를 참조 형식 데이터로 변경할 때.</li>
+</ul>
+</li>
+<li>
+<p>언박싱(Unboxing)</p>
+<ul>
+<li>참조 형식의 데이터를 값 형식 데이터로 변경할 때.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="kt">object</span> <span class="n">obj</span> <span class="p">=</span> <span class="m">20</span><span class="p">;</span>     <span class="c1">// 박싱</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">val</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">obj</span><span class="p">;</span>  <span class="c1">// 언박싱</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="상수와-열거-형식">상수와 열거 형식</h2>
+<ul>
+<li>상수(Constants)와 열거 형식(Enumerator)은 변수와 다르게, 안에 담긴 데이터를 절대 바꿀 수 없는 메모리 공간이다.
+<ul>
+<li><code>const int a = 3;</code></li>
+<li>`enum Result { YES = 10, NO, CANCEL, CONFIRM, OK }</li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="nullable-형식">Nullable 형식</h2>
+<ul>
+<li>어떠한 값도 가지지 않는 <code>null</code>이 될 수 있는 변수이다.
+<ul>
+<li>데이터 형식 뒤에 <code>?</code>를 붙여서 선언하면 된다.</li>
+<li><code>int? a = null;</code></li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="var">var</h2>
+<ul>
+<li><code>var</code>로 변수를 선언하면 컴파일러가 자동으로 해당 변수의 형식을 지정해준다.
+<ul>
+<li>반드시 <strong>선언과 동시에 초기화</strong>를 해야한다.</li>
+<li><strong>지역 변수</strong>로만 사용할 수 있다. 클래스의 필드를 선언할 때는 사용할 수 없다.</li>
+<li><code>var a = 3;  // int형식</code></li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="공용-형식-시스템">공용 형식 시스템</h2>
+<ul>
+<li><strong>공용 형식 시스템(Common Type System)</strong>
+<ul>
+<li>.NET의 형식 체계 표준이다.</li>
+<li>C#의 데이터 형식 체계는 모두 공용 형식 시스템을 따른다.</li>
+<li>따라서 .NET 언어들끼리 호환성을 갖는다.</li>
+</ul>
+</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>CTS 클래스 이름</th>
+<th>C# 형식</th>
+<th>C++ 형식</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>System.Byte</code></td>
+<td><code>byte</code></td>
+<td><code>unsigned char</code></td>
+</tr>
+<tr>
+<td><code>System.SByte</code></td>
+<td><code>sbyte</code></td>
+<td><code>char</code></td>
+</tr>
+<tr>
+<td><code>System.Int16</code></td>
+<td><code>short</code></td>
+<td><code>short</code></td>
+</tr>
+<tr>
+<td><code>System.Int32</code></td>
+<td><code>int</code></td>
+<td><code>int</code> 또는 <code>long</code></td>
+</tr>
+<tr>
+<td><code>System.Int64</code></td>
+<td><code>long</code></td>
+<td><code>__int64</code></td>
+</tr>
+<tr>
+<td><code>System.UInt16</code></td>
+<td><code>ushort</code></td>
+<td><code>unsigned short</code></td>
+</tr>
+<tr>
+<td><code>System.UInt32</code></td>
+<td><code>uint</code></td>
+<td><code>unsigned int</code> 또는 <code>unsigned long</code></td>
+</tr>
+<tr>
+<td><code>System.UInt64</code></td>
+<td><code>ulong</code></td>
+<td><code>unsigned__int64</code></td>
+</tr>
+<tr>
+<td><code>System.Single</code></td>
+<td><code>float</code></td>
+<td><code>float</code></td>
+</tr>
+<tr>
+<td><code>System.Double</code></td>
+<td><code>double</code></td>
+<td><code>double</code></td>
+</tr>
+<tr>
+<td><code>System.Boolean</code></td>
+<td><code>bool</code></td>
+<td><code>bool</code></td>
+</tr>
+<tr>
+<td><code>System.Char</code></td>
+<td><code>char</code></td>
+<td><code>wchar_t</code></td>
+</tr>
+<tr>
+<td><code>System.Decimal</code></td>
+<td><code>decimal</code></td>
+<td><code>Decimal</code></td>
+</tr>
+<tr>
+<td><code>System.IntPtr</code></td>
+<td>없음</td>
+<td>없음</td>
+</tr>
+<tr>
+<td><code>System.UIntPtr</code></td>
+<td>없음</td>
+<td>없음</td>
+</tr>
+<tr>
+<td><code>System.Object</code></td>
+<td><code>object</code></td>
+<td><code>Object*</code></td>
+</tr>
+<tr>
+<td><code>System.String</code></td>
+<td><code>string</code></td>
+<td><code>String*</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><br /><br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/this-is-c-sharp/">This is C-Sharp</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/init/this_is_c_sharp-02/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[This is C#] Chapter 1, 2. 시작하기</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#데이터의-종류">데이터의 종류</a></li>
+    <li><a href="#값-형식과-참조-형식">값 형식과 참조 형식</a></li>
+    <li><a href="#기본-데이터-형식">기본 데이터 형식</a>
+      <ol>
+        <li><a href="#숫자-형식">숫자 형식</a></li>
+        <li><a href="#문자-형식과-문자열-형식">문자 형식과 문자열 형식</a></li>
+        <li><a href="#논리-형식">논리 형식</a></li>
+        <li><a href="#object-형식">object 형식</a></li>
+      </ol>
+    </li>
+    <li><a href="#상수와-열거-형식">상수와 열거 형식</a></li>
+    <li><a href="#nullable-형식">Nullable 형식</a></li>
+    <li><a href="#var">var</a></li>
+    <li><a href="#공용-형식-시스템">공용 형식 시스템</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

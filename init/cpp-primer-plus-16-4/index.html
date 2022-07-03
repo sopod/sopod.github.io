@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='함수 객체(functor) 펑크터 함수처럼 ()와 함께 사용할 수 있는 객체이다. 일반 함수, 함수를 지시하는 포인터, ()가 오버로딩된 클래스 객체가 모두 펑크터가 될 수 있다. 펑크터 개념 제너레이터(generator) 매개변수 없이 호출하는 함수 단항 함수(unary function) 하나의 매개변수로 호출하는 함수 이항 함수(binary function) 두 개의 매개변수로 호출하는 함수 펑크터 개념의 개량 조건(predicate) bool값을 리턴하는 단항 함수 이항 조건(binary predicate) bool값을 리턴하는 이항 함수 list는 하나의 조건을 매개변수로 받아들이는 remove_if() 멤버를 가진다. 이것은 각 멤버에 조건을 적용해서 조건이 true를 리턴하는 모든 원소들을 삭제한다.'><title>[C&#43;&#43; Primer Plus] Chapter 16. (4) STL - 함수 객체</title>
+
+<link rel='canonical' href='https://sopod.github.io/init/cpp-primer-plus-16-4/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[C&#43;&#43; Primer Plus] Chapter 16. (4) STL - 함수 객체'>
+<meta property='og:description' content='함수 객체(functor) 펑크터 함수처럼 ()와 함께 사용할 수 있는 객체이다. 일반 함수, 함수를 지시하는 포인터, ()가 오버로딩된 클래스 객체가 모두 펑크터가 될 수 있다. 펑크터 개념 제너레이터(generator) 매개변수 없이 호출하는 함수 단항 함수(unary function) 하나의 매개변수로 호출하는 함수 이항 함수(binary function) 두 개의 매개변수로 호출하는 함수 펑크터 개념의 개량 조건(predicate) bool값을 리턴하는 단항 함수 이항 조건(binary predicate) bool값을 리턴하는 이항 함수 list는 하나의 조건을 매개변수로 받아들이는 remove_if() 멤버를 가진다. 이것은 각 멤버에 조건을 적용해서 조건이 true를 리턴하는 모든 원소들을 삭제한다.'>
+<meta property='og:url' content='https://sopod.github.io/init/cpp-primer-plus-16-4/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Init' /><meta property='article:tag' content='C&#43;&#43; Primer Plus' /><meta property='article:published_time' content='2022-03-25T12:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-03-25T12:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[C&#43;&#43; Primer Plus] Chapter 16. (4) STL - 함수 객체">
+<meta name="twitter:description" content="함수 객체(functor) 펑크터 함수처럼 ()와 함께 사용할 수 있는 객체이다. 일반 함수, 함수를 지시하는 포인터, ()가 오버로딩된 클래스 객체가 모두 펑크터가 될 수 있다. 펑크터 개념 제너레이터(generator) 매개변수 없이 호출하는 함수 단항 함수(unary function) 하나의 매개변수로 호출하는 함수 이항 함수(binary function) 두 개의 매개변수로 호출하는 함수 펑크터 개념의 개량 조건(predicate) bool값을 리턴하는 단항 함수 이항 조건(binary predicate) bool값을 리턴하는 이항 함수 list는 하나의 조건을 매개변수로 받아들이는 remove_if() 멤버를 가진다. 이것은 각 멤버에 조건을 적용해서 조건이 true를 리턴하는 모든 원소들을 삭제한다.">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/c&#43;&#43;/" >
+                C&#43;&#43;
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/init/cpp-primer-plus-16-4/">[C&#43;&#43; Primer Plus] Chapter 16. (4) STL - 함수 객체</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 25, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    4 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br /><br /></p>
+<h2 id="함수-객체functor">함수 객체(functor)</h2>
+<ul>
+<li>펑크터
+<ul>
+<li>함수처럼 <code>()</code>와 함께 사용할 수 있는 객체이다.</li>
+<li>일반 함수, 함수를 지시하는 포인터, <code>()</code>가 오버로딩된 클래스 객체가 모두 펑크터가 될 수 있다.</li>
+</ul>
+</li>
+<li>펑크터 개념
+<ul>
+<li>제너레이터(generator)
+<ul>
+<li>매개변수 없이 호출하는 함수</li>
+</ul>
+</li>
+<li>단항 함수(unary function)
+<ul>
+<li>하나의 매개변수로 호출하는 함수</li>
+</ul>
+</li>
+<li>이항 함수(binary function)
+<ul>
+<li>두 개의 매개변수로 호출하는 함수</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>펑크터 개념의 개량
+<ul>
+<li>조건(predicate)
+<ul>
+<li><code>bool</code>값을 리턴하는 단항 함수</li>
+</ul>
+</li>
+<li>이항 조건(binary predicate)
+<ul>
+<li><code>bool</code>값을 리턴하는 이항 함수</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><code>list</code>는 하나의 조건을 매개변수로 받아들이는 <code>remove_if()</code> 멤버를 가진다.
+<ul>
+<li>이것은 각 멤버에 조건을 적용해서 조건이 <code>true</code>를 리턴하는 모든 원소들을 삭제한다.</li>
+<li>기준과, 원소의 값 두 가지 매개변수를 전달하지 못한다.</li>
+<li>하지만 클래스 펑크터를 사용하면 기준이 되는 매개변수를 생성자로 미리 전달할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>  <span class="c1">// 펑크터 클래스가 operator()()를 정의한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">class</span> <span class="nc">TooBig</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">T</span> <span class="n">cutoff</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TooBig</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">t</span><span class="p">)</span> <span class="o">:</span> <span class="n">cutoff</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kt">bool</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">cutoff</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">;</span> <span class="c1">// cutoff보다 크면 true
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">OutInt</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TooBig</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">f100</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span> <span class="c1">// 100초과의 것들은 true
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    
+</span></span><span class="line"><span class="cl">    <span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">yadayada</span> <span class="o">=</span> <span class="p">{</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">210</span><span class="p">,</span> <span class="mi">415</span><span class="p">,</span> <span class="mi">88</span><span class="p">,</span> <span class="mi">188</span><span class="p">,</span> <span class="mi">201</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">    <span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">etcetera</span> <span class="o">=</span> <span class="p">{</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">210</span><span class="p">,</span> <span class="mi">415</span><span class="p">,</span> <span class="mi">88</span><span class="p">,</span> <span class="mi">188</span><span class="p">,</span> <span class="mi">201</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;원래의 리스트:</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">for_each</span><span class="p">(</span><span class="n">yadayada</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">yadayada</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">OutInt</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">for_each</span><span class="p">(</span><span class="n">etcetera</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">etcetera</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">OutInt</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="n">yadayada</span><span class="p">.</span><span class="n">remove_if</span><span class="p">(</span><span class="n">f100</span><span class="p">);</span>              <span class="c1">// 선언된 함수 객체 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">etcetera</span><span class="p">.</span><span class="n">remove_if</span><span class="p">(</span><span class="n">TooBig</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">200</span><span class="p">));</span>  <span class="c1">// 익명의 함수 객체
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// 200초과의 것들은 true. 다 지운다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;정비된 리스트:</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">for_each</span><span class="p">(</span><span class="n">yadayada</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">yadayada</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">OutInt</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">for_each</span><span class="p">(</span><span class="n">etcetera</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">etcetera</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">OutInt</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">원래의 리스트:
+</span></span><span class="line"><span class="cl">50 100 90 180 60 210 415 88 188 201
+</span></span><span class="line"><span class="cl">50 100 90 180 60 210 415 88 188 201
+</span></span><span class="line"><span class="cl">정비된 리스트:
+</span></span><span class="line"><span class="cl">50 100 90 60 88
+</span></span><span class="line"><span class="cl">50 100 90 180 60 88 188
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>두 개의 매개변수를 사용하는 템플릿 함수를 이미 가지고 있다면,
+<ul>
+<li>클래스를 사용해서 이것을 하나의 매개변수를 사용하는 함수 객체로 변환할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">tooBig</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lim</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="n">lim</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">TooBig2</span>  <span class="c1">// 함수 어댑터이다. tooBig함수를 다른 인터페이스에 맞게 개조시킨다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">T</span> <span class="n">cutoff</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TooBig2</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">t</span><span class="p">)</span> <span class="o">:</span> <span class="n">cutoff</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kt">bool</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">tooBig</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">);</span>  <span class="c1">// tooBig 함수를 사용한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>미리 정의된 펑크터
+<ul>
+<li>STL은 몇 가지 기본적인 펑크터들을 정의한다. 그것들은 함수를 매개변수로 취하는 STL 함수들을 지원하기 위해 제공된다.</li>
+<li>예를 들어, <code>transform()</code>함수를 생각해 보자.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="c1">//...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">plus</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">add</span><span class="p">;</span>           <span class="c1">// plus&lt;int&gt; 객체를 생성한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>  <span class="c1">// plus&lt;int&gt;::operator()()를 사용한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vec</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">48</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vec2</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">ostream_iterator</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="kt">char</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">(</span><span class="n">cout</span><span class="p">,</span> <span class="s">&#34; &#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">transform</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">vec2</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">out</span><span class="p">,</span> <span class="n">plus</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">());</span>  
+</span></span><span class="line"><span class="cl"><span class="c1">// 익명의 plus&lt;double&gt; 함수 객체를 만들어서 사용했다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1">// vec의 0~4와 vec2의 0~4의 원소를 각각 더해서 화면에 출력한다. 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>내장 연산자들과 동등한 펑크터들
+<ul>
+<li>이것은 모두 순응성(adaptable)이다.</li>
+</ul>
+</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th style="text-align:center">연산자</th>
+<th>동등한 펑크터</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>+</code></td>
+<td><code>plus</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-</code></td>
+<td><code>minus</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>*</code></td>
+<td><code>multiplies</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>/</code></td>
+<td><code>divides</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>%</code></td>
+<td><code>modulus</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-</code></td>
+<td><code>negate</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>==</code></td>
+<td><code>equal_to</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>!=</code></td>
+<td><code>not_equal_to</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>&gt;</code></td>
+<td><code>grater</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>&lt;</code></td>
+<td><code>less</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>&gt;=</code></td>
+<td><code>grater_equal</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>&lt;=</code></td>
+<td><code>less_equal</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>&amp;&amp;</code></td>
+<td><code>logical_and</code></td>
+</tr>
+<tr>
+<td style="text-align:center">`</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>!</code></td>
+<td><code>logical_not</code></td>
+</tr>
+</tbody>
+</table></div>
+<br />
+<ul>
+<li>순응성(adaptable)
+<ul>
+<li>매개변수형과 리턴형을 식별하는 <code>typedef</code>멤버를 가지는 것이다.</li>
+<li>그 멤버들은 <code>result_type</code>, <code>first_argument_type</code>, <code>second_argument_type</code> 등이 있다.</li>
+<li>예를 들어, <code>plus&lt;int&gt;</code> 객체의 리턴형은 <code>plus&lt;int&gt;::result_type</code>이다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>펑크터가 순응성이면, 함수 어댑터 객체가 펑크터를 사용할 수 있다.
+<ul>
+<li>예를 들어, <code>multiplies</code>는 이항 함수이다. 따라서 하나의 매개변수만 제공하는 아래와 같은 코드는 동작하지 않는다.</li>
+<li>그래서 두 개의 매개변수를 사용하는 펑크터를 하나의 매개변수를 사용하는 펑크터로 변환하는, 함수 어댑터가 필요하다.</li>
+<li>STL은 순응성 이항 함수를 순응성 단항 함수로 변환하는 <code>binder1st</code>와 <code>binder2nd</code> 클래스를 제공한다.</li>
+<li>그리고 이것을 간소화한 <code>bind1st</code>, <code>bind2nd</code> 함수를 제공한다.
+<ul>
+<li><code>bind1st</code>는 제 1 매개변수를 제공한다.</li>
+<li><code>bind2nd</code>는 제 2 매개변수를 제공한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vec</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">48</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">ostream_iterator</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="kt">char</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">(</span><span class="n">cout</span><span class="p">,</span> <span class="s">&#34; &#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">transform</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">out</span><span class="p">,</span> <span class="n">multiplies</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">());</span> <span class="c1">// (X)
+</span></span></span><span class="line"><span class="cl"><span class="c1">// vec만 가지고는 곱셈을 할 수 없다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">binder1st</span><span class="o">&lt;</span><span class="n">multiplies</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span> <span class="n">b1</span> <span class="o">=</span> <span class="n">binder1st</span><span class="o">&lt;</span><span class="n">multiplies</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">multiplies</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(),</span> <span class="mf">2.5</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">transform</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">b1</span><span class="p">);</span>  <span class="c1">// (O)
+</span></span></span><span class="line"><span class="cl"><span class="c1">// binder1st 함수 어댑터 객체를 만들어서
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 이항 함수 multiplies를 단항 함수로 만들었다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">transform</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">out</span><span class="p">,</span> <span class="n">bind1st</span><span class="p">(</span><span class="n">multiplies</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(),</span> <span class="mf">2.5</span><span class="p">));</span> <span class="c1">// (O)
+</span></span></span><span class="line"><span class="cl"><span class="c1">// bind1st 함수는 좀 더 간편하게 사용할 수 있다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1">// vec은 제 2 매개변수이다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1">// bind1st( 2항 함수, 제 1 매개변수 ) 
+</span></span></span><span class="line"><span class="cl"><span class="c1">// vec의 원소들과 bind1st에 제공된 제 1 매개변수를 곱한값을 출력한다. 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/c&#43;&#43;-primer-plus/">C&#43;&#43; Primer Plus</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-16-3/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 16. (3) STL - 컨테이너</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-16-2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 16. (2) STL - 이터레이터</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-16-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 16. (1) string 클래스, 스마트 포인터 템플릿 클래스</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-15-3/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 15. (3) RTTI</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-15-2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 15. (2) 예외</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#함수-객체functor">함수 객체(functor)</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

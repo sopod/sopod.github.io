@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='표현식 대입 표현식은 값을 가지기 때문에 이런 구문도 가능하다. 1 x = y = z = 0; 표현식에 세미콜론을 붙이면 구문이 된다. statement = expression &#43; semicolon 시퀀스 포인트 (Sequence Point) 시퀀스 포인트란 프로그램의 실행이 다음 단계로 넘어가기 전에, 모든 부수 효과(변수 값 변경 등)들이 확실하게 평가되는 포인트이다. 예를 들면 세미콜론, 완전 수식(while문의 조건문)의 끝, || 연사자 등은 시퀀스 포인트이다. 따라서 아래 예제에서는 시퀀스 포인트에서 다음 명령을 실행하기 전에 증가 연산자로 인해 값이 증가한다.'><title>[C&#43;&#43; Primer Plus] Chapter 5. 루프와 관계표현식</title>
+
+<link rel='canonical' href='https://sopod.github.io/init/cpp-primer-plus-05/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[C&#43;&#43; Primer Plus] Chapter 5. 루프와 관계표현식'>
+<meta property='og:description' content='표현식 대입 표현식은 값을 가지기 때문에 이런 구문도 가능하다. 1 x = y = z = 0; 표현식에 세미콜론을 붙이면 구문이 된다. statement = expression &#43; semicolon 시퀀스 포인트 (Sequence Point) 시퀀스 포인트란 프로그램의 실행이 다음 단계로 넘어가기 전에, 모든 부수 효과(변수 값 변경 등)들이 확실하게 평가되는 포인트이다. 예를 들면 세미콜론, 완전 수식(while문의 조건문)의 끝, || 연사자 등은 시퀀스 포인트이다. 따라서 아래 예제에서는 시퀀스 포인트에서 다음 명령을 실행하기 전에 증가 연산자로 인해 값이 증가한다.'>
+<meta property='og:url' content='https://sopod.github.io/init/cpp-primer-plus-05/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Init' /><meta property='article:tag' content='C&#43;&#43; Primer Plus' /><meta property='article:published_time' content='2022-03-05T12:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-03-05T12:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[C&#43;&#43; Primer Plus] Chapter 5. 루프와 관계표현식">
+<meta name="twitter:description" content="표현식 대입 표현식은 값을 가지기 때문에 이런 구문도 가능하다. 1 x = y = z = 0; 표현식에 세미콜론을 붙이면 구문이 된다. statement = expression &#43; semicolon 시퀀스 포인트 (Sequence Point) 시퀀스 포인트란 프로그램의 실행이 다음 단계로 넘어가기 전에, 모든 부수 효과(변수 값 변경 등)들이 확실하게 평가되는 포인트이다. 예를 들면 세미콜론, 완전 수식(while문의 조건문)의 끝, || 연사자 등은 시퀀스 포인트이다. 따라서 아래 예제에서는 시퀀스 포인트에서 다음 명령을 실행하기 전에 증가 연산자로 인해 값이 증가한다.">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/c&#43;&#43;/" >
+                C&#43;&#43;
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/init/cpp-primer-plus-05/">[C&#43;&#43; Primer Plus] Chapter 5. 루프와 관계표현식</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 05, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    3 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br /><br /></p>
+<h2 id="표현식">표현식</h2>
+<ul>
+<li>대입 표현식은 값을 가지기 때문에 이런 구문도 가능하다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>표현식에 세미콜론을 붙이면 구문이 된다.
+<ul>
+<li><code>statement = expression + semicolon</code></li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="시퀀스-포인트-sequence-point">시퀀스 포인트 (Sequence Point)</h2>
+<ul>
+<li>시퀀스 포인트란 프로그램의 실행이 다음 단계로 넘어가기 전에, 모든 부수 효과(변수 값 변경 등)들이 확실하게 평가되는 포인트이다.</li>
+<li>예를 들면 세미콜론, 완전 수식(<code>while</code>문의 조건문)의 끝, <code>||</code> 연사자 등은 시퀀스 포인트이다.
+<ul>
+<li>따라서 아래 예제에서는 시퀀스 포인트에서 다음 명령을 실행하기 전에 증가 연산자로 인해 값이 증가한다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">point</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>     
+</span></span><span class="line"><span class="cl"><span class="n">point</span><span class="o">++</span><span class="p">;</span> <span class="c1">// 여기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">while</span><span class="p">(</span><span class="n">point</span><span class="o">++</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">// 여기 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span> 
+</span></span><span class="line"><span class="cl">    <span class="c1">//… 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="접두어와-접미어-방식">접두어와 접미어 방식</h2>
+<ul>
+<li>내장 데이터형의 경우에는 둘 다 결과적으로 동일한 결과를 가져온다.</li>
+<li>하지만 클래스와 같이 사용자 정의 데이터형인 경우에는 접두어 방식이 효율적이다.
+<ul>
+<li>왜냐하면 접미어 방식은 복사본을 만들어서 값을 증가시키고 복사본을 리턴하는 방식으로 동작하기 때문이다.</li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="포인터와-증가감소-연산자">포인터와 증가/감소 연산자</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th style="text-align:center">표기</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>*++pt</code></td>
+<td>오른쪽부터 왼쪽으로 결합하므로, <code>++pt</code>는 주소 증가, 그 후 <code>*(++pt)</code>는 값 출력.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>++*pt</code></td>
+<td><code>*pt</code>는 값이므로, <code>++(*pt)</code>는 값이 증가.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>(*pt)++</code></td>
+<td><code>*pt</code>는 값이므로, <code>(*pt)++</code>는 다음 단계로 넘어가면서 값이 증가.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>*pt++</code></td>
+<td><code>pt++</code>는 주소 증가지만 다음 단계로 넘어갈 때 증가. <br /> <code>*(pt++)</code>는 현재 주소의 값 출력. 그 후 다음 단계로 넘어가면서 주소 증가.</td>
+</tr>
+</tbody>
+</table></div>
+<p><br /><br /></p>
+<h2 id="콤마-연산자로-두-개의-표현식-넣기">콤마 연산자로 두 개의 표현식 넣기</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// temp를 사용해서 i인덱스와 j인덱스에 해당하는 값을 교환하여 거꾸로 만들기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">temp</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">,</span> <span class="n">j</span><span class="o">--</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...	
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>temp</code>가 바깥에 선언되었다.
+<ul>
+<li>매 주기마다 새로 대입하고 해제되지 않아도 돼서 좋다.</li>
+</ul>
+</li>
+<li><code>i</code>, <code>j</code>가 바깥에 선언되었다.
+<ul>
+<li><code>int i = 0, j = size - 1</code>에서 콤마는 연산자가 아닌 분리자가 된다. 그래서 <code>for 제어문</code> 안에서 선언할 수 없다.</li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="문자열-비교">문자열 비교</h2>
+<ul>
+<li>C스타일
+<ul>
+<li><code>strcmp()</code>를 사용한다.</li>
+<li>같으면 <code>0</code>, 첫문자가 앞순서면 <code>-1</code>, 뒷순서면 <code>1</code>을 리턴</li>
+<li>대문자가 소문자보다 앞이다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">char</span> <span class="n">word</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#34;word&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="n">strcmp</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="s">&#34;mate&#34;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//...  
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>string</code>
+<ul>
+<li>관계 연산자를 사용한다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">string</span> <span class="n">word</span> <span class="o">=</span> <span class="s">&#34;word&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="n">word</span> <span class="o">==</span> <span class="s">&#34;mate&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//...
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="시간지연-루프">시간지연 루프</h2>
+<ul>
+<li>프로세스 성능에 따라 1초에 반복되는 루프문의 수가 달라질 수 있다. 그래서 똑같은 시간을 재기 위해서는 클록 수를 카운트한다.</li>
+</ul>
+<br />
+<ul>
+<li><code>clock()</code>
+<ul>
+<li>프로그램 실행 순간부터 이 함수가 호출될 때 까지의 클록 수</li>
+</ul>
+</li>
+<li><code>CLOCK_PER_SEC</code>
+<ul>
+<li>1초 당 클록 수</li>
+</ul>
+</li>
+<li><code>clock_t형</code>
+<ul>
+<li><code>clock()</code>의 리턴 데이터형이 시스템마다 달라질 수 있는데 그것을 모두 수용할 수 있는 데이터형이다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">clock_t</span> <span class="n">delay</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">CLOCK_PER_SEC</span><span class="p">;</span>  <span class="c1">// 10초 지연한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">clock_t</span> <span class="n">start</span> <span class="o">=</span> <span class="n">clock</span><span class="p">();</span>  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">while</span><span class="p">(</span><span class="n">clock</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">delay</span><span class="p">)</span>  
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="루프와-텍스트-입력">루프와 텍스트 입력</h2>
+<ul>
+<li>
+<p><code>cin &gt;&gt; ch</code></p>
+<ul>
+<li>빈칸, 탭, 개행을 무시하고 건너뛴다.
+<ul>
+<li>입력: <code>Do you need#</code></li>
+<li>출력: <code>Doyouneed</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>cin.get(ch);</code></p>
+<ul>
+<li>빈칸, 탭, 개행을 포함한다.
+<ul>
+<li>입력: <code>Do you need#</code></li>
+<li>출력: <code>Do you need</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>운영 체제들이 리디렉션(표준 스트림을 사용자 지정 위치로 우회할 수 있는 것) 기능을 제공하기 때문에, 파일 입력 대신 키보드 입력을 바탕으로 프로그램을 실행할 수 있다.
+<ul>
+<li>키보드로 <code>Ctrl + Z</code>를 입력하면 <code>EOF</code>를 나타낼 수 있다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// cin.get(ch)는 cin을 리턴하고. cin은 읽기가 성공하면 true를 리턴한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">while</span> <span class="p">(</span><span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">ch</span><span class="p">))</span>              
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// cin.get()은 문자를 읽어서 리턴한다. 그 문자가 EOF이면 -1이겠다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">while</span> <span class="p">((</span><span class="n">ch</span> <span class="o">=</span> <span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">())</span> <span class="o">!=</span> <span class="n">EOF</span><span class="p">)</span>  
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>cin</code>은 <code>EOF</code>(파일의 끝; End Of File; -1)를 탐지했을 때 <code>eofbit</code>와 <code>failbit</code>를 <code>1</code>로 설정한다.
+<ul>
+<li><code>cin.eof()</code>는 <code>eofbit</code>가 <code>1</code>이면 <code>true</code>를 리턴한다.</li>
+<li><code>cin.fail()</code>는 <code>eofbit</code> 혹은 <code>failbit</code>이 <code>1</code>이면 <code>true</code>를 리턴한다.</li>
+</ul>
+</li>
+<li><code>EOF</code>가 설정되면 <code>cin</code>이 더 이상 입력을 받지 않는다. 따라서 다시 입력을 받으려면 <code>cin.clear()</code>를 해주어야 한다.</li>
+</ul>
+<p><br /><br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/c&#43;&#43;-primer-plus/">C&#43;&#43; Primer Plus</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-04/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 4. 복합 데이터형</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-03/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 3. 데이터 처리</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-01/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 1, 2. 시작하기</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#표현식">표현식</a></li>
+    <li><a href="#시퀀스-포인트-sequence-point">시퀀스 포인트 (Sequence Point)</a></li>
+    <li><a href="#접두어와-접미어-방식">접두어와 접미어 방식</a></li>
+    <li><a href="#포인터와-증가감소-연산자">포인터와 증가/감소 연산자</a></li>
+    <li><a href="#콤마-연산자로-두-개의-표현식-넣기">콤마 연산자로 두 개의 표현식 넣기</a></li>
+    <li><a href="#문자열-비교">문자열 비교</a></li>
+    <li><a href="#시간지연-루프">시간지연 루프</a></li>
+    <li><a href="#루프와-텍스트-입력">루프와 텍스트 입력</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

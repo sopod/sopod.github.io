@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='수와 집합 수의 체계 기호 분류 정의 $\mathbb{N}$ 자연수 1, 2, &amp;hellip; $\mathbb{Z}$ 정수 &amp;hellip;, -2, -1, 0, 1, 2, &amp;hellip; $\mathbb{Q}$ 유리수 분수로 나타낼 수 있는 수의 집합 $\mathbb{I}$ 무리수 분수로 나타낼 수 없는 수의 집합 $\mathbb{R}$ 실수 유리수와 무리수를 포함하는 수의 집합 $\mathbb{C}$ 복소수 실수와 허수를 포함하는 수의 집합 $\mathbb{H}$ 사원수 $a &#43; bi &#43; cj &#43; dk$ $(i, j, k는 허수)$ 형태로 표현하는 수의 집합 이항연산의 특징 닫혀 있다(Closure) 같은 집합에 속한 두 수를 투입한 이항연산의 결과가 항상 투입한 집합에 속한다면, 그 이항연산은 해당 집합에 닫혀 있다고 한다.'><title>[Game Math] Chapter 2. 수: 가상 세계를 구성하는 가장 작은 단위</title>
+
+<link rel='canonical' href='https://sopod.github.io/init/game-math-02/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[Game Math] Chapter 2. 수: 가상 세계를 구성하는 가장 작은 단위'>
+<meta property='og:description' content='수와 집합 수의 체계 기호 분류 정의 $\mathbb{N}$ 자연수 1, 2, &amp;hellip; $\mathbb{Z}$ 정수 &amp;hellip;, -2, -1, 0, 1, 2, &amp;hellip; $\mathbb{Q}$ 유리수 분수로 나타낼 수 있는 수의 집합 $\mathbb{I}$ 무리수 분수로 나타낼 수 없는 수의 집합 $\mathbb{R}$ 실수 유리수와 무리수를 포함하는 수의 집합 $\mathbb{C}$ 복소수 실수와 허수를 포함하는 수의 집합 $\mathbb{H}$ 사원수 $a &#43; bi &#43; cj &#43; dk$ $(i, j, k는 허수)$ 형태로 표현하는 수의 집합 이항연산의 특징 닫혀 있다(Closure) 같은 집합에 속한 두 수를 투입한 이항연산의 결과가 항상 투입한 집합에 속한다면, 그 이항연산은 해당 집합에 닫혀 있다고 한다.'>
+<meta property='og:url' content='https://sopod.github.io/init/game-math-02/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Init' /><meta property='article:tag' content='Game Math' /><meta property='article:published_time' content='2022-03-28T18:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-03-28T18:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[Game Math] Chapter 2. 수: 가상 세계를 구성하는 가장 작은 단위">
+<meta name="twitter:description" content="수와 집합 수의 체계 기호 분류 정의 $\mathbb{N}$ 자연수 1, 2, &amp;hellip; $\mathbb{Z}$ 정수 &amp;hellip;, -2, -1, 0, 1, 2, &amp;hellip; $\mathbb{Q}$ 유리수 분수로 나타낼 수 있는 수의 집합 $\mathbb{I}$ 무리수 분수로 나타낼 수 없는 수의 집합 $\mathbb{R}$ 실수 유리수와 무리수를 포함하는 수의 집합 $\mathbb{C}$ 복소수 실수와 허수를 포함하는 수의 집합 $\mathbb{H}$ 사원수 $a &#43; bi &#43; cj &#43; dk$ $(i, j, k는 허수)$ 형태로 표현하는 수의 집합 이항연산의 특징 닫혀 있다(Closure) 같은 집합에 속한 두 수를 투입한 이항연산의 결과가 항상 투입한 집합에 속한다면, 그 이항연산은 해당 집합에 닫혀 있다고 한다.">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/game-math/" >
+                Game Math
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/init/game-math-02/">[Game Math] Chapter 2. 수: 가상 세계를 구성하는 가장 작은 단위</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 28, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    3 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br /><br /></p>
+<h2 id="수와-집합">수와 집합</h2>
+<ul>
+<li>수의 체계</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>기호</th>
+<th>분류</th>
+<th>정의</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\mathbb{N}$</td>
+<td>자연수</td>
+<td>1, 2, &hellip;</td>
+</tr>
+<tr>
+<td>$\mathbb{Z}$</td>
+<td>정수</td>
+<td>&hellip;, -2, -1, 0, 1, 2, &hellip;</td>
+</tr>
+<tr>
+<td>$\mathbb{Q}$</td>
+<td>유리수</td>
+<td>분수로 나타낼 수 있는 수의 집합</td>
+</tr>
+<tr>
+<td>$\mathbb{I}$</td>
+<td>무리수</td>
+<td>분수로 나타낼 수 없는 수의 집합</td>
+</tr>
+<tr>
+<td>$\mathbb{R}$</td>
+<td>실수</td>
+<td>유리수와 무리수를 포함하는 수의 집합</td>
+</tr>
+<tr>
+<td>$\mathbb{C}$</td>
+<td>복소수</td>
+<td>실수와 허수를 포함하는 수의 집합</td>
+</tr>
+<tr>
+<td>$\mathbb{H}$</td>
+<td>사원수</td>
+<td>$a + bi + cj + dk$ $(i, j, k는 허수)$ 형태로 표현하는 수의 집합</td>
+</tr>
+</tbody>
+</table></div>
+<br />
+<ul>
+<li>이항연산의 특징
+<ul>
+<li><strong>닫혀 있다(Closure)</strong>
+<ul>
+<li>같은 집합에 속한 두 수를 투입한 이항연산의 결과가 항상 투입한 집합에 속한다면, 그 이항연산은 해당 집합에 닫혀 있다고 한다.</li>
+</ul>
+</li>
+<li><strong>교환법칙(Commutative law)</strong></li>
+<li><strong>결합볍칙(Associative law)</strong></li>
+<li><strong>분배법칙(Distributive law)</strong></li>
+<li><strong>항등원(Identity)</strong>
+<ul>
+<li>어떤 수와 항등원과의 연산결과는 늘 그 어떤 수이다.</li>
+<li>덧셈의 항등원: $a + 0 = a$</li>
+<li>곱셈의 항등원: $a \cdot 1 = a$</li>
+</ul>
+</li>
+<li><strong>역원(Inverse)</strong>
+<ul>
+<li>어떤 수와 역원과의 연산결과는 늘 그 어떤 수의 항등원이다.</li>
+<li>덧셈의 역원: $a + (-a) = 0$ (부호가 반대인 수, 반대수(Opposite number))</li>
+<li>곱셈의 역원: $a \cdot \frac{1}{a} = 1$ (역수(Reciprocal))</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>공리(Axiom)
+<ul>
+<li>명제 중에서 증명할 필요가 없는 기본 명제</li>
+</ul>
+</li>
+<li><strong>체(Field)의 구조를 지닌다.</strong>
+<ul>
+<li>공리적 집합론에서 두 연산에 대해 다음과 같은 공리를 모두 만족하는 수 집합.</li>
+<li>따라서 체는 <strong>사칙연산이 자유로이 시행될 수 있는 수의 구조</strong>이다.</li>
+<li>덧셈 연산에 대해
+<ul>
+<li>(1) 닫혀있다.</li>
+<li>(2) 덧셈 항등원($0$)이 존재한다.</li>
+<li>(3) 모든 성분에 대해 덧셈 역원이 존재한다.</li>
+<li>(4) 모든 성분에 대해 결합볍칙이 성립한다.</li>
+<li>(5) 모든 성분에 대해 교환법칙이 성립한다.</li>
+</ul>
+</li>
+<li>곱셈 연산에 대해
+<ul>
+<li>(6) 닫혀있다.</li>
+<li>(7) 곱셈 항등원이 존재한다.</li>
+<li>(8) $0$ 이외의 모든 성분에 대해 곱셈 역원이 존재한다.</li>
+<li>(9) $0$ 이외의 모든 성분에 대해 결합법칙이 성립한다.</li>
+<li>(10) $0$ 이외의 모든 성분에 대해 교환법칙이 성립한다.</li>
+</ul>
+</li>
+<li>덧셈과 곱셈 연산에 대해
+<ul>
+<li>(11) 덧셈에 대한 곱셈 연산의 분배법칙이 성립한다.</li>
+</ul>
+</li>
+<li>뺄셈과 나눗셈의 경우에는&hellip;
+<ul>
+<li>뺄셈 대신 덧셈의 역원을 사용하고: $a + (-b) = (-b) + a$</li>
+<li>나눗셈 대신 곱셈의 역원을 사용하면 된다: $a \cdot \frac{1}{b} = \frac{1}{b} \cdot a$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>체의 구조를 만족하는 수집합은 유리수, 실수가 있다.
+<ul>
+<li>이 중에서 완벽한 연속성을 가지는 <strong>실수</strong>를 가지고 <strong>수직선</strong> 상에서 수를 표현할 수 있겠다.</li>
+<li>방향: 부호</li>
+<li>크기: 절대값 (원점으로부터의 거리)</li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="함수">함수</h2>
+<p>$f: X \rightarrow Y$</p>
+<ul>
+<li>함수의 조건
+<ul>
+<li>(1) 첫 번째 집합의 모든 원소에 대한 대응 관계가 존재해야한다.</li>
+<li>(2) 첫 번째 집합의 원소는 두 번째 집합의 한 원소에만 대응되어야 한다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>함수 용어
+<ul>
+<li><strong>정의역(Domain)</strong>
+<ul>
+<li>함수에서 왼쪽에 위치한 첫 번째 집합. (X)</li>
+</ul>
+</li>
+<li><strong>공역(Codomain)</strong>
+<ul>
+<li>함수에서 오른쪽에 위치한 두 번째 집합. (Y)</li>
+</ul>
+</li>
+<li><strong>치역(Range)</strong>
+<ul>
+<li>정의역에 대응되는 공역의 원소만 따로 모든 부분집합.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>함수 종류
+<ul>
+<li><strong>전사함수(Surjection)</strong>
+<ul>
+<li>공역의 모든 요소가 정의역에 대응되는 함수.</li>
+</ul>
+</li>
+<li><strong>단사함수(Injection)</strong>
+<ul>
+<li>정의역과 공역의 요소가 1대1로 대응되는 함수.</li>
+</ul>
+</li>
+<li><strong>전단사함수(Bijection)</strong>
+<ul>
+<li>정의역과 공역의 모든 요소가 빠짐없이 1대1로 대응되는 함수.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><strong>함수의 합성(Function composition)</strong>
+<ul>
+<li>$f: X \rightarrow Y$ <br /> $g: Y \rightarrow Z$</li>
+<li>2개의 함수를 연쇄적으로 이어서 하나의 함수로 만드는 연산이다.</li>
+<li>$g \circ f$ 혹은 $g(f(x))$로 표시한다.
+<ul>
+<li>먼저 실행되는 함수 $f$ 가 기호 $\circ$ 의 오른쪽에 놓인다는 점에 유의하자.</li>
+</ul>
+</li>
+<li>합성 함수는 결합법칙이 성립한다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><strong>항등함수(Identity function)</strong>
+<ul>
+<li>정의역과 공역이 동일한 값으로 대응되는 함수로 $id$ 로 나타낸다.</li>
+<li>어느 위치에 있던 동일한 대응 관계를 나타낸다.</li>
+<li>$id \circ f = f$, $ f \circ id = f$</li>
+</ul>
+</li>
+<li><strong>역함수(Inverse function)</strong>
+<ul>
+<li>역함수와의 합성 함수의 대응 결과는 항등함수가 된다. $f^{-1}$ 로 나타낸다.</li>
+<li>공역 $Y$ 에서 정의역 $X$로 대응되는 함수로도 생각할 수 있다.
+<ul>
+<li>$f^{-1} \circ f = id$, $f \circ f^{-1} = id$</li>
+</ul>
+</li>
+<li>모든 함수가 역함수를 갖지는 않는다.
+<ul>
+<li><span style='background-color: #c393d8'>역함수를 가지려면 반드시 전단사함수의 형태가 되어야 한다.</span></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><strong>곱집합(Catesian product)</strong>
+<ul>
+<li>$A \times B$</li>
+<li>두 집합의 원소를 순서쌍으로 묶은 원소의 집합.</li>
+<li>곱집합의 요소는 순서쌍으로 묶어서 표현한다. $(a, b)$</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>서로 수직으로 배치하는 곱집합의 성질을 응용하면, 하나의 직선으로 표현한 실수 집합을 확장해서, <strong>두 실수 집합의 곱집합</strong>을 <strong>평면</strong>으로 나타낼 수 있다.</li>
+</ul>
+<p><br /><br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/game-math/">Game Math</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#수와-집합">수와 집합</a></li>
+    <li><a href="#함수">함수</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

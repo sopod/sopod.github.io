@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='서론 어떤 사람의 이름을 저장하는 클래스를 만들고 싶다고 하자, 만약 이름 길이가 40자가 넘어가면 어떻할 것인가? 40개를 저장할 수 있는 문자 배열을 만들면 될까? 그럼 극히 일부만 채워지는 멤버 때문에 많은 메모리가 낭비될 것이다. 문자열의 길이가 컴파일 할 때가 아니라 실행할 때 결정되도록 하면 좋겠다. 일반적으로 string 클래스를 사용하면 되지만, new와 delete를 사용해서 메모리에 대해 배워보기 위해 string 클래스와 비슷한 클래스를 직접 만들어보면서 배워보자. 무언가 잘못된 StringBad 클래스 string 클래스와 비슷한 기능을 하는 StringBad 클래스를 만들어보았다.'><title>[C&#43;&#43; Primer Plus] Chapter 12. 클래스와 동적 메모리 대입</title>
+
+<link rel='canonical' href='https://sopod.github.io/init/cpp-primer-plus-12/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[C&#43;&#43; Primer Plus] Chapter 12. 클래스와 동적 메모리 대입'>
+<meta property='og:description' content='서론 어떤 사람의 이름을 저장하는 클래스를 만들고 싶다고 하자, 만약 이름 길이가 40자가 넘어가면 어떻할 것인가? 40개를 저장할 수 있는 문자 배열을 만들면 될까? 그럼 극히 일부만 채워지는 멤버 때문에 많은 메모리가 낭비될 것이다. 문자열의 길이가 컴파일 할 때가 아니라 실행할 때 결정되도록 하면 좋겠다. 일반적으로 string 클래스를 사용하면 되지만, new와 delete를 사용해서 메모리에 대해 배워보기 위해 string 클래스와 비슷한 클래스를 직접 만들어보면서 배워보자. 무언가 잘못된 StringBad 클래스 string 클래스와 비슷한 기능을 하는 StringBad 클래스를 만들어보았다.'>
+<meta property='og:url' content='https://sopod.github.io/init/cpp-primer-plus-12/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Init' /><meta property='article:tag' content='C&#43;&#43; Primer Plus' /><meta property='article:published_time' content='2022-03-19T12:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-03-19T12:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[C&#43;&#43; Primer Plus] Chapter 12. 클래스와 동적 메모리 대입">
+<meta name="twitter:description" content="서론 어떤 사람의 이름을 저장하는 클래스를 만들고 싶다고 하자, 만약 이름 길이가 40자가 넘어가면 어떻할 것인가? 40개를 저장할 수 있는 문자 배열을 만들면 될까? 그럼 극히 일부만 채워지는 멤버 때문에 많은 메모리가 낭비될 것이다. 문자열의 길이가 컴파일 할 때가 아니라 실행할 때 결정되도록 하면 좋겠다. 일반적으로 string 클래스를 사용하면 되지만, new와 delete를 사용해서 메모리에 대해 배워보기 위해 string 클래스와 비슷한 클래스를 직접 만들어보면서 배워보자. 무언가 잘못된 StringBad 클래스 string 클래스와 비슷한 기능을 하는 StringBad 클래스를 만들어보았다.">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/c&#43;&#43;/" >
+                C&#43;&#43;
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/init/cpp-primer-plus-12/">[C&#43;&#43; Primer Plus] Chapter 12. 클래스와 동적 메모리 대입</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 19, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    15 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br /><br /></p>
+<h2 id="서론">서론</h2>
+<ul>
+<li>어떤 사람의 이름을 저장하는 클래스를 만들고 싶다고 하자, 만약 이름 길이가 40자가 넘어가면 어떻할 것인가?</li>
+<li>40개를 저장할 수 있는 문자 배열을 만들면 될까?</li>
+<li>그럼 극히 일부만 채워지는 멤버 때문에 많은 메모리가 낭비될 것이다.</li>
+<li>문자열의 길이가 컴파일 할 때가 아니라 실행할 때 결정되도록 하면 좋겠다.</li>
+<li>일반적으로 <code>string</code> 클래스를 사용하면 되지만, <code>new</code>와 <code>delete</code>를 사용해서 메모리에 대해 배워보기 위해 <code>string</code> 클래스와 비슷한 클래스를 직접 만들어보면서 배워보자.</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="무언가-잘못된-stringbad-클래스">무언가 잘못된 StringBad 클래스</h2>
+<ul>
+<li><code>string</code> 클래스와 비슷한 기능을 하는 <code>StringBad</code> 클래스를 만들어보았다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// StringBad.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">StringBad</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="o">*</span> <span class="n">str</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">len</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// static 클래스 멤버는 생성되는 객체 수와 상관없이 단 하나만 생성된다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">static</span> <span class="kt">int</span> <span class="n">stringCount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">StringBad</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">s</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">StringBad</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">StringBad</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="n">ostream</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">StringBad</span> <span class="o">&amp;</span> <span class="n">st</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// StringBad.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;StringBad.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// static 클래스 멤버를 초기화 한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">StringBad</span><span class="o">::</span><span class="n">stringCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">StringBad</span><span class="o">::</span><span class="n">StringBad</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// str = s로 하면 안 된다. 주소만 저장하기 때문이다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// 아래와 같이 문자열의 복사본을 만들어서 저장해야 한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">str</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span> <span class="c1">// 문자열은 힙에 저장되겠다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">strcpy</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">stringCount</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">   
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">str</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; 이 생성됨. &#34;</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; stringCount: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">stringCount</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">StringBad</span><span class="o">::</span><span class="n">StringBad</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">len</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">str</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">6</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">strcpy</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="s">&#34;empty&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">stringCount</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">   
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">str</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; 이 생성됨. &#34;</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; stringCount: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">stringCount</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">StringBad</span><span class="o">::~</span><span class="n">StringBad</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="o">--</span><span class="n">stringCount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">   
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">str</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; 이 파괴됨. &#34;</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; 남은 stringCount: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">stringCount</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">   
+</span></span><span class="line"><span class="cl">    <span class="c1">// 객체를 파괴할 때 객체가 차지하는 메모리는 해제되지만
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// 객체의 멤버인 포인터가 가리키는 메모리는 자동으로 해제되지 않는다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// 따라서 아래와 같이 해제해준다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">delete</span> <span class="p">[]</span> <span class="n">str</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">ostream</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">StringBad</span> <span class="o">&amp;</span> <span class="n">st</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">st</span><span class="p">.</span><span class="n">str</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">os</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>static</code> 멤버 변수
+<ul>
+<li>해당 클래스로 만들어지는 객체의 전체 수를 카운트해보기 위해 만들었다.</li>
+<li>생성되는 객체 수에 상관 없이 이 변수는 단 하나만 생성되고, 공유된다.</li>
+<li>초기화를 클래스 선언 안에서 할 수 없다.
+<ul>
+<li>왜냐하면 <code>static</code> 멤버 변수는 객체의 일부분으로 저장되는 것이 아니라 별도로 저장되기 때문이다. 그래서 클래스 선언 바깥에서 초기화해주어야 한다.</li>
+<li>헤더 파일에서 초기화한다면, 헤더파일이 여러번 포함되어 그 개수만큼 여러번 반복되어 초기화하기 때문에 에러가 발생한다.</li>
+<li>따라서 멤버 함수 구현 파일에 넣는다.</li>
+<li>정수형/열거형의 <code>const</code>인 경우에는 클래스 선언 안에서 초기화할 수 있다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// main.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;StringBad.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">CallByReference</span><span class="p">(</span><span class="n">StringBad</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; 가 참조로 전달되었다&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 값으로 객체를 전달하면, 복사 생성자가 호출된다.  
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">CallByValue</span><span class="p">(</span><span class="n">StringBad</span> <span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; 가 값으로 전달되었다&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">StringBad</span> <span class="n">one</span><span class="p">(</span><span class="s">&#34;one&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">StringBad</span> <span class="n">two</span><span class="p">(</span><span class="s">&#34;two&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">StringBad</span> <span class="n">three</span><span class="p">(</span><span class="s">&#34;three&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">CallByReference</span><span class="p">(</span><span class="n">one</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;돌아온 one: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">one</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">CallByValue</span><span class="p">(</span><span class="n">two</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;돌아온 two: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">two</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 하나의 객체를 다른 객체로 초기화하면 복사 생성자가 호출된다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;three 객체로 초기화하기&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">StringBad</span> <span class="n">three2</span> <span class="o">=</span> <span class="n">three</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;three2: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">three2</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 하나의 객체러르 다른 객체에 대입하면 대입 연산자가 호출된다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;one 객체로 대입하기&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">StringBad</span> <span class="n">one2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">one2</span> <span class="o">=</span> <span class="n">one</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;one2: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">one2</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>출력 결과</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">one 이 생성됨.  stringCount: 1
+</span></span><span class="line"><span class="cl">two 이 생성됨.  stringCount: 2
+</span></span><span class="line"><span class="cl">three 이 생성됨.  stringCount: 3
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">one 가 참조로 전달되었다
+</span></span><span class="line"><span class="cl">돌아온 one: one
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">two 가 값으로 전달되었다
+</span></span><span class="line"><span class="cl">two 이 파괴됨.  남은 stringCount: 2   // 문제 1
+</span></span><span class="line"><span class="cl">돌아온 two: L
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">three 객체로 초기화하기
+</span></span><span class="line"><span class="cl">three2: three
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">one 객체로 대입하기
+</span></span><span class="line"><span class="cl">empty 이 생성됨.  stringCount: 3
+</span></span><span class="line"><span class="cl">one2: one
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">one 이 파괴됨.  남은 stringCount: 2
+</span></span><span class="line"><span class="cl">three 이 파괴됨.  남은 stringCount: 1
+</span></span><span class="line"><span class="cl">� 이 파괴됨.  남은 stringCount: 0
+</span></span><span class="line"><span class="cl">signal: aborted (core dumped)    // 문제 2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>다음과 같은 문제가 있다.
+<ul>
+<li>(1) 값으로 전달된 후 파괴자가 호출되었다. 그리고 원본 <code>two</code> 객체의 값이 이상해졌다.</li>
+<li>(2) 블록을 빠져나오면 파괴자가 줄줄이 호출되는데 객체 수가 2개나 부족하다. 무언가 또 다른 것이 파괴자를 호출한 것임에 분명하다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>
+<p>C++이 자동으로 다음과 같은 멤버 함수들을 제공한다.</p>
+<ul>
+<li>(1) 생성자를 전혀 정의하지 않았을 경우에 디폴트 생성자</li>
+<li>(2) 디폴트 파괴자를 정의하지 않았을 경우에 디폴트 파괴자</li>
+<li>(3) 복사 생성자를 정의하지 않았을 경우에 복사 생성자</li>
+<li>(4) 대입 연산자를 정의하지 않았을 경우에 대입 연산자</li>
+<li>(5) 주소 연산자를 정의하지 않았을 경우에 주소 연산자
+<ul>
+<li>이동 생성자, 이동 대입 연산자 (C++11) (Chapter 18)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>암시적 주소 연산자는 호출한 객체(<code>this</code> 포인터의 값)의 주소를 리턴한다.</p>
+<ul>
+<li>이것은 <code>StringBad</code> 클래스의 설계 목적에 합당하다.</li>
+<li>하지만 복사 생성자와 대입 연산자는 그렇지 않다.</li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="복사-생성자">복사 생성자</h2>
+<ul>
+<li>원형</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">StringBad</span><span class="p">(</span><span class="k">const</span> <span class="n">StringBad</span> <span class="o">&amp;</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>복사 생성자가 불리는 경우: 프로그램이 객체의 복사본을 생성할 때
+<ul>
+<li>새로운 객체가 생성되어 같은 종류의 기존의 객체로 초기화될 때</li>
+<li>함수가 객체를 값으로 전달할 때</li>
+<li>함수가 객체를 리턴할 때</li>
+<li>임시객체를 생성할 때</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">StringBad</span> <span class="nf">one</span><span class="p">(</span><span class="s">&#34;one&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 초기화 시에는 모두 복사 생성자를 호출한다.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">StringBad</span> <span class="n">two</span><span class="p">(</span><span class="n">one</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">StringBad</span> <span class="n">three</span> <span class="o">=</span> <span class="n">StringBad</span><span class="p">(</span><span class="n">one</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">StringBad</span> <span class="o">*</span> <span class="n">four</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBad</span><span class="p">(</span><span class="n">one</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>하는 일
+<ul>
+<li><code>static</code> 멤버를 제외한 멤버들을 멤버별로 복사한다(얕은 복사).</li>
+<li>각 멤버는 값으로 복사한다.</li>
+<li>따라서 아래의 두 코드는 같은 말이다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">StringBad</span> <span class="n">two</span> <span class="o">=</span> <span class="n">one</span><span class="p">;</span> <span class="c1">// 이것과
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">StringBad</span> <span class="n">two</span><span class="p">;</span> <span class="c1">// 이것은 같은 말이다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">two</span><span class="p">.</span><span class="n">str</span> <span class="o">=</span> <span class="n">one</span><span class="p">.</span><span class="n">str</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">two</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">one</span><span class="p">.</span><span class="n">len</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>
+<p>StringBad 예시에서 값으로 전달된 후에 원본 객체의 값이 이상해진 건 복사 생성자 때문이었다.</p>
+<ul>
+<li><code>CallByValue()</code>가 호출될 때 값으로 전달되는 매개변수를 초기화하는 데 복사 생성자가 사용된다.</li>
+<li><code>CallByValue()</code> 함수가 끝나면서 파괴자를 호출해서 전달된 객체 원본의 메모리를 해제해버린다.</li>
+</ul>
+</li>
+<li>
+<p>StringBad 예시에서 파괴된 객체가 두 개 더 많았던 것 중 하나는 복사 생성자 때문이었다.</p>
+<ul>
+<li><code>three2</code> 객체를 <code>three</code> 객체로 초기화할 때 복사 생성자가 사용된다.</li>
+<li>우리는 복사 생성자를 정의하지 않았으므로 이 때 불리는 복사 생성자는 <code>stringCount</code>를 올려주지 않는다.</li>
+<li>또한 복사 생성자는 문자열 자체를 복사하지 않고 문자열을 지시하는 포인터를 복사한다. 즉, 얕은 복사를 한다. 두 개의 포인터가 하나의 문자열을 가리키는 형상이 되는 것이다. 따라서 다음과 같은 문제가 생겼던 것이다.</li>
+<li>그래서 <code>three2</code>의 파괴자가 불렸을 때 <code>three</code>의 메모리를 해제해버린다. 그리고 <code>three</code>의 파괴자는 이미 삭제한 문자열을 다시 삭제하려고 시도한다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>명시적 복사 생성자를 제공함으로써 문제를 해결할 수 있다.</li>
+<li>아래의 코드는 깊은 복사를 수행한다. 즉, 문자열 자체를 복사하고, 그 복사본의 주소를 str 멤버에 대입하게 한다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">StringBad</span><span class="o">::</span><span class="n">StringBad</span><span class="p">(</span><span class="k">const</span> <span class="n">StringBad</span> <span class="o">&amp;</span> <span class="n">st</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">stringCount</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">len</span> <span class="o">=</span> <span class="n">st</span><span class="p">.</span><span class="n">len</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">str</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">strcpy</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">str</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<blockquote>
+<p>클래스 멤버 중에 포인터가 있다면 복사 생성자를 필수로 정의해야 한다.</p>
+</blockquote>
+<p><br /><br /></p>
+<h2 id="대입-연산자">대입 연산자</h2>
+<ul>
+<li>원형</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">StringBad</span> <span class="o">&amp;</span> <span class="n">StringBad</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">StringBad</span> <span class="o">&amp;</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>대입 연산자가 불리는 경우
+<ul>
+<li>하나의 객체를 기존의 다른 객체에 대입할 때</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">StringBad</span> <span class="nf">one</span><span class="p">(</span><span class="s">&#34;one&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">StringBad</span> <span class="n">one2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">one2</span> <span class="o">=</span> <span class="n">one</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>하는 일
+<ul>
+<li>복사 생성자와 마찬가지로 <code>static</code> 멤버를 제외한 멤버들을 멤버별로 복사한다(얕은 복사).</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>StringBad 예시에서 파괴된 객체가 두 개 더 많았던 것 중 하나는 대입 연산자 때문이었다.
+<ul>
+<li><code>one2</code> 객체를 <code>one</code> 객체로 초기화할 때 대입 연산자가 사용된다.</li>
+<li>우리는 대입 연산자를 정의하지 않았으므로 이 때 불리는 대입 연산자는 <code>stringCount</code>를 올려주지 않는다.</li>
+<li>또한 대입 연산자는 얕은 복사를 하기 때문에 <code>one2</code>의 파괴자가 불렸을 때 one의 메모리를 해제해버린다. 그리고 <code>one</code>의 파괴자는 이미 삭제한 문자열을 다시 삭제하려고 시도한다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>명시적 대입 연산자를 제공함으로써 문제를 해결할 수 있다.</li>
+<li>복사 연산자와의 차이에 유념하며 구현해야 한다. 차이점은 아래와 같다.
+<ul>
+<li>(1) 이전에 대입된 데이터를 참조하고 있을 수도 있으므로 먼저 해제해주어야 한다.</li>
+<li>(2) 자기 자신에게 대입하지 못하게 막아야 한다.</li>
+<li>(3) 호출한 객체에 대한 참조를 리턴해야 한다. 그래야 <code>one = two = three;</code> 와 같은 연산이 가능해진다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">StringBad</span> <span class="o">&amp;</span> <span class="n">StringBad</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">StringBad</span> <span class="o">&amp;</span> <span class="n">st</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">st</span><span class="p">)</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span> <span class="c1">// 2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">delete</span> <span class="p">[]</span> <span class="n">str</span><span class="p">;</span>  <span class="c1">// 1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">len</span> <span class="o">=</span> <span class="n">st</span><span class="p">.</span><span class="n">len</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">str</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">strcpy</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">str</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="c1">// 3
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>대입은 새로운 객체를 만들지 않는다. 따라서 <code>stringCount</code>를 올릴 필요는 없다.</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="개선된-string-클래스">개선된 String 클래스</h2>
+<ul>
+<li>위와 같은 문제들을 개선한 <code>String</code> 클래스이다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// String.h 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">String</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="o">*</span> <span class="n">str</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">len</span><span class="p">;</span>              
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">int</span> <span class="n">stringCount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">CINLIM</span> <span class="o">=</span> <span class="mi">80</span><span class="p">;</span>  <span class="c1">// cin 입력 제한 글자수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">s</span><span class="p">);</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">String</span><span class="p">();</span>              
+</span></span><span class="line"><span class="cl">    <span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="p">);</span>  <span class="c1">// 명시적 복사 생성자
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">~</span><span class="n">String</span><span class="p">();</span>              
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="nf">length</span> <span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">len</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="n">String</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="p">);</span>  <span class="c1">// 명시적 대입 연산자
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">String</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">);</span>   <span class="c1">// 보통의 문자열을 String 객체에 복사하기 위한 대입 연산자 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">char</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">);</span>  <span class="c1">// []표기를 사용해서 개별 문자에 접근하기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">const</span> <span class="kt">char</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>  <span class="c1">// const 객체에 사용하기 위함
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">st</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">st2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">&gt;</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">st1</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">st2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">st</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">st2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="n">ostream</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span> <span class="n">st</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="n">istream</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">istream</span> <span class="o">&amp;</span> <span class="n">is</span><span class="p">,</span> <span class="n">String</span> <span class="o">&amp;</span> <span class="n">st</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">int</span> <span class="nf">HowMany</span><span class="p">();</span> <span class="c1">// static 멤버 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// string1.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;String.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">String</span><span class="o">::</span><span class="n">stringCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// static 멤버 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">String</span><span class="o">::</span><span class="n">HowMany</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">stringCount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">String</span><span class="o">::</span><span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">s</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">len</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>      
+</span></span><span class="line"><span class="cl">    <span class="n">str</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>   
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">strcpy</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>       
+</span></span><span class="line"><span class="cl">    <span class="n">stringCount</span><span class="o">++</span><span class="p">;</span>             
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 개선된 디폴트 생성자 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">String</span><span class="o">::</span><span class="n">String</span><span class="p">()</span>                
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">str</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>              
+</span></span><span class="line"><span class="cl">    <span class="n">stringCount</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">String</span><span class="o">::</span><span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span> <span class="n">st</span><span class="p">)</span>  <span class="c1">// 명시적 복사 생성자
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">stringCount</span><span class="o">++</span><span class="p">;</span>            
+</span></span><span class="line"><span class="cl">    <span class="n">len</span> <span class="o">=</span> <span class="n">st</span><span class="p">.</span><span class="n">len</span><span class="p">;</span>             
+</span></span><span class="line"><span class="cl">    <span class="n">str</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span> <span class="p">[</span><span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">strcpy</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">str</span><span class="p">);</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">String</span><span class="o">::~</span><span class="n">String</span><span class="p">()</span>             
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="o">--</span><span class="n">stringCount</span><span class="p">;</span>            
+</span></span><span class="line"><span class="cl">    <span class="k">delete</span> <span class="p">[]</span> <span class="n">str</span><span class="p">;</span>            
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">String</span> <span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span> <span class="n">st</span><span class="p">)</span>  <span class="c1">// 명시적 대입 연산자
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">st</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">delete</span> <span class="p">[]</span> <span class="n">str</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">len</span> <span class="o">=</span> <span class="n">st</span><span class="p">.</span><span class="n">len</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">str</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">strcpy</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">str</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 보통의 문자열을 String 객체에 복사하기 위한 대입 연산자 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">String</span> <span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">delete</span> <span class="p">[]</span> <span class="n">str</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">len</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">str</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">strcpy</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// []표기를 사용해서 개별 문자에 접근하기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">char</span> <span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// const 객체에 사용하기 위함
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="kt">char</span> <span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// friend 함수들
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">st1</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">st2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strcmp</span><span class="p">(</span><span class="n">st1</span><span class="p">.</span><span class="n">str</span><span class="p">,</span> <span class="n">st2</span><span class="p">.</span><span class="n">str</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="k">operator</span><span class="o">&gt;</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">st1</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">st2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">st2</span> <span class="o">&lt;</span> <span class="n">st1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">st1</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">st2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strcmp</span><span class="p">(</span><span class="n">st1</span><span class="p">.</span><span class="n">str</span><span class="p">,</span> <span class="n">st2</span><span class="p">.</span><span class="n">str</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">ostream</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span> <span class="n">st</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">st</span><span class="p">.</span><span class="n">str</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">os</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">istream</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">istream</span> <span class="o">&amp;</span> <span class="n">is</span><span class="p">,</span> <span class="n">String</span> <span class="o">&amp;</span> <span class="n">st</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="n">temp</span><span class="p">[</span><span class="n">String</span><span class="o">::</span><span class="n">CINLIM</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">is</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">String</span><span class="o">::</span><span class="n">CINLIM</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">is</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">st</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">(</span><span class="n">is</span> <span class="o">&amp;&amp;</span> <span class="n">is</span><span class="p">.</span><span class="n">get</span><span class="p">()</span> <span class="o">!=</span> <span class="sc">&#39;\n&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">is</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<p>1. 개선된 디폴트 생성자</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">String</span><span class="o">::</span><span class="n">String</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1">// 이것은 파괴자에 있는 delete [] str;과 맞추기 위함이다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">str</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1">// 이렇게 써도 된다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">str</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">    <span class="n">stringCount</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>널 포인터
+<ul>
+<li>아무것도 가리키는 않는 포인터이다.</li>
+<li>C++가 소스 코드에서 0을 표현할 때 널 포인터를 사용했다.</li>
+<li>하지만 종종 포인터 상수와 정수 모두 0으로 표현하기 때문에 문제가 발생했고 새로운 키워드 <code>nullptr</code>을 제공했다.
+<ul>
+<li>이것은 포인터 타입이며 정수형으로 변환할 수 없다.</li>
+<li><code>nullptr == 0</code>은 <code>true</code>지만, 예를 들어서 <code>int</code>형 매개변수를 받는 함수에서 <code>0</code>은 통과되지만 <code>nullptr</code>은 컴파일 에러가 난다.</li>
+<li>따라서 컴파일러가 분명하고 안전하게 받아들일 수 있도록 <code>nullptr</code>를 사용해야 한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<p>2. []표기를 사용해서 개별 문자에 접근하기</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#34;Kim&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>name</code>은 첫번째 피연산자이고, <code>[]</code>은 연산자이고, <code>0</code>은 두 번째 피연산자이다.
+<ul>
+<li>따라서 <code>[]</code>연산자를 다음과 같이 만들 수 있다.</li>
+<li>리턴형이 <code>char &amp;</code>이기 때문에 값을 대입하는 것 또한 가능하다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">char</span> <span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">String</span> <span class="nf">one</span><span class="p">(</span><span class="s">&#34;one&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">one</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">one</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// (O)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>하지만 <code>const</code> 객체에는 사용이 불가능하다.
+<ul>
+<li>C++이 <code>const</code>함수 시그내처와 <code>const</code>가 아닌 함수 시그내처를 구별하기 때문이다.</li>
+<li>따라서 <code>const String</code> 객체가 사용할 수 있는 제 2의 버전을 제공할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">char</span> <span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="n">String</span> <span class="nf">one</span><span class="p">(</span><span class="s">&#34;one&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">one</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">one</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// (X) const 객체는 쓰기가 불가능하다. 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<p>3. 보통의 문자열을 <code>String</code> 객체에 복사하기를 원한다면 어떻게 해야 할까?</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">String</span> <span class="n">name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">char</span> <span class="n">temp</span><span class="p">[</span><span class="mi">40</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">cin</span><span class="p">.</span><span class="n">getine</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="mi">40</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">name</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>  
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p>이 예제의 마지막 구분은 이렇게 동작한다.</p>
+<ul>
+<li>(1) <code>String(const char *)</code> 생성자(변환 함수의 역할)를 사용해서 <code>temp</code>를 <code>String</code> 임시 객체로 만든다.</li>
+<li>(2) <code>String &amp; Operator=(const String &amp; )</code> 함수를 사용해서 <code>String</code> 임시 객체의 내용을 <code>name</code>에 담는다.</li>
+<li>(3) <code>String</code> 임시 객체를 파괴한다.</li>
+</ul>
+</li>
+<li>
+<p>따라서 다음과 같은 대입 연산자를 오버로딩하면, 임시 객체를 생성하고 파괴하는 절차가 생략되겠다.</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">String</span> <span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">delete</span> <span class="p">[]</span> <span class="n">str</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">str</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">strcpy</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<p>4. <code>static</code> 멤버 함수</p>
+<ul>
+<li><code>static</code> 키워드는 함수 선언에 나타나야 한다.</li>
+<li>다음과 같은 특징을 가진다.
+<ul>
+<li>객체에 의해 호출될 필요가 없다. 클래스 이름과 사용범위 결정 연산자를 사용하여 호출된다.</li>
+<li>어떤 특정 객체와도 결합하지 않기 때문에 사용할 수 있는 데이터 멤버는 <code>static</code> 데이터 멤버밖에 없다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">String</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// …
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">static</span> <span class="kt">int</span> <span class="n">HowMany</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">stringCount</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// static 멤버에만 접근할 수 있다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">String</span><span class="o">::</span><span class="n">HowMany</span><span class="p">();</span>  <span class="c1">// static 멤버 함수를 호출한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="객체-리턴에-대한-관찰">객체 리턴에 대한 관찰</h2>
+<p>1. <code>const</code> 객체를 참조 리턴하는 경우</p>
+<ul>
+<li>효율성 측면에서 유리하다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Vector</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 리턴형이 Vector 라면 복사 생성자를 호출할 것이다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 참조를 리턴함으로써 좀 더 효율적이게 된다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="n">Vector</span> <span class="o">&amp;</span> <span class="n">Max</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector</span> <span class="o">&amp;</span> <span class="n">v1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vector</span> <span class="o">&amp;</span> <span class="n">v2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">v1</span><span class="p">.</span><span class="n">magval</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">v2</span><span class="p">.</span><span class="n">magval</span><span class="p">())</span> <span class="k">return</span> <span class="n">v1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span>                           <span class="k">return</span> <span class="n">v2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Vector</span> <span class="nf">vec1</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">Vector</span> <span class="nf">vec2</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">70</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">Vector</span> <span class="n">max</span> <span class="o">=</span> <span class="n">Max</span><span class="p">(</span><span class="n">vec1</span><span class="p">,</span> <span class="n">vec2</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<p>2. <code>const</code>가 아닌 객체를 참조 리턴 하는 경우</p>
+<ul>
+<li>대입 연산자 오버로딩</li>
+<li><code>cout</code>과 함께 사용하기 위한 <code>&lt;&lt;</code> 연산자 오버로딩</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">String</span> <span class="nf">s1</span><span class="p">(</span><span class="s">&#34;Good Stuff&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">String</span> <span class="n">s2</span><span class="p">,</span> <span class="n">s3</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl"><span class="n">s3</span> <span class="o">=</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl"><span class="c1">// s2 = s1의 리턴 값이 s1의 참조여야 s3 = s1가 가능하다.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 참조가 아니면 복사 생성자가 호출되므로, 참조로 리턴하는 게 효율적이다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s1</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; is coming!&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// ostream은 public 복사 생성자를 만들지 않으므로 
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 참조가 아니면 동작하지 않는다. 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<p>3. <code>const</code> 객체를 리턴하는 경우</p>
+<ul>
+<li>리턴되는 객체가 지역적이면 참조를 리턴하면 안 된다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">Vector</span> <span class="nf">vec1</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">Vector</span> <span class="nf">vec2</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">70</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">Vector</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">vec1</span> <span class="o">+</span> <span class="n">vec2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 두 벡터의 합의 결과인 임시벡터를 참조로 리턴하면 안된다. 실제 객체를 리턴해야 한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Vector</span> <span class="n">Vector</span><span class="o">::</span><span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector</span> <span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="k">const</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">Vector</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">v</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">v</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<p>4. <code>const</code>가 아닌 객체를 리턴하는 경우</p>
+<ul>
+<li>위의 코드인 경우 아래와 같은 것이 가능해진다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">sum</span> <span class="o">=</span> <span class="n">vec1</span> <span class="o">+</span> <span class="n">vec2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 이것도 가능하다. vec1 + vec2의 결과로 임시객체를 만들고, 그것에 sum의 값이 대입된다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">vec1</span> <span class="o">+</span> <span class="n">vec2</span> <span class="o">=</span> <span class="n">sum</span><span class="p">;</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>따라서 다음과 같이 리턴형을 <code>const</code>로 하면 두번째 경우는 불가능해 진다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">const</span> <span class="n">Vector</span> <span class="n">Vector</span><span class="o">::</span><span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector</span> <span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="k">const</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">Vector</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">v</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">v</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="위치-지정-new와-클래스">위치 지정 new와 클래스</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">char</span> <span class="o">*</span> <span class="n">buffer</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">512</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">TestClass</span> <span class="o">*</span><span class="n">t1</span><span class="p">,</span> <span class="o">*</span><span class="n">t2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">t1</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="n">TestClass</span><span class="p">(</span><span class="s">&#34;test one&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">t2</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="n">TestClass</span><span class="p">(</span><span class="s">&#34;test two&#34;</span><span class="p">);</span> <span class="c1">// t1의 데이터를 덮어쓴다
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">delete</span> <span class="p">[]</span> <span class="n">buffer</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>t2</code>의 경우 <code>t1</code>의 데이터를 덮어 쓴다.
+<ul>
+<li>이것은 <code>t1</code>에 대한 파괴자가 호출하지 않기 때문에 위험하다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>따라서 다음과 같이 바꿀 수 있겠다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">t2</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">buffer</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">TestClass</span><span class="p">))</span> <span class="n">TestClass</span><span class="p">(</span><span class="s">&#34;test two&#34;</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>이 구현은 <code>t1</code>, <code>t2</code> 객체에 대한 파괴자를 부르지 않는다.
+<ul>
+<li><code>delete [] t1;</code> 으로 한다고 해도 <code>t1</code>은 <code>buffer</code>를 해제할 것이다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>따라서 파괴자를 명시적으로 호출할 수 있겠다. (역순으로)</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">t2</span><span class="o">-&gt;~</span><span class="n">TestClass</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="n">t1</span><span class="o">-&gt;~</span><span class="n">TestClass</span><span class="p">();</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="큐-시뮬레이션-만들기">큐 시뮬레이션 만들기</h2>
+<p>1. 구조체, 클래스, 열거체가 어떤 클래스 안에서 선언되면, 그 선언은 그 클래스의 사용 범위를 가진다.</p>
+<ul>
+<li>데이터 객체를 생성하지 않고, 그 클래스 안에서 내부적으로 사용할 수 있는 데이터형을 서술한다.</li>
+<li><code>public</code> 부분에 있다면, 클래스 바깥에서 변수를 선언할 수 있다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Queue</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">struct</span> <span class="nc">PrivateNode</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">struct</span> <span class="nc">PublicNode</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PrivateNode</span> <span class="n">n1</span><span class="p">;</span>       <span class="c1">// (X) private struct는 그 클래스 안에서만 사용할 수 있다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">PublicNode</span> <span class="n">n2</span><span class="p">;</span>        <span class="c1">// (X) public struct는 아래 처럼 사용해야 한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Queue</span><span class="o">::</span><span class="n">PublicNode</span> <span class="n">n3</span><span class="p">;</span> <span class="c1">// (O)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<p>2. 멤버 초기자 리스트</p>
+<ul>
+<li><code>const</code>형 멤버를 초기화하기 위해서는 어떻게 해야할까?</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Queue</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">int</span> <span class="n">queueSize</span><span class="p">;</span> <span class="c1">// 이것을 0으로 초기화해야 한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>생성자에서 하면 될까?
+<ul>
+<li><code>const</code> 변수는 초기화될 수는 있지만, 대입될 수는 없다.</li>
+<li>생성자의 중괄호 안의 내용이 실행되기 전에 객체가 먼저 생성된다.</li>
+<li>따라서 중괄호 안의 내용은 <code>const</code> 멤버 변수를 초기화하는 것이 아니라 대입하는 것이다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">Queue</span><span class="o">::</span><span class="n">Queue</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">queueSize</span> <span class="o">=</span> <span class="n">size</span><span class="p">;</span>  <span class="c1">// (X) 대입이다. 안 된다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>이럴 경우 객체가 생성될 때 초기화하는 멤버 초기자 리스트를 사용할 수 있다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">Queue</span><span class="o">::</span><span class="n">Queue</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="o">:</span> <span class="n">queueSize</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// …
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>멤버 초기자 리스트 문법은 생성자만이 사용할 수 있다.</li>
+<li>참조로 선언된 클래스 멤버들에 대해서도 이 문법을 사용해야 한다.
+<ul>
+<li>참조는 생성될 때만 초기화될 수 있기 때문이다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Agency</span> <span class="p">{</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Agent</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Agency</span> <span class="o">&amp;</span> <span class="n">belong</span><span class="p">;</span> <span class="c1">// 참조로 선언된 클래스 멤버
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Agent</span><span class="p">(</span><span class="n">Agency</span> <span class="o">&amp;</span> <span class="n">a</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 멤버 초기자 리스트를 사용해서 초기화해야 한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Agent</span><span class="o">::</span><span class="n">Agency</span><span class="p">(</span><span class="n">Agency</span> <span class="o">&amp;</span> <span class="n">a</span><span class="p">)</span> <span class="o">:</span> <span class="n">belong</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// …
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<p>3. 복사와 대입을 막는 복사 연산자와 대입 연산자를 구현 방법</p>
+<ul>
+<li>지금 당장은 깊은 복사를 하는 복사 연산자와 대입 연산자가 필요 없다.</li>
+<li>하지만 위험하므로 복사와 대입은 막고 싶다면?
+<ul>
+<li>명목상의 <code>private</code> 메서드로 정의한다. 그러면 바깥에서 사용하지 못하게 된다.</li>
+<li>또 다른 방법은 <code>delete</code> 키워드를 사용하는 것이다. (Chapter 18)</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Queue</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 선점 정의
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Queue</span><span class="p">(</span><span class="k">const</span> <span class="n">Queue</span> <span class="o">&amp;</span> <span class="n">q</span><span class="p">)</span> <span class="o">:</span> <span class="n">queueSize</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">Queue</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Queue</span> <span class="o">&amp;</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="p">}</span> 
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Queue</span> <span class="n">q1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Queue</span> <span class="n">q2</span><span class="p">(</span><span class="n">q1</span><span class="p">);</span> <span class="c1">// (X)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">Queue</span> <span class="n">q3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">q3</span> <span class="o">=</span> <span class="n">q1</span><span class="p">;</span>      <span class="c1">// (X)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/c&#43;&#43;-primer-plus/">C&#43;&#43; Primer Plus</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-11/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 11. 클래스의 활용</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-10/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 10. 객체와 클래스</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-09/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 9. 메모리 모델과 이름공간</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-08/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 8. 함수의 활용</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-07/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 7. 함수</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#서론">서론</a></li>
+    <li><a href="#무언가-잘못된-stringbad-클래스">무언가 잘못된 StringBad 클래스</a></li>
+    <li><a href="#복사-생성자">복사 생성자</a></li>
+    <li><a href="#대입-연산자">대입 연산자</a></li>
+    <li><a href="#개선된-string-클래스">개선된 String 클래스</a></li>
+    <li><a href="#객체-리턴에-대한-관찰">객체 리턴에 대한 관찰</a></li>
+    <li><a href="#위치-지정-new와-클래스">위치 지정 new와 클래스</a></li>
+    <li><a href="#큐-시뮬레이션-만들기">큐 시뮬레이션 만들기</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

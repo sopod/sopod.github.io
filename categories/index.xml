@@ -5,6 +5,39 @@
         <link>https://sopod.github.io/categories/</link>
         <description>Recent content in Categories on Sopod</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>en-us</language><atom:link href="https://sopod.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+        <language>en-us</language>
+        <lastBuildDate>Sun, 08 May 2022 16:00:00 +0900</lastBuildDate><atom:link href="https://sopod.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>C-Sharp</title>
+        <link>https://sopod.github.io/categories/c-sharp/</link>
+        <pubDate>Sun, 08 May 2022 16:00:00 +0900</pubDate>
+        
+        <guid>https://sopod.github.io/categories/c-sharp/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Game Math</title>
+        <link>https://sopod.github.io/categories/game-math/</link>
+        <pubDate>Fri, 22 Apr 2022 13:00:00 +0900</pubDate>
+        
+        <guid>https://sopod.github.io/categories/game-math/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>C&#43;&#43;</title>
+        <link>https://sopod.github.io/categories/c&#43;&#43;/</link>
+        <pubDate>Tue, 29 Mar 2022 17:00:00 +0900</pubDate>
+        
+        <guid>https://sopod.github.io/categories/c&#43;&#43;/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Design Pattern</title>
+        <link>https://sopod.github.io/categories/design-pattern/</link>
+        <pubDate>Wed, 16 Mar 2022 17:00:00 +0900</pubDate>
+        
+        <guid>https://sopod.github.io/categories/design-pattern/</guid>
+        <description></description>
+        </item>
+        
     </channel>
 </rss>

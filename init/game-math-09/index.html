@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='게임 엔진의 구성 요소 게임 엔진의 인터페이스는 게임 콘텐츠가 담기는 게임 공간을 설계하는 작업 공간과, 게임 데이터를 관리하는 작업 공간으로 나뉜다. 게임 공간: 씬(Scene), 레벨(Level) 데이터: 리소스(Resource), 애셋(Asset) 게임엔진은 씬 데이터와 리소스 데이터를 결합해서 최종 게임 화면이 렌더링되로록 설계됐다. 씬의 구조 콘텐츠를 구성하는 기본단위: 액터(Actor), 게임 오브젝트(GameObject) 크기, 회전, 위치로 구성된 트랜스폼(Transform)의 정보를 사용해서 관리한다. 이 트랜스폼 정보에 모델링 행렬을 사용해서 렌더링할 물체의 정점을 변환한다. 모델링 행렬의 설계 트랜스폼의 크기, 회전, 이동 데이터'><title>[Game Math] Chapter 9. 게임 엔진: 콘텐츠를 만드는 기술</title>
+
+<link rel='canonical' href='https://sopod.github.io/init/game-math-09/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[Game Math] Chapter 9. 게임 엔진: 콘텐츠를 만드는 기술'>
+<meta property='og:description' content='게임 엔진의 구성 요소 게임 엔진의 인터페이스는 게임 콘텐츠가 담기는 게임 공간을 설계하는 작업 공간과, 게임 데이터를 관리하는 작업 공간으로 나뉜다. 게임 공간: 씬(Scene), 레벨(Level) 데이터: 리소스(Resource), 애셋(Asset) 게임엔진은 씬 데이터와 리소스 데이터를 결합해서 최종 게임 화면이 렌더링되로록 설계됐다. 씬의 구조 콘텐츠를 구성하는 기본단위: 액터(Actor), 게임 오브젝트(GameObject) 크기, 회전, 위치로 구성된 트랜스폼(Transform)의 정보를 사용해서 관리한다. 이 트랜스폼 정보에 모델링 행렬을 사용해서 렌더링할 물체의 정점을 변환한다. 모델링 행렬의 설계 트랜스폼의 크기, 회전, 이동 데이터'>
+<meta property='og:url' content='https://sopod.github.io/init/game-math-09/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Init' /><meta property='article:tag' content='Game Math' /><meta property='article:published_time' content='2022-04-08T18:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-04-08T18:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[Game Math] Chapter 9. 게임 엔진: 콘텐츠를 만드는 기술">
+<meta name="twitter:description" content="게임 엔진의 구성 요소 게임 엔진의 인터페이스는 게임 콘텐츠가 담기는 게임 공간을 설계하는 작업 공간과, 게임 데이터를 관리하는 작업 공간으로 나뉜다. 게임 공간: 씬(Scene), 레벨(Level) 데이터: 리소스(Resource), 애셋(Asset) 게임엔진은 씬 데이터와 리소스 데이터를 결합해서 최종 게임 화면이 렌더링되로록 설계됐다. 씬의 구조 콘텐츠를 구성하는 기본단위: 액터(Actor), 게임 오브젝트(GameObject) 크기, 회전, 위치로 구성된 트랜스폼(Transform)의 정보를 사용해서 관리한다. 이 트랜스폼 정보에 모델링 행렬을 사용해서 렌더링할 물체의 정점을 변환한다. 모델링 행렬의 설계 트랜스폼의 크기, 회전, 이동 데이터">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/game-math/" >
+                Game Math
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/init/game-math-09/">[Game Math] Chapter 9. 게임 엔진: 콘텐츠를 만드는 기술</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Apr 08, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    14 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br />  <br /></p>
+<h2 id="게임-엔진의-구성-요소">게임 엔진의 구성 요소</h2>
+<ul>
+<li>게임 엔진의 인터페이스는 게임 콘텐츠가 담기는 게임 공간을 설계하는 작업 공간과, 게임 데이터를 관리하는 작업 공간으로 나뉜다.
+<ul>
+<li>게임 공간: 씬(Scene), 레벨(Level)</li>
+<li>데이터: 리소스(Resource), 애셋(Asset)</li>
+<li>게임엔진은 씬 데이터와 리소스 데이터를 결합해서 최종 게임 화면이 렌더링되로록 설계됐다. <br /><br>
+<img src="/postimg/gamemath/09-01-rendering.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="씬과 리소스로 만들어지는 최종 화면의 렌더링"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<h3 id="씬의-구조">씬의 구조</h3>
+<ul>
+<li>콘텐츠를 구성하는 기본단위: 액터(Actor), 게임 오브젝트(GameObject)
+<ul>
+<li>크기, 회전, 위치로 구성된 트랜스폼(Transform)의 정보를 사용해서 관리한다.</li>
+<li>이 트랜스폼 정보에 <strong>모델링 행렬</strong>을 사용해서 렌더링할 물체의 정점을 변환한다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<h3 id="모델링-행렬의-설계">모델링 행렬의 설계</h3>
+<ul>
+<li>
+<p>트랜스폼의 크기, 회전, 이동 데이터</p>
+<ul>
+<li>크기(S): 2차원 벡터 $(s_x, s_y)$</li>
+<li>회전(R): 각 $\theta$</li>
+<li>이동(T): 2차원 벡터 $(t_x, t_y)$</li>
+</ul>
+</li>
+<li>
+<p>크기, 회전, 이동에 대한 세 가지 아핀 변환행렬에 대응된다.</p>
+<ul>
+<li>$$S = \begin{bmatrix} a &amp; 0 &amp; 0 \\ 0 &amp; b &amp; 0 \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$$</li>
+<li>$$R = \begin{bmatrix} \cos\theta &amp; -\sin\theta &amp; 0 \\ \sin\theta &amp; \cos\theta &amp; 0 \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$$</li>
+<li>$$T = \begin{bmatrix} 1 &amp; 0 &amp; a\\ 0 &amp; 1 &amp; b \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>
+<p>그렇다면 아핀 변환을 어떤 순서로 적용해야 할까?</p>
+<ul>
+<li>회전과 이동변환을 할 경우 아래처럼 순서에 따라서 다른 결과가 나온다. 이것은 회전 대신 크기변환을 해도 마찬가지이다. 따라서 <strong>이동변환은 가장 마지막에</strong> 해야하겠다. <br /><br>
+<img src="/postimg/gamemath/09-02-rt.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="회전변환과 이동변환"
+	
+	
+></li>
+<li>이동변환을 제외하면 크기변환과 회전변환이 남는다. 크기와 회전변환을 할 경우에도 순서에 따라서 다른 결과가 나온다. Chapter 7에서 보았듯이 회전변환은 물체의 형태를 그대로 보존해주는 강체 변환(Rigid Transform)이기 때문에 <strong>회전변환을 나중에 해서 형태를 유지</strong>하는 것이 사용자 입장에서 직관적인 변환이겠다. <br /><br>
+<img src="/postimg/gamemath/09-03-sr.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="크기변환과 회전변환"
+	
+	
+></li>
+</ul>
+</li>
+<li>
+<p>따라서 아핀 변환의 순서는 <span style='background-color: #c293d8'>크기 → 회전 → 위치</span>순서로 이뤄지며 행렬곱으로 나타내면 다음과 같다. (열 기준 행렬으로 설명한다. 따라서 변환의 순서는 오른쪽에서 왼쪽으로 진행된다.)</p>
+<ul>
+<li>$T \cdot R \cdot S$</li>
+</ul>
+</li>
+<li>
+<p>이 3가지 변환을 수행하는 합성행렬인 **모델링 행렬(Modeling matrix)**은 다음과 같다.</p>
+<ul>
+<li>$$M = T \cdot R \cdot S = \begin{bmatrix} \cos\theta \cdot s_x &amp; -\sin\theta \cdot s_y &amp; t_x \\ \sin\theta \cdot s_x &amp; \cos\theta \cdot s_y &amp; t_y \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<h3 id="로컬-공간과-로컬-축">로컬 공간과 로컬 축</h3>
+<ul>
+<li><strong>로컬 공간(Local space)</strong>
+<ul>
+<li>Chapter 8에서 보았듯이, 하나의 물체를 표현하기 위해서 만들어진 메시 데이터는 자신만의 공간에서 물체를 구성하는 각 정점의 위치 정보가 저장된다. 이렇게 물체의 정보를 담기 위해 부여한 공간을 로컬 공간이라고 한다.</li>
+</ul>
+</li>
+<li><strong>월드 공간(World space)</strong>
+<ul>
+<li>게임 콘텐츠는 단일 물체가 아니라 여러가지 물체를 모아서 하나의 배경을 만든다. 이럴 때 사용하는 새로운 공간을 월드 공간이라고 한다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>
+<p>예를 들어, 비행기 게임을 만든다고 하자. 그러면 월드 공간을 중심으로 설정된 비행기의 위치좌표가 필요하다. 또한 앞으로 나아가는 비행기의 방향을 조종하려면 월드 공간과 무관하게 비행기가 바라보는 방향 정보도 필요할 것이다. <br /><br>
+<img src="/postimg/gamemath/09-04-worldLocal.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="월드 공간과 로컬 공간의 축"
+	
+	
+></p>
+</li>
+<li>
+<p><strong>로컬 축(Local Axis)</strong></p>
+<ul>
+<li>이렇게 물체를 기준으로 설정된 방향 정보를 로컬 축이라고 한다.</li>
+<li>로컬 축 정보는 로컬 공간의 기저벡터와 동일한 값을 가진다.</li>
+<li>게임 엔진은 월드의 $X$, $Y$, $Z$축과 구분하기 위해 각 로컬 축의 이름을 다음과 같이 부른다.</li>
+</ul>
+</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>로컬 축</th>
+<th>로컬 축의 이름</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$+X$</td>
+<td>라이트벡터 (Right Vector)</td>
+</tr>
+<tr>
+<td>$+Y$</td>
+<td>업벡터 (Up Vector)</td>
+</tr>
+<tr>
+<td>$+Z$</td>
+<td>포워드벡터 (Forward Vector)</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>트랜스폼의 이동과 크기 정보가 변경되더라도 게임 오브젝트가 보는 방향은 변함이 없기 때문에, 로컬 축 정보는 오직 <strong>회전 정보에만 영향을 받는다.</strong>
+<ul>
+<li>게임 오브젝트에 새로운 회전 값 $\theta$가 설정되면 로컬 축을 구성하는 표준기저벡터도 이에 따라 변한다.</li>
+<li>$e_1$이 변화된 값을 $\vec{r}$로, $e_2$가 변화된 값을 $\vec{u}$로 표현하면 그 값은 다음과 같다.
+<ul>
+<li>$\vec{r} = (\cos\theta, \sin\theta)$ <br /><br>
+$\vec{u} = (-\sin\theta, \cos\theta)$</li>
+</ul>
+</li>
+<li>여기서 로컬축 벡터의 원소를 각각 $\vec{r} = (r_x, r_y)$, $\vec{u} = (u_x, u_y)$로 지정하면, 아핀 회전 변환행렬은 삼각함수 대신 로컬 축 벡터를 사용해 생성할 수 있다. 따라서 모델링 행렬 역시 삼각함수 대신 로컬 축 정보를 사용해 계산할 수 있다.
+<ul>
+<li>$$M = T \cdot R \cdot S = \begin{bmatrix} r_x \cdot s_x &amp; u_x \cdot s_y &amp; t_x \\ r_y \cdot s_x &amp; u_y \cdot s_y &amp; t_y \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">TransformComponent</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 회전하면 로컬 축을 갱신한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">void</span> <span class="nf">SetRotation</span><span class="p">(</span><span class="kt">float</span> <span class="n">InDegree</span><span class="p">)</span> <span class="p">{</span> <span class="n">_Rotation</span> <span class="o">=</span> <span class="n">InDegree</span><span class="p">;</span> <span class="n">Update</span><span class="p">();</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="nf">AddRotation</span><span class="p">(</span><span class="kt">float</span> <span class="n">InDegree</span><span class="p">)</span> <span class="p">{</span> <span class="n">_Rotation</span> <span class="o">+=</span> <span class="n">InDegree</span><span class="p">;</span> <span class="n">Update</span><span class="p">();</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vector2</span> <span class="n">_Right</span> <span class="o">=</span> <span class="n">Vector2</span><span class="o">::</span><span class="n">UnityX</span><span class="p">;</span>  <span class="c1">// e1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Vector2</span> <span class="n">_Up</span> <span class="o">=</span> <span class="n">Vector2</span><span class="o">::</span><span class="n">UnityY</span><span class="p">;</span>     <span class="c1">// e2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 열벡터를 사용해서 모델링 행렬을 만든다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">FORCEINLINE</span> <span class="n">Matrix3x3</span> <span class="n">TransformComponent</span><span class="o">::</span><span class="n">GetModelingMatrix</span><span class="p">()</span> <span class="k">const</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">Matrix3x3</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector3</span><span class="p">(</span><span class="n">_Scale</span><span class="p">.</span><span class="n">X</span> <span class="o">*</span> <span class="n">_Right</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">_Scale</span><span class="p">.</span><span class="n">X</span> <span class="o">*</span> <span class="n">_Right</span><span class="p">.</span><span class="n">Y</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector3</span><span class="p">(</span><span class="n">_ScaleY</span><span class="p">.</span> <span class="o">*</span> <span class="n">_Up</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">_ScaleY</span><span class="p">.</span> <span class="o">*</span> <span class="n">_Up</span><span class="p">.</span><span class="n">Y</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector3</span><span class="p">(</span><span class="n">_Position</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">_Position</span><span class="p">.</span><span class="n">Y</span><span class="p">,</span> <span class="mf">1.f</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// sin cos함수를 이용해서 현재 회전 정보에 맞는 로컬 축 벡터를 갱신한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="n">TransformComponent</span><span class="o">::</span><span class="n">Update</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Math</span><span class="o">::</span><span class="n">GetSinCos</span><span class="p">(</span><span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">_Rotation</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">_Right</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">(</span><span class="n">cos</span><span class="p">,</span> <span class="n">sin</span><span class="p">);</span>  <span class="c1">// e1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">_Up</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">(</span><span class="o">-</span><span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">);</span>    <span class="c1">// e2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />  
+<h3 id="리소스-관리">리소스 관리</h3>
+<ul>
+<li>
+<p>월드 공간에 동일한 게임 오브젝트를 여러 개 배치한다고 하자.</p>
+<ul>
+<li>모델링 행렬을 사용해서 로컬 공간 정보를 월드 공간 정보로 변환하여 트랜스폼 정보를 설정해야할 것이다. <br /><br>
+<img src="/postimg/gamemath/09-05-localToWorld.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="로컬 공간에서 월드 공간으로"
+	
+	
+></li>
+<li>여기서 각각의 게임 오브젝트들은 각자의 트랜스폼 정보를 포함하고 있다. 그렇다면 리소스 데이터는 어떨까?
+<ul>
+<li>용량이 큰 메시 정보를 모두 각각 가지고 있다면 메모리 공간이 낭비될 것이다. 따라서 리소스 데이터는 여러 게임 오브젝트들이 함께 사용할 수 있는 공유 자원의 형태로 관리하는 것이 바람직하다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>리소스 저장소(Resource repository)</p>
+<ul>
+<li>씬과 무관하게 별도로 리소스를 모아두는 저장소이다.</li>
+<li>게임 오브젝트는 <strong>리소스의 키 값</strong>만 저장하며, 이것을 통해서 리소스에 접근한다. <br /><br>
+<img src="/postimg/gamemath/09-06-resource.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="리소스 저장소의 구조"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<p><br />  <br /></p>
+<h2 id="게임-엔진의-워크플로우">게임 엔진의 워크플로우</h2>
+<ul>
+<li>
+<p>워크플로우(Workflow)</p>
+<ul>
+<li>실행의 흐름.</li>
+<li>게임 엔진의 워크플로우는 크게 씬을 완성하는 과정, 완성된 씬으로부터 화면을 그려내는 과정으로 나뉜다.</li>
+</ul>
+</li>
+<li>
+<p>(저자가 제작한) 게임 엔진의 워크플로우</p>
+<ul>
+<li>1. 리소스 로딩 단계
+<ul>
+<li>메시, 텍스처 같은 리소스는 게임을 진행하면서 불러들이기에는 데이터 양이 크기 때문에 게임 시작 전에 미리 불러들여서 메모리에 올려둬야 안정적으로 게임을 진행할 수 있다.</li>
+<li><code>LoadResources()</code></li>
+</ul>
+</li>
+<li>2. 씬 구축 단계
+<ul>
+<li>게임 오브젝트의 트랜스폼 정보가 설정되며 리소스 정보가 게임 오브젝트에 연결된다.</li>
+<li><code>LoadScene2D()</code></li>
+</ul>
+</li>
+<li>3. 게임 로직 단계
+<ul>
+<li>프레임마다 게임 오브젝트의 트랜스폼 값을 변경한다.</li>
+<li><code>Update2D()</code></li>
+</ul>
+</li>
+<li>4. 렌더링 로직 단계
+<ul>
+<li>트랜스폼 정보와 리소스 데이터를 활용해서 최종화면을 그린다.</li>
+<li><code>Render2D()</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />  
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 1. 리소스 로딩 단계
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 메시
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">GameEngine</span><span class="o">::</span><span class="n">QuadMesh</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">hash</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">()(</span><span class="s">&#34;SM_Quad&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 텍스처
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">GameEngine</span><span class="o">::</span><span class="n">BaseTexture</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">hash</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">()(</span><span class="s">&#34;Base&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GameEngine</span><span class="o">::</span><span class="n">CharacterTexturePath</span><span class="p">(</span><span class="s">&#34;CKMan.png&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GameEngine</span><span class="o">::</span><span class="n">LoadResources</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 사각형 메시 데이터 객체를 생성하고 QuadMesh 키를 부여한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Mesh</span><span class="o">&amp;</span> <span class="n">quadMesh</span> <span class="o">=</span> <span class="n">CreateMesh</span><span class="p">(</span><span class="n">GameEngine</span><span class="o">::</span><span class="n">QuadMesh</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">constexpr</span> <span class="kt">float</span> <span class="n">squareHalfSize</span> <span class="o">=</span> <span class="mf">0.5f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">constexpr</span> <span class="kt">int</span> <span class="n">vertexCount</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">constexpr</span> <span class="kt">int</span> <span class="n">triangleCount</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">constexpr</span> <span class="kt">int</span> <span class="n">indexCount</span> <span class="o">=</span> <span class="n">triangleCount</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">quadMesh</span><span class="p">.</span><span class="n">GetVertices</span><span class="p">();</span> <span class="c1">// 정점 버퍼
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">i</span> <span class="o">=</span> <span class="n">quadMesh</span><span class="p">.</span><span class="n">GetIndices</span><span class="p">();</span>  <span class="c1">// 인덱스 버퍼
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">uv</span> <span class="o">=</span> <span class="n">quadMesh</span><span class="p">.</span><span class="n">GetUVs</span><span class="p">();</span>     <span class="c1">// UV 값
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">v</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector2</span><span class="p">(</span><span class="o">-</span><span class="n">squareHalfSize</span><span class="p">,</span> <span class="o">-</span><span class="n">squareHalfSize</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector2</span><span class="p">(</span><span class="o">-</span><span class="n">squareHalfSize</span><span class="p">,</span> <span class="n">squareHalfSize</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector2</span><span class="p">(</span><span class="n">squareHalfSize</span><span class="p">,</span> <span class="n">squareHalfSize</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector2</span><span class="p">(</span><span class="n">squareHalfSize</span><span class="p">,</span> <span class="o">-</span><span class="n">squareHalfSize</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">uv</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector2</span><span class="p">(</span><span class="mf">0.125f</span><span class="p">,</span> <span class="mf">0.75f</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector2</span><span class="p">(</span><span class="mf">0.125f</span><span class="p">,</span> <span class="mf">0.875f</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector2</span><span class="p">(</span><span class="mf">0.25f</span><span class="p">,</span> <span class="mf">0.875f</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector2</span><span class="p">(</span><span class="mf">0.25f</span><span class="p">,</span> <span class="mf">0.75f</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 텍스처 객체를 생성하고 BaseTexture 키를 부여한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Texture</span><span class="o">&amp;</span> <span class="n">baseTexture</span> <span class="o">=</span> <span class="n">CreateTexture</span><span class="p">(</span><span class="n">GameEngine</span><span class="o">::</span><span class="n">BaseTexture</span><span class="p">,</span> <span class="n">GameEngine</span><span class="o">::</span><span class="n">CharacterTexturePath</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 2. 씬 구축 단계
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 게임 오브젝트 목록
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">PlayerGo</span><span class="p">(</span><span class="s">&#34;Player&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 최초 씬 로딩을 담당하는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">LoadScene2D</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 최초 씬 로딩에서 사용하는 모듈 내 주요 레퍼런스
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">Get2DGameEngine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 플레이어의 생성과 설정
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">constexpr</span> <span class="kt">float</span> <span class="n">playerScale</span> <span class="o">=</span> <span class="mf">30.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">goPlayer</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">CreateNewGameObject</span><span class="p">(</span><span class="n">PlayerGo</span><span class="p">);</span>  <span class="c1">// 게임 오브젝트를 생성한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">goPlayer</span><span class="p">.</span><span class="n">SetMesh</span><span class="p">(</span><span class="n">GameEngine</span><span class="o">::</span><span class="n">QuadMesh</span><span class="p">);</span>  <span class="c1">// 메시 키를 설정한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">goPlayer</span><span class="p">.</span><span class="n">GetTransform</span><span class="p">().</span><span class="n">SetScale</span><span class="p">(</span><span class="n">Vector2</span><span class="o">::</span><span class="n">One</span> <span class="o">*</span> <span class="n">playerScale</span><span class="p">);</span>  <span class="c1">// 최초 트랜스폼을 설정한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">goPlayer</span><span class="p">.</span><span class="n">SetColor</span><span class="p">(</span><span class="n">LinearColor</span><span class="o">::</span><span class="n">Red</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 100개의 배경 게임 오브젝트 생성과 설정
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">64</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">constexpr</span> <span class="kt">float</span> <span class="n">squareScale</span> <span class="o">=</span> <span class="mf">20.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">mt19937</span> <span class="n">generator</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">uniform_real_distribution</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">dist</span><span class="p">(</span><span class="o">-</span><span class="mf">1000.f</span><span class="p">,</span> <span class="mf">1000.f</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">snprintf</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s">&#34;GameObject%d&#34;</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">newGo</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">CreateNewGameObject</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">newGo</span><span class="p">.</span><span class="n">GetTransform</span><span class="p">().</span><span class="n">SetPosition</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="n">dist</span><span class="p">(</span><span class="n">generator</span><span class="p">),</span> <span class="n">dist</span><span class="p">(</span><span class="n">generator</span><span class="p">)));</span>
+</span></span><span class="line"><span class="cl">        <span class="n">newGo</span><span class="p">.</span><span class="n">GetTransform</span><span class="p">().</span><span class="n">SetScale</span><span class="p">(</span><span class="n">Vector2</span><span class="o">::</span><span class="n">One</span> <span class="o">*</span> <span class="n">squareScale</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">newGo</span><span class="p">.</span><span class="n">SetMesh</span><span class="p">(</span><span class="n">GameEngine</span><span class="o">::</span><span class="n">QuadMesh</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">newGo</span><span class="p">.</span><span class="n">SetColor</span><span class="p">(</span><span class="n">LinearColor</span><span class="o">::</span><span class="n">Blue</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 3. 게임 로직 단계
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 게임 로직을 담당하는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">Update2D</span><span class="p">(</span><span class="kt">float</span> <span class="n">InDeltaSeconds</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 게임 로직에서 사용하는 모듈 내 주요 레퍼런스
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">Get2DGameEngine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">InputManager</span><span class="o">&amp;</span> <span class="n">input</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetInputManager</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 게임 로직의 로컬 변수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">static</span> <span class="kt">float</span> <span class="n">moveSpeed</span> <span class="o">=</span> <span class="mf">200.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">float</span> <span class="n">rotateSpeed</span> <span class="o">=</span> <span class="mf">180.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">float</span> <span class="n">scaleMin</span> <span class="o">=</span> <span class="mf">15.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">float</span> <span class="n">scaleMax</span> <span class="o">=</span> <span class="mf">30.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">float</span> <span class="n">scaleSpeed</span> <span class="o">=</span> <span class="mf">180.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 플레이어에 대한 주요 레퍼런스
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">goPlayer</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetGameObject</span><span class="p">(</span><span class="n">PlayerGo</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TransformComponent</span><span class="o">&amp;</span> <span class="n">transform</span> <span class="o">=</span> <span class="n">goPlayer</span><span class="p">.</span><span class="n">GetTransform</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 입력에 따른 플레이어 위치와 크기의 변경
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">float</span> <span class="n">newScale</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">GetScale</span><span class="p">().</span><span class="n">X</span> <span class="o">+</span> <span class="n">scaleSpeed</span> <span class="o">*</span> <span class="n">input</span><span class="p">.</span><span class="n">GetAxis</span><span class="p">(</span><span class="n">InputAxis</span><span class="o">::</span><span class="n">ZAxis</span><span class="p">)</span> <span class="o">*</span> <span class="n">InDeltaSeconds</span><span class="p">,</span> <span class="n">scaleMin</span><span class="p">,</span> <span class="n">scaleMax</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">transform</span><span class="p">.</span><span class="n">SetScale</span><span class="p">(</span><span class="n">Vector2</span><span class="o">::</span><span class="n">One</span> <span class="o">*</span> <span class="n">newScale</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">transform</span><span class="p">.</span><span class="n">AddRotation</span><span class="p">(</span><span class="n">input</span><span class="p">.</span><span class="n">GetAxis</span><span class="p">(</span><span class="n">InputAxis</span><span class="o">::</span><span class="n">XAxis</span><span class="p">)</span> <span class="o">*</span> <span class="n">rotateSpeed</span> <span class="o">*</span> <span class="n">InDeltaSeconds</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">transform</span><span class="p">.</span><span class="n">AddPosition</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">GetLocalY</span><span class="p">()</span> <span class="o">*</span> <span class="n">input</span><span class="p">.</span><span class="n">GetAxis</span><span class="p">(</span><span class="n">InputAxis</span><span class="o">::</span><span class="n">YAxis</span><span class="p">)</span> <span class="o">*</span> <span class="n">moveSpeed</span> <span class="o">*</span> <span class="n">InDeltaSeconds</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 4. 렌더링 로직 단계
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 렌더링 로직을 담당하는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">Render2D</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 렌더링 로직에서 사용하는 모듈 내 주요 레퍼런스
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">GetRenderer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">Get2DGameEngine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 배경에 격자 그리기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">DrawGizmo2D</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 렌더링 로직의 로컬 변수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">size_t</span> <span class="n">totalObjectCount</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetScene</span><span class="p">().</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 씬을 구성하는 모든 게임 오브젝트의 순회
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">SceneBegin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">g</span><span class="p">.</span><span class="n">SceneEnd</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 게임 오브젝트의 레퍼런스를 얻기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">const</span> <span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">gameObject</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">gameObject</span><span class="p">.</span><span class="n">HasMesh</span><span class="p">()</span> <span class="o">||</span> <span class="o">!</span><span class="n">gameObject</span><span class="p">.</span><span class="n">IsVisible</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 렌더링에 필요한 게임 오브젝트의 주요 레퍼런스를 얻기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">const</span> <span class="n">Mesh</span><span class="o">&amp;</span> <span class="n">mesh</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetMesh</span><span class="p">(</span><span class="n">gameObject</span><span class="p">.</span><span class="n">GetMeshKey</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="n">TransformComponent</span><span class="o">&amp;</span> <span class="n">transform</span> <span class="o">=</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">GetTransform</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Matrix3x3</span> <span class="n">finalMatrix</span> <span class="o">=</span> <span class="n">transform</span><span class="p">.</span><span class="n">GetModelingMatrix</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 게임 오브젝트의 렌더링 수행 - 다음 절의 렌더링 파이프라인의 시작.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">DrawMesh2D</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">finalMatrix</span><span class="p">,</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">GetColor</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 플레이어의 정보를 화면에 출력
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="n">gameObject</span> <span class="o">==</span> <span class="n">PlayerGo</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;Player Position : &#34;</span> <span class="o">+</span> <span class="n">transform</span><span class="p">.</span><span class="n">GetPosition</span><span class="p">().</span><span class="n">ToString</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">            <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;Player Rotation : &#34;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">GetRotation</span><span class="p">())</span> <span class="o">+</span> <span class="s">&#34; (deg)&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;Player Scale : &#34;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">GetScale</span><span class="p">().</span><span class="n">X</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />  
+<h3 id="렌더링-파이프라인">렌더링 파이프라인</h3>
+<ul>
+<li>
+<p><strong>렌더링 파이프라인(Rendering pipeline)</strong></p>
+<ul>
+<li>게임 제작의 렌더링은 GPU가 처리한다. <span style='background-color: #c293d8'>GPU 내부에 설정된 렌더링 워크플로우</span>를 렌더링 파이프라인이라고 한다.  <br /><br>
+<img src="/postimg/gamemath/09-07-renderingPipeline.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="렌더링 파이프라인"
+	
+	
+></li>
+</ul>
+</li>
+<li>
+<p><strong>드로우 콜(Drawcall)</strong></p>
+<ul>
+<li>CPU가 GPU에게 렌더링 작업을 수행하도록 명령을 하는 것이다.</li>
+<li>(저자가 제작한 게임 엔진에서는) <code>DrawMesh2D()</code>를 호출하는 것이 드로우 콜이라고 할 수 있겠다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>(저자가 제작한) 렌더링 파이프라인
+<ul>
+<li>1. 정점 변환과 처리 단계
+<ul>
+<li>메시에 설정된 정점의 데이터는 로컬 공간을 기준으로 설정되어 있다. 이것을 월드 공간 중심으로 변환하여 화면에 그려질 정점의 최종 위치 값을 구한다.</li>
+<li>즉, 모델링 행렬에 로컬 공간의 좌표를 곱한다.</li>
+<li><code>DrawMesh2D()</code>, <code>VertexShader2D()</code></li>
+</ul>
+</li>
+<li>2. 픽셀화와 픽셀 처리 단계
+<ul>
+<li>Chapter 8에서 보았던 무게중심좌표를 활용해서 삼각형 영역의 픽셀을 추려내고, 색상을 결정한다. 해당 픽셀의 UV에 대응되는 색상을 가져온 후 필요하다면 추가로 조명 효과 등을 적용해서 최종 픽셀 색상을 설정한다.</li>
+<li><code>DrawTriangle2D()</code>, <code>FragmentShader2D()</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />  
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 1. 정점 변환과 처리
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 메시를 그리는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">DrawMesh2D</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">DD</span><span class="o">::</span><span class="n">Mesh</span><span class="o">&amp;</span> <span class="n">InMesh</span><span class="p">,</span> <span class="k">const</span> <span class="n">Matrix3x3</span><span class="o">&amp;</span> <span class="n">InMatrix</span><span class="p">,</span> <span class="k">const</span> <span class="n">LinearColor</span><span class="o">&amp;</span> <span class="n">InColor</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 메시의 구조를 파악하기 위한 로컬 변수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">size_t</span> <span class="n">vertexCount</span> <span class="o">=</span> <span class="n">InMesh</span><span class="p">.</span><span class="n">GetVertices</span><span class="p">().</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">size_t</span> <span class="n">indexCount</span> <span class="o">=</span> <span class="n">InMesh</span><span class="p">.</span><span class="n">GetIndices</span><span class="p">().</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">size_t</span> <span class="n">triangleCount</span> <span class="o">=</span> <span class="n">indexCount</span> <span class="o">/</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 메시 정보를 렌더러가 사용할 정점 버퍼와 인덱스 버퍼로 변환
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex2D</span><span class="o">&gt;</span> <span class="n">vertices</span><span class="p">(</span><span class="n">vertexCount</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">size_t</span><span class="o">&gt;</span> <span class="n">indice</span><span class="p">(</span><span class="n">InMesh</span><span class="p">.</span><span class="n">GetIndices</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">vi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">vi</span> <span class="o">&lt;</span> <span class="n">vertexCount</span><span class="p">;</span> <span class="o">++</span><span class="n">vi</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">vertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">Position</span> <span class="o">=</span> <span class="n">InMesh</span><span class="p">.</span><span class="n">GetVertices</span><span class="p">()[</span><span class="n">vi</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">InMesh</span><span class="p">.</span><span class="n">HasColor</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">vertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">Color</span> <span class="o">=</span> <span class="n">InMesh</span><span class="p">.</span><span class="n">GetColors</span><span class="p">()[</span><span class="n">vi</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">InMesh</span><span class="p">.</span><span class="n">HasUV</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">vertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">UV</span> <span class="o">=</span> <span class="n">InMesh</span><span class="p">.</span><span class="n">GetUVs</span><span class="p">()[</span><span class="n">vi</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 정점 변환 진행!!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">VertexShader2D</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">InMatrix</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 그리기모드 설정
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">FillMode</span> <span class="n">fm</span> <span class="o">=</span> <span class="n">FillMode</span><span class="o">::</span><span class="n">None</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">InMesh</span><span class="p">.</span><span class="n">HasColor</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">fm</span> <span class="o">|=</span> <span class="n">FillMode</span><span class="o">::</span><span class="n">Color</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">InMesh</span><span class="p">.</span><span class="n">HasUV</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">fm</span> <span class="o">|=</span> <span class="n">FillMode</span><span class="o">::</span><span class="n">Texture</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 메시를 삼각형으로 쪼개서 각각 그리기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">ti</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ti</span> <span class="o">&lt;</span> <span class="n">triangleCount</span><span class="p">;</span> <span class="o">++</span><span class="n">ti</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">bi0</span> <span class="o">=</span> <span class="n">ti</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">bi1</span> <span class="o">=</span> <span class="n">ti</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bi2</span> <span class="o">=</span> <span class="n">ti</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex2D</span><span class="o">&gt;</span> <span class="n">tvs</span> <span class="o">=</span> <span class="p">{</span> <span class="n">vertices</span><span class="p">[</span><span class="n">indice</span><span class="p">[</span><span class="n">bi0</span><span class="p">]]</span> <span class="p">,</span> <span class="n">vertices</span><span class="p">[</span><span class="n">indice</span><span class="p">[</span><span class="n">bi1</span><span class="p">]]</span> <span class="p">,</span> <span class="n">vertices</span><span class="p">[</span><span class="n">indice</span><span class="p">[</span><span class="n">bi2</span><span class="p">]]</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1">// 2. 픽셀화
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">DrawTriangle2D</span><span class="p">(</span><span class="n">tvs</span><span class="p">,</span> <span class="n">InColor</span><span class="p">,</span> <span class="n">fm</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />  
+<ul>
+<li>
+<p><strong>셰이더(Shader)</strong></p>
+<ul>
+<li>GPU의 렌더링 파이프라인의 몇몇 부분은 프로그래밍이 가능하다. 이런 부분을 개발자가 프로그래밍해서 만들어낸, 렌더링 효과를 계산하는 함수를 셰이더라고 한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>정점 셰이더(Vertex Shader)</strong></p>
+<ul>
+<li>개발자들이 변환을 직접 설계해서 만든 정점 처리 함수이다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 정점 셰이더
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">VertexShader2D</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex2D</span><span class="o">&gt;&amp;</span> <span class="n">InVertices</span><span class="p">,</span> <span class="k">const</span> <span class="n">Matrix3x3</span><span class="o">&amp;</span> <span class="n">InMatrix</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 위치 값에 최종 행렬을 적용해 변환
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="n">Vertex2D</span><span class="o">&amp;</span> <span class="nl">v</span> <span class="p">:</span> <span class="n">InVertices</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">v</span><span class="p">.</span><span class="n">Position</span> <span class="o">=</span> <span class="n">InMatrix</span> <span class="o">*</span> <span class="n">v</span><span class="p">.</span><span class="n">Position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />  
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 2. 픽셀화와 픽셀 처리
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 삼각형을 그리는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">DrawTriangle2D</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DD</span><span class="o">::</span><span class="n">Vertex2D</span><span class="o">&gt;&amp;</span> <span class="n">InVertices</span><span class="p">,</span> <span class="k">const</span> <span class="n">LinearColor</span><span class="o">&amp;</span> <span class="n">InColor</span><span class="p">,</span> <span class="n">FillMode</span> <span class="n">InFillMode</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 렌더링 로직에서 사용하는 모듈 내 주요 레퍼런스
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">GetRenderer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">GameEngine</span><span class="o">&amp;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">Get2DGameEngine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">Texture</span><span class="o">&amp;</span> <span class="n">texture</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetTexture</span><span class="p">(</span><span class="n">GameEngine</span><span class="o">::</span><span class="n">BaseTexture</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">IsWireframeDrawing</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 와이어 프레임 모드
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// ... 삼각형 칠하기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        
+</span></span><span class="line"><span class="cl">        <span class="c1">// 삼각형 영역 내 모든 점을 점검하고 색칠
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">upperRightPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">lowerLeftPoint</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="o">++</span><span class="n">y</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">ScreenPoint</span> <span class="n">fragment</span> <span class="o">=</span> <span class="n">ScreenPoint</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Vector2</span> <span class="n">pointToTest</span> <span class="o">=</span> <span class="n">fragment</span><span class="p">.</span><span class="n">ToCartesianCoordinate</span><span class="p">(</span><span class="n">_ScreenSize</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Vector2</span> <span class="n">w</span> <span class="o">=</span> <span class="n">pointToTest</span> <span class="o">-</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">float</span> <span class="n">wdotu</span> <span class="o">=</span> <span class="n">w</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">u</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">float</span> <span class="n">wdotv</span> <span class="o">=</span> <span class="n">w</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                <span class="kt">float</span> <span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="n">wdotv</span> <span class="o">*</span> <span class="n">udotv</span> <span class="o">-</span> <span class="n">wdotu</span> <span class="o">*</span> <span class="n">vdotv</span><span class="p">)</span> <span class="o">*</span> <span class="n">invDenominator</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">float</span> <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">wdotu</span> <span class="o">*</span> <span class="n">udotv</span> <span class="o">-</span> <span class="n">wdotv</span> <span class="o">*</span> <span class="n">udotu</span><span class="p">)</span> <span class="o">*</span> <span class="n">invDenominator</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">float</span> <span class="n">oneMinusST</span> <span class="o">=</span> <span class="mf">1.f</span> <span class="o">-</span> <span class="n">s</span> <span class="o">-</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(((</span><span class="n">s</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">s</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">t</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">oneMinusST</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">oneMinusST</span> <span class="o">&lt;=</span> <span class="mf">1.f</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Vector2</span> <span class="n">targetUV</span> <span class="o">=</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">oneMinusST</span> <span class="o">+</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">UV</span> <span class="o">*</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                    
+</span></span><span class="line"><span class="cl">                    <span class="c1">// 색상 결정 진행!!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="n">r</span><span class="p">.</span><span class="n">DrawPoint</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">FragmentShader2D</span><span class="p">(</span><span class="n">texture</span><span class="p">.</span><span class="n">GetSample</span><span class="p">(</span><span class="n">targetUV</span><span class="p">),</span> <span class="n">LinearColor</span><span class="o">::</span><span class="n">White</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />  
+<ul>
+<li>파편(Fragment)
+<ul>
+<li>GPU에서는 삼각형을 구성하는 픽셀을 파편이라고 한다.</li>
+</ul>
+</li>
+<li><strong>파편 셰이더(Fragment Shader)</strong> 혹은 <strong>픽셀 셰이더(Pixel Shader)</strong>
+<ul>
+<li>개발자들이 직접 설계한, 최종 픽셀을 계산하는 함수이다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 픽셀 셰이더 (단순하게 흰색을 합성해서 고유의 색을 표현하도록 함)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">FORCEINLINE</span> <span class="n">LinearColor</span> <span class="nf">FragmentShader2D</span><span class="p">(</span><span class="n">LinearColor</span><span class="o">&amp;</span> <span class="n">InColor</span><span class="p">,</span> <span class="k">const</span> <span class="n">LinearColor</span><span class="o">&amp;</span> <span class="n">InColorParam</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">InColor</span> <span class="o">*</span> <span class="n">InColorParam</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br />  <br /></p>
+<h2 id="카메라-시스템">카메라 시스템</h2>
+<ul>
+<li>게임 엔진에는 개발자 관점에서 바라보는 게임 공간과 게이머가 바라보는 게임 공간, 이 두 가지 화면을 제공한다.</li>
+<li>그렇다면 게이머를 위한 카메라는 월드 공간에 어떻게 설정할 수 있을까?</li>
+</ul>
+<br />  
+<h3 id="가상-공간의-카메라">가상 공간의 카메라</h3>
+<ul>
+<li>
+<p><strong>뷰포트(Viewport)</strong></p>
+<ul>
+<li>카메라는 자신이 출력할 화면의 해상도 정보를 가지고 월드의 일부를 그려낸다. 이 때 <strong>카메라가 출력할 화면의 크기 정보</strong>를 뷰포트라고 한다.</li>
+<li>즉, 게이머가 보는 게임 공간의 크기가 바로 뷰포트다.</li>
+</ul>
+</li>
+<li>
+<p><strong>뷰 공간(View space)</strong></p>
+<ul>
+<li>카메라에 설정된 뷰포트 정보를 바탕으로 월드 공간의 일부분을 렌더링해야 한다. 이를 위해서는 카메라를 중심으로 물체의 트랜스폼을 재조정하는 작업이 필요하다.</li>
+<li>여기서 <strong>카메라를 중심으로 변환한 공간</strong>을 뷰 공간이라고 한다.</li>
+</ul>
+</li>
+<li>
+<p>로컬 공간, 월드 공간, 뷰 공간의 개념을 정리하면 다음과 같다. <br /><br>
+<img src="/postimg/gamemath/09-08-localWorldView.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="로컬, 월드, 뷰 공간"
+	
+	
+></p>
+</li>
+</ul>
+<br />  
+<ul>
+<li>
+<p>카메라를 중심으로 전개되는 뷰 공간을 어떻게 설계할 수 있을까?</p>
+<ul>
+<li>예를 들어, 월드 공간에 카메라가 $(-10, -10)$에 있고, 어떤 물체가 $(10, 10)$에 있다고 하자. 그렇다면 카메라로부터 해당 게임 오브젝트의 상대적 위치는 $(20, 20)$이 된다.  <br /><br>
+<img src="/postimg/gamemath/09-09-worldToView.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="카메라를 중심으로 해석한 게임 오브젝트의 최종 위치"
+	
+	
+></li>
+<li>어떻게 하면 그 물체의 월드 공간 좌표인 $(10, 10)$을 뷰 공간 좌표인 $(20, 20)$로 바꿀 수 있을까?</li>
+</ul>
+</li>
+<li>
+<p><strong>뷰 행렬(View matrix)</strong></p>
+<ul>
+<li>모델링 행렬이 로컬 공간의 좌표를 월드 공간의 좌표로 변환해준다면, 뷰 행렬은 월드 공간의 좌표를 뷰 공간의 좌표로 변환해준다.</li>
+<li>이전 예제를 다시보면, 뷰 공간 좌표인 $(20, 20)$은 물체의 월드 공간 좌표에다가 카메라의 위치를 기준으로 측정한 월드 원점의 상대 좌표인 $(10, 10)$을 더하면 얻을 수 있다.</li>
+<li>그리고 그 상대 좌표는 <span style='background-color: #c293d8'>카메라의 월드 공간 좌표를 반전시켜서</span> 얻을 수 있다. 즉, <span style='background-color: #c293d8'>이동 행렬의 역행렬</span>을 사용해서 계산하면 된다.</li>
+<li>$$V = \begin{bmatrix} 1 &amp; 0 &amp; -t_x \\ 0 &amp; 1 &amp; -t_y \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$$</li>
+</ul>
+</li>
+<li>
+<p>따라서, 로컬 공간 $v_{local}$을 뷰 공간 $v_{view}$으로 변환하는 과정은 다음과 같다.</p>
+<ul>
+<li><span style='background-color: #c293d8'>$v_{view} = V \cdot M \cdot v_{local}$</span></li>
+<li>즉, 행렬 $VM$은 로컬 공간을 뷰 공간으로 변환한다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>다음은 플레이어를 따라가는 카메라의 로직을 구현한 예제이다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 게임 로직을 담당하는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">Update2D</span><span class="p">(</span><span class="kt">float</span> <span class="n">InDeltaSeconds</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 게임 로직에서 사용하는 모듈 내 주요 레퍼런스
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">Get2DGameEngine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">InputManager</span><span class="o">&amp;</span> <span class="n">input</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetInputManager</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 게임 로직의 로컬 변수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">static</span> <span class="kt">float</span> <span class="n">moveSpeed</span> <span class="o">=</span> <span class="mf">200.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">float</span> <span class="n">rotateSpeed</span> <span class="o">=</span> <span class="mf">180.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">float</span> <span class="n">scaleMin</span> <span class="o">=</span> <span class="mf">15.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">float</span> <span class="n">scaleMax</span> <span class="o">=</span> <span class="mf">30.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">float</span> <span class="n">scaleSpeed</span> <span class="o">=</span> <span class="mf">180.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">float</span> <span class="n">minDistance</span> <span class="o">=</span> <span class="mf">1.f</span><span class="p">;</span> <span class="c1">// 플레이어와 카메라의 위치가 일치할 최소거리
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">static</span> <span class="kt">float</span> <span class="n">lerpSpeed</span> <span class="o">=</span> <span class="mf">2.f</span><span class="p">;</span> <span class="c1">// 플레이어가 카메라를 쫒아가는 속도
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 플레이어에 대한 주요 레퍼런스
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">goPlayer</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetGameObject</span><span class="p">(</span><span class="n">PlayerGo</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TransformComponent</span><span class="o">&amp;</span> <span class="n">transform</span> <span class="o">=</span> <span class="n">goPlayer</span><span class="p">.</span><span class="n">GetTransform</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 입력에 따른 플레이어 위치와 크기의 변경
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">transform</span><span class="p">.</span><span class="n">AddPosition</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="n">input</span><span class="p">.</span><span class="n">GetAxis</span><span class="p">(</span><span class="n">InputAxis</span><span class="o">::</span><span class="n">XAxis</span><span class="p">),</span> <span class="n">input</span><span class="p">.</span><span class="n">GetAxis</span><span class="p">(</span><span class="n">InputAxis</span><span class="o">::</span><span class="n">YAxis</span><span class="p">)).</span><span class="n">GetNormalize</span><span class="p">()</span> <span class="o">*</span> <span class="n">moveSpeed</span> <span class="o">*</span> <span class="n">InDeltaSeconds</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">newScale</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">GetScale</span><span class="p">().</span><span class="n">X</span> <span class="o">+</span> <span class="n">scaleSpeed</span> <span class="o">*</span> <span class="n">input</span><span class="p">.</span><span class="n">GetAxis</span><span class="p">(</span><span class="n">InputAxis</span><span class="o">::</span><span class="n">ZAxis</span><span class="p">)</span> <span class="o">*</span> <span class="n">InDeltaSeconds</span><span class="p">,</span> <span class="n">scaleMin</span><span class="p">,</span> <span class="n">scaleMax</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">transform</span><span class="p">.</span><span class="n">SetScale</span><span class="p">(</span><span class="n">Vector2</span><span class="o">::</span><span class="n">One</span> <span class="o">*</span> <span class="n">newScale</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">transform</span><span class="p">.</span><span class="n">AddRotation</span><span class="p">(</span><span class="n">input</span><span class="p">.</span><span class="n">GetAxis</span><span class="p">(</span><span class="n">InputAxis</span><span class="o">::</span><span class="n">WAxis</span><span class="p">)</span> <span class="o">*</span> <span class="n">rotateSpeed</span> <span class="o">*</span> <span class="n">InDeltaSeconds</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 플레이어를 따라다니는 카메라의 트랜스폼
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">TransformComponent</span><span class="o">&amp;</span> <span class="n">cameraTransform</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetMainCamera</span><span class="p">().</span><span class="n">GetTransform</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vector2</span> <span class="n">playerPos</span> <span class="o">=</span> <span class="n">transform</span><span class="p">.</span><span class="n">GetPosition</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vector2</span> <span class="n">cameraPos</span> <span class="o">=</span> <span class="n">cameraTransform</span><span class="p">.</span><span class="n">GetPosition</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">((</span><span class="n">playerPos</span> <span class="o">-</span> <span class="n">cameraPos</span><span class="p">).</span><span class="n">SizeSquared</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">minDistance</span> <span class="o">*</span> <span class="n">minDistance</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 최소거리보다 작으면 플레이어 위치로 간다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">cameraTransform</span><span class="p">.</span><span class="n">SetPosition</span><span class="p">(</span><span class="n">playerPos</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span> <span class="c1">// 최소거리보다 크면 서서히 이동한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">float</span> <span class="n">ratio</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="n">lerpSpeed</span> <span class="o">*</span> <span class="n">InDeltaSeconds</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">,</span> <span class="mf">1.f</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector2</span> <span class="n">newCameraPos</span> <span class="o">=</span> <span class="n">cameraPos</span> <span class="o">+</span> <span class="p">(</span><span class="n">playerPos</span> <span class="o">-</span> <span class="n">cameraPos</span><span class="p">)</span> <span class="o">*</span> <span class="n">ratio</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cameraTransform</span><span class="p">.</span><span class="n">SetPosition</span><span class="p">(</span><span class="n">newCameraPos</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 렌더링 로직을 담당하는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">Render2D</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 렌더링 로직에서 사용하는 모듈 내 주요 레퍼런스
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">GetRenderer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">Get2DGameEngine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">texture</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetTexture</span><span class="p">(</span><span class="n">GameEngine</span><span class="o">::</span><span class="n">BaseTexture</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 배경에 격자 그리기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">DrawGizmo2D</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 렌더링 로직의 로컬 변수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">size_t</span> <span class="n">totalObjectCount</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetScene</span><span class="p">().</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Matrix3x3</span> <span class="n">viewMatrix</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetMainCamera</span><span class="p">().</span><span class="n">GetViewMatrix</span><span class="p">();</span> <span class="c1">// 뷰 행렬
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 씬을 구성하는 모든 게임 오브젝트의 순회
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">SceneBegin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">g</span><span class="p">.</span><span class="n">SceneEnd</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 게임 오브젝트의 레퍼런스를 얻기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">const</span> <span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">gameObject</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">gameObject</span><span class="p">.</span><span class="n">HasMesh</span><span class="p">()</span> <span class="o">||</span> <span class="o">!</span><span class="n">gameObject</span><span class="p">.</span><span class="n">IsVisible</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 렌더링에 필요한 게임 오브젝트의 주요 레퍼런스를 얻기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">const</span> <span class="n">Mesh</span><span class="o">&amp;</span> <span class="n">mesh</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">GetMesh</span><span class="p">(</span><span class="n">gameObject</span><span class="p">.</span><span class="n">GetMeshKey</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="n">TransformComponent</span><span class="o">&amp;</span> <span class="n">transform</span> <span class="o">=</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">GetTransform</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Matrix3x3</span> <span class="n">finalMatrix</span> <span class="o">=</span> <span class="n">viewMatrix</span> <span class="o">*</span> <span class="n">transform</span><span class="p">.</span><span class="n">GetModelingMatrix</span><span class="p">();</span> <span class="c1">// 뷰행렬 * 모델링 행렬으로 VM을 구한다 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 게임 오브젝트의 렌더링 수행
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">DrawMesh2D</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">finalMatrix</span><span class="p">,</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">GetColor</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1">// 플레이어의 정보를 화면에 출력
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="n">gameObject</span> <span class="o">==</span> <span class="n">PlayerGo</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;Player Position : &#34;</span> <span class="o">+</span> <span class="n">transform</span><span class="p">.</span><span class="n">GetPosition</span><span class="p">().</span><span class="n">ToString</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">            <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;Player Rotation : &#34;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">GetRotation</span><span class="p">())</span> <span class="o">+</span> <span class="s">&#34; (deg)&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">r</span><span class="p">.</span><span class="n">PushStatisticText</span><span class="p">(</span><span class="s">&#34;Player Scale : &#34;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">GetScale</span><span class="p">().</span><span class="n">X</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br />  <br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/game-math/">Game Math</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/init/game-math-08/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 8. 삼각형: 물체를 구성하는 가장 작은 단위</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-07/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 7. 내적: 벡터 공간의 분석과 응용</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-06/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 6. 아핀 공간: 움직이는 가상 세계의 구축</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-05/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 5. 행렬: 가상 세계의 변환 도구</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-04/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 4. 삼각함수: 회전을 위한 수학</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#게임-엔진의-구성-요소">게임 엔진의 구성 요소</a>
+      <ol>
+        <li><a href="#씬의-구조">씬의 구조</a></li>
+        <li><a href="#모델링-행렬의-설계">모델링 행렬의 설계</a></li>
+        <li><a href="#로컬-공간과-로컬-축">로컬 공간과 로컬 축</a></li>
+        <li><a href="#리소스-관리">리소스 관리</a></li>
+      </ol>
+    </li>
+    <li><a href="#게임-엔진의-워크플로우">게임 엔진의 워크플로우</a>
+      <ol>
+        <li><a href="#렌더링-파이프라인">렌더링 파이프라인</a></li>
+      </ol>
+    </li>
+    <li><a href="#카메라-시스템">카메라 시스템</a>
+      <ol>
+        <li><a href="#가상-공간의-카메라">가상 공간의 카메라</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='벡터의 외적 벡터의 외적(Cross product) $\vec{a} = (a_x, a_y, a_z), \vec{b} = (b_x, b_y, b_z)$ $\vec{a} \times \vec{b} = (a_yb_z - a_zb_y, a_zb_x - a_xb_z, a_xb_y - a_yb_x)$ Chapter 10에서 설명했던 회전의 순환 순서 $x$→$y$→$z$→$x$에 맞춰 벡터를 순서대로 나열하는 형태이며, 결과는 언제나 3차원 벡터가 된다. $x$성분의 결과를 만들기 위해 $x$와 관련없는 나머지 두 성분의 $y$와 $z$를 결합해서 만든다. 항상 같은 성분만 사용하는 내적과 대비된다. 외적의 성질 교환법칙이 성립하지 않는다. 위의 식을 살펴보면 교환법칙이 성립하지 않는 뺄셈을 사용한 것을 알 수 있다.'><title>[Game Math] Chapter 11. 외적: 3차원 공간의 분석과 응용</title>
+
+<link rel='canonical' href='https://sopod.github.io/init/game-math-11/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[Game Math] Chapter 11. 외적: 3차원 공간의 분석과 응용'>
+<meta property='og:description' content='벡터의 외적 벡터의 외적(Cross product) $\vec{a} = (a_x, a_y, a_z), \vec{b} = (b_x, b_y, b_z)$ $\vec{a} \times \vec{b} = (a_yb_z - a_zb_y, a_zb_x - a_xb_z, a_xb_y - a_yb_x)$ Chapter 10에서 설명했던 회전의 순환 순서 $x$→$y$→$z$→$x$에 맞춰 벡터를 순서대로 나열하는 형태이며, 결과는 언제나 3차원 벡터가 된다. $x$성분의 결과를 만들기 위해 $x$와 관련없는 나머지 두 성분의 $y$와 $z$를 결합해서 만든다. 항상 같은 성분만 사용하는 내적과 대비된다. 외적의 성질 교환법칙이 성립하지 않는다. 위의 식을 살펴보면 교환법칙이 성립하지 않는 뺄셈을 사용한 것을 알 수 있다.'>
+<meta property='og:url' content='https://sopod.github.io/init/game-math-11/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Init' /><meta property='article:tag' content='Game Math' /><meta property='article:published_time' content='2022-04-13T18:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-04-13T18:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[Game Math] Chapter 11. 외적: 3차원 공간의 분석과 응용">
+<meta name="twitter:description" content="벡터의 외적 벡터의 외적(Cross product) $\vec{a} = (a_x, a_y, a_z), \vec{b} = (b_x, b_y, b_z)$ $\vec{a} \times \vec{b} = (a_yb_z - a_zb_y, a_zb_x - a_xb_z, a_xb_y - a_yb_x)$ Chapter 10에서 설명했던 회전의 순환 순서 $x$→$y$→$z$→$x$에 맞춰 벡터를 순서대로 나열하는 형태이며, 결과는 언제나 3차원 벡터가 된다. $x$성분의 결과를 만들기 위해 $x$와 관련없는 나머지 두 성분의 $y$와 $z$를 결합해서 만든다. 항상 같은 성분만 사용하는 내적과 대비된다. 외적의 성질 교환법칙이 성립하지 않는다. 위의 식을 살펴보면 교환법칙이 성립하지 않는 뺄셈을 사용한 것을 알 수 있다.">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/game-math/" >
+                Game Math
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/init/game-math-11/">[Game Math] Chapter 11. 외적: 3차원 공간의 분석과 응용</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Apr 13, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    11 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br />  <br /></p>
+<h2 id="벡터의-외적">벡터의 외적</h2>
+<ul>
+<li><strong>벡터의 외적(Cross product)</strong> <br /><br>
+<img src="/postimg/gamemath/11-01-crossProduct.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="외적을 구하는 방법"
+	
+	
+>
+<ul>
+<li>$\vec{a} = (a_x, a_y, a_z), \vec{b} = (b_x, b_y, b_z)$ <br /><br>
+$\vec{a} \times \vec{b} = (a_yb_z - a_zb_y, a_zb_x - a_xb_z, a_xb_y - a_yb_x)$</li>
+<li>Chapter 10에서 설명했던 회전의 순환 순서 $x$→$y$→$z$→$x$에 맞춰 벡터를 순서대로 나열하는 형태이며, 결과는 언제나 3차원 벡터가 된다.</li>
+<li>$x$성분의 결과를 만들기 위해 $x$와 관련없는 나머지 두 성분의 $y$와 $z$를 결합해서 만든다. 항상 같은 성분만 사용하는 내적과 대비된다.</li>
+</ul>
+</li>
+<li>외적의 성질
+<ul>
+<li>교환법칙이 성립하지 않는다. 위의 식을 살펴보면 교환법칙이 성립하지 않는 뺄셈을 사용한 것을 알 수 있다.
+<ul>
+<li>$\vec{a} \times \vec{b} \neq \vec{b} \times \vec{a}$</li>
+</ul>
+</li>
+<li>뺄셈처럼, 순서를 바꿔서 연산하면 반대 방향이 나온다.
+<ul>
+<li>$\vec{a} \times \vec{b} = -\vec{a} \times \vec{b}$</li>
+</ul>
+</li>
+<li>결합법칙이 성립하지 않는다.
+<ul>
+<li>$\vec{a} \times (\vec{b} \times \vec{c}) \neq (\vec{a} \times \vec{b}) \times \vec{c}$</li>
+</ul>
+</li>
+<li>덧셈에 대한 분배법칙은 성립한다.
+<ul>
+<li>$\vec{a} \times (\vec{b} + \vec{c}) = \vec{a} \times \vec{b} + \vec{a} \times \vec{c}$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>내적</th>
+<th>외적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>계산 결과</strong></td>
+<td>스칼라</td>
+<td>벡터</td>
+</tr>
+<tr>
+<td><strong>교환법칙</strong></td>
+<td>성립함</td>
+<td>성립하지 않음</td>
+</tr>
+<tr>
+<td><strong>결합법칙</strong></td>
+<td>성립하지 않음</td>
+<td>성립하지 않음</td>
+</tr>
+<tr>
+<td><strong>분배법칙</strong></td>
+<td>성립함</td>
+<td>성립함</td>
+</tr>
+<tr>
+<td><strong>연산 방법</strong></td>
+<td>같은 위치의 요소만 사용</td>
+<td>다른 위치의 요소만 사용</td>
+</tr>
+</tbody>
+</table></div>
+<br />  
+<h3 id="평행성-판별">평행성 판별</h3>
+<ul>
+<li><strong>평행한 두벡터를 외적하면 항상 영벡터가 나온다.</strong>
+<ul>
+<li>동일한 벡터를 내적하면? 벡터 크기를 제곱한 값이 나왔다.</li>
+<li>그렇다면 동일한 벡터를 외적하면? 그 결과는 항상 영벡터가 나온다.
+<ul>
+<li>$\vec{a} \times \vec{a} = (a_ya_z - a_za_y, a_za_x - a_xa_z, a_xa_y - a_ya_x) = (0, 0, 0)$</li>
+</ul>
+</li>
+<li>이것은 반대 방향의 벡터 $-\vec{a}$를 외적하는 경우에도 동일하다.
+<ul>
+<li>$\vec{a} \times -\vec{a} = (-a_ya_z + a_za_y, -a_za_x + a_xa_z, -a_xa_y + a_ya_x) = (0, 0, 0)$</li>
+</ul>
+</li>
+<li>평행하지만 크기가 다른 벡터 $k \cdot \vec{a}$를 사용해도 마찬가지이다.
+<ul>
+<li>$\vec{a} \times (k \cdot \vec{a}) = (ka_ya_z - ka_za_y, ka_za_x - ka_xa_z, ka_xa_y - ka_ya_x) = (0, 0, 0)$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>벡터 $\vec{b}$를 벡터 $\vec{a}$에 수평인 벡터 $\vec{b_{\parallel}}$와 수직인 벡터 $\vec{b_{\perp}}$로 분리하여, 그 둘의 덧셈으로 나타낼 수 있다.
+<ul>
+<li>$\vec{a} = \vec{b_{\parallel}} + \vec{b_{\perp}}$  <br /><br>
+<img src="/postimg/gamemath/11-02-parallelvertical.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="벡터를 수평 성분과 수직 성분으로 분리하기"
+	
+	
+></li>
+<li>이것을 $\vec{a} \times \vec{b}$에 적용하면 다음과 같다.
+<ul>
+<li>$\vec{a} \times \vec{b} = \vec{a} \times (\vec{b_{\parallel}} + \vec{b_{\perp}})= \vec{a} \times \vec{b_{\parallel}} + \vec{a} \times \vec{b_{\perp}}$</li>
+</ul>
+</li>
+<li>여기서 $\vec{a} \times \vec{b_{\parallel}}$는 서로 평행해서 영벡터이므로 다음과 같아진다.
+<ul>
+<li>$\vec{a} \times \vec{b} = \vec{a} \times \vec{b_{\perp}}$</li>
+</ul>
+</li>
+<li>이처럼 외적은 <strong>상대방에 직교하는 벡터 성분만 사용</strong>되는 성질이 있다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li><strong>외적의 크기는 $\sin$함수에 비례하며, 두 벡터가 만드는 평행사변형의 넓이와 같다.</strong>
+<ul>
+<li>아래 그림을 보면, (1)과 같이 두 벡터의 사잇각이 크면 직교 성분 $\vec{b_{\perp}}$의 크기는 커지고, 반대로 (2)와 같이 사잇각이 작으면 $\vec{b_{\perp}}$의 크기는 작아진다.</li>
+<li>따라서, 외적의 크기도 $\sin$함수에 비례할 것이다.  <br /><br>
+<img src="/postimg/gamemath/11-03-thetaDif.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="사잇각이 다를 때 수직 선분의 크기 비교"
+	
+	
+></li>
+<li>이것을 수식으로 확인해보기 위해 $|\vec{a} \times \vec{b}|^2$, $(|\vec{a}||\vec{b}|)^2$, $(\vec{a} \cdot \vec{b})^2$를 구해보면 다음과 같은 관계를 도출할 수 있다. (풀이 생략)
+<ul>
+<li>$|\vec{a} \times \vec{b}|^2 = (|\vec{a}||\vec{b}|)^2 - (\vec{a} \cdot \vec{b})^2$ <br /><br>
+$ = (|\vec{a}||\vec{b}|)^2 - (|\vec{a}||\vec{b}|\cos\theta)^2$ <br /><br>
+$ = (|\vec{a}||\vec{b}|)^2 (1 - \cos^2\theta)$ <br /><br>
+$ = (|\vec{a}||\vec{b}|)^2 \sin^2\theta$</li>
+<li>$|\vec{a} \times \vec{b}| = |\vec{a}||\vec{b}| |\sin\theta|$</li>
+<li>이처럼 벡터 외적의 크기는 $\sin$함수에 비례하는 것을 알 수 있다.</li>
+</ul>
+</li>
+<li>또한 이것은 두 벡터가 만드는 평행사변형의 넓이와 같다. <br /><br>
+<img src="/postimg/gamemath/11-04-area.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="두 벡터가 만드는 평행사변형의 넓이"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />  
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>내적</th>
+<th>외적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>판별성($0$이 된다)</strong></td>
+<td>직교성</td>
+<td>평행성</td>
+</tr>
+<tr>
+<td><strong>삼각함수</strong></td>
+<td>$\cos\theta$</td>
+<td>$\sin\theta$</td>
+</tr>
+</tbody>
+</table></div>
+<br />  
+<h3 id="법선-벡터">법선 벡터</h3>
+<ul>
+<li><strong>벡터의 외적은 두 벡터에 직교하는 벡터를 생성한다.</strong>
+<ul>
+<li>두 벡터의 외적에다가 한 가지 벡터를 내적하면 어떻게 될까?
+<ul>
+<li>$\vec{a} \cdot (\vec{a} \times \vec{b}) = a_xa_yb_z - a_xa_zb_y + a_ya_zb_x - a_ya_xb_z + a_za_xb_y - a_za_yb_x = 0$</li>
+<li>$\vec{b} \cdot (\vec{a} \times \vec{b}) = b_xa_yb_z - b_xa_zb_y + b_ya_zb_x - b_ya_xb_z + b_za_xb_y - b_za_yb_x = 0$</li>
+<li>그 결과는 늘 $0$이 되며 이것은 외적 결과값이 두 벡터에 직교한다는 의미가 된다.</li>
+</ul>
+</li>
+<li>Chapter 3에서 말했듯이, 선형 독립 관계를 가지는 두 벡터의 선형 결합은 평면을 만든다. 그렇다면 벡터의 외적은 그 평면이 향하는 방향(직교)에 대한 벡터를 만드는 것이다.</li>
+<li>이 벡터를 <strong>법선 벡터(Normal vector)</strong> 또는 <strong>노멀 벡터</strong>라고 한다.  <br /><br>
+<img src="/postimg/gamemath/11-05-normalVector.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="법선 벡터를 생성하는 외적"
+	
+	
+></li>
+<li>외적은 교환법칙이 성립하지 않는다. 따라서 연산의 순서를 바꾸면 반대방향의 법선 벡터가 생성된다.</li>
+<li>오른손 좌표계를 사용한다면, 오른손 법칙을. 왼손 좌표계를 사용한다면, 왼손 법칙을 사용해서 법선 벡터의 방향을 파악할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<h3 id="좌우-방향-판별">좌우 방향 판별</h3>
+<ul>
+<li>월드 공간의 $y$축 $\vec{y} = (0, 1, 0)$에 직교하는 평면에 캐릭터와 몬스터가 놓여 있다.
+<ul>
+<li>이 때, 캐릭터의 정면을 향하는 시선 벡터 $\vec{f}$와 캐릭터에서 몬스터로 향하는 벡터 $\vec{v}$를 외적하면?</li>
+<li>결과 벡터는 오른손 법칙의 경우 평면의 위쪽으로 향할 것이다.<br /><br>
+<img src="/postimg/gamemath/11-06-lr.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="좌우판별 예시 상황"
+	
+	
+></li>
+<li>외적의 결과에 평면의 위쪽 방향을 나타내는 벡터 $\vec{y}$를 내적하면, 두 벡터의 방향이 같으면 양수가 나오고, 반대 방향이라면 음수가 나온다.</li>
+</ul>
+</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>몬스터의 위치</th>
+<th>판별식의 값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>왼쪽에 있다</strong></td>
+<td>$(\vec{f} \times \vec{v}) \cdot \vec{y} &gt; 0$</td>
+</tr>
+<tr>
+<td><strong>오른쪽에 있다</strong></td>
+<td>$(\vec{f} \times \vec{v}) \cdot \vec{y} &lt; 0$</td>
+</tr>
+<tr>
+<td><strong>정확히 시선 방향과 일치한다</strong></td>
+<td>$(\vec{f} \times \vec{v}) = 0$</td>
+</tr>
+</tbody>
+</table></div>
+<br />  
+<ul>
+<li>이러한 성질은 외적이 $\sin$함수에 비례하는 성질을 가졌기 때문이다.
+<ul>
+<li>반면, 내적은 $\cos$함수에 비례하기 때문에 앞뒤 판별에 사용된다. <br /><br>
+<img src="/postimg/gamemath/11-07-dotCrossArea.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="내적과 외적의 부호 영역"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>내적</th>
+<th>외적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>방향 판별</strong></td>
+<td>앞뒤</td>
+<td>좌우</td>
+</tr>
+</tbody>
+</table></div>
+<p><br />  <br /></p>
+<h2 id="벡터로부터-회전행렬-생성">벡터로부터 회전행렬 생성</h2>
+<ul>
+<li>Chapter 10에서는 오일러 각 방식을 사용해서 카메라의 회전을 지정하였다.</li>
+<li>외적을 사용하면 <strong>카메라의 시선 벡터</strong> 하나를 가지고 카메라를 구성하는 <strong>세 가지 로컬 축</strong>을 구할 수가 있다. <br /><br>
+<img src="/postimg/gamemath/11-08-camLocalAxis.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="카메라의 세 가지 로컬 축 구하기"
+	
+	
+>
+<ul>
+<li>로컬 $z$축
+<ul>
+<li>물체의 위치에서 카메라의 위치를 뺀 후 크기를 $1$로 정규화 시킨 시선 벡터이다.</li>
+</ul>
+</li>
+<li>로컬 $x$축
+<ul>
+<li>월드 공간의 $y$축(업벡터라고 한다; Up vector)과 카메라의 로컬 $x$축을 외적한 후 정규화하면 얻을 수 있다.</li>
+</ul>
+</li>
+<li>로컬 $y$축
+<ul>
+<li>로컬 $z$축과 로컬 $x$축을 외적하면 얻을 수 있다.</li>
+</ul>
+</li>
+<li>따라서 시선 벡터 $\vec{v}$와 업 벡터 $\vec{u}$로부터 다음과 같이 구할 수 있다.
+<ul>
+<li>$\vec{x} = \frac{\vec{v} \times \vec{u}}{|\vec{v} \times \vec{u}|}$</li>
+<li>$\vec{y} = \vec{x} \times \vec{z}$</li>
+<li>$\vec{z} = \frac{\vec{v}}{|\vec{v}|}$</li>
+</ul>
+</li>
+<li>그렇다면 카메라 트랜스폼의 회전 행렬 $R$은 로컬 벡터를 열벡터로 지정해서 다음과 같이 생성할 수 있다.
+<ul>
+<li>$$R = \begin{bmatrix} x_x &amp; y_x &amp; z_x &amp; 0 \\ x_y &amp; y_y &amp; z_y &amp; 0 \\ x_z &amp; y_z &amp; z_z &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}$$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>예외 상황
+<ul>
+<li>(1) 카메라의 위쪽방향이 월드 공간의 $y$축과 반대인 경우(<strong>뒤집힌 경우</strong>)
+<ul>
+<li>월드 공간 $y$축과 반대인 $(0, -1, 0)$을 사용해야 한다.  <br /><br>
+<img src="/postimg/gamemath/11-09-upsideDownCam.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="거꾸로 뒤집힌 카메라의 경우"
+	
+	
+></li>
+</ul>
+</li>
+<li>(2) 카메라의 시선방향이 월드 공간의 $y$축과 <strong>평행</strong>한 경우
+<ul>
+<li>로컬 $z$축에 직교하는 로컬 $x$축의 값을 수동으로 지정해야 한다. <br /><br>
+<img src="/postimg/gamemath/11-10-parallelCam.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="카메라의 시선방향이 월드 공간 y축과 평행한 경우"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />  
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 목표물의 위치로부터 카메라의 세 로컬 축을 구해서 트랜스폼에 반영한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// InUp은 카메라가 뒤집힌 경우에는 반대 방향의 월드 Y축이 전달되겠다. (1)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">CameraObject</span><span class="o">::</span><span class="n">SetLookAtRotation</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">InTargetPosition</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">InUp</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Vector3</span> <span class="n">localX</span><span class="p">,</span> <span class="n">localY</span><span class="p">,</span> <span class="n">localZ</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">localZ</span> <span class="o">=</span> <span class="p">(</span><span class="n">InTargetPosition</span> <span class="o">-</span> <span class="n">_Transform</span><span class="p">.</span><span class="n">GetPosition</span><span class="p">()).</span><span class="n">Normalize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1">// 시선 방향과 월드 Y축(0, 1, 0)이 평행한 경우 (2)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// 단위 벡터 Z축의 y값이 1과 가까우면...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="n">Math</span><span class="o">::</span><span class="n">Abs</span><span class="p">(</span><span class="n">localZ</span><span class="p">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mf">1.f</span> <span class="o">-</span> <span class="n">SMALL_NUMBER</span><span class="p">))</span> 
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">localX</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">UnitX</span><span class="p">;</span> <span class="c1">// 로컬 X 좌표 값을 임의로 지정.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">localX</span> <span class="o">=</span> <span class="n">InUp</span><span class="p">.</span><span class="n">Cross</span><span class="p">(</span><span class="n">localZ</span><span class="p">).</span><span class="n">Normalize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">localY</span> <span class="o">=</span> <span class="n">localX</span><span class="p">.</span><span class="n">Cross</span><span class="p">(</span><span class="n">localX</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1">// 최종 계산된 세 로컬 축을 카메라의 트랜스폼에 반영한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">_Transform</span><span class="p">.</span><span class="n">SetLocalAxes</span><span class="p">(</span><span class="n">localX</span><span class="p">,</span> <span class="n">localY</span><span class="p">.</span> <span class="n">localZ</span><span class="p">);</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br />  <br /></p>
+<h2 id="렌더링-계산량을-줄여주는-백페이스-컬링">렌더링 계산량을 줄여주는 백페이스 컬링</h2>
+<ul>
+<li><strong>백페이스 컬링(Backface culling)</strong>
+<ul>
+<li>카메라와 마주보지 않는 메시의 뒷면은 그리지 않고 건너뛰는 것이다. 덕분에 빠르게 렌더링할 수 있겠다.</li>
+<li>삼각형의 세 점을 지정하는 인덱스 버퍼에는 점의 순서가 나열되어있다. 외적을 사용해서 삼각형이 향하는 방향을 파악할 수 있다.</li>
+<li>이러한 삼각형의 방향과 카메라의 시선 방향을 내적해서 그 결과 값이 음수라면, 방향이 마주보고 있다는 것이므로 그린다.</li>
+<li>나머지 경우에는 두 방향이 같은 방향을 바라보는 것이므로 그리지 않는다. <br /><br>
+<img src="/postimg/gamemath/11-11-backfaceCulling.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="점의 순서에 따른 면의 방향"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>백페이스 컬링 구현 코드
+<ul>
+<li>삼각형의 면이 향하는 법선 벡터
+<ul>
+<li>$\vec{n} = \vec{P_0P_1} \times \vec{P_0P_2}$</li>
+</ul>
+</li>
+<li>뷰 공간에서 카메라가 바라보는 시선이 $-z$축이므로 $(0, 0, -1)$과 내적을 한다.
+<ul>
+<li>$(n_x, n_y, n_z) \cdot (0, 0, -1) &lt; 0$ 일 때만 그린다</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">DrawTriangle3D</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex3D</span><span class="o">&gt;&amp;</span> <span class="n">InVertices</span><span class="p">,</span> <span class="k">const</span> <span class="n">LinearColor</span><span class="o">&amp;</span> <span class="n">InColor</span><span class="p">,</span> <span class="n">FillMode</span> <span class="n">InFillMode</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">GetRenderer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">GameEngine</span><span class="o">&amp;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">Get3DGameEngine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">useBackfaceCulling</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 백페이스 컬링 ( 뒷면이면 그리기 생략 )
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">Vector3</span> <span class="n">edge1</span> <span class="o">=</span> <span class="p">(</span><span class="n">InVertices</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">Position</span> <span class="o">-</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">).</span><span class="n">ToVector3</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector3</span> <span class="n">edge2</span> <span class="o">=</span> <span class="p">(</span><span class="n">InVertices</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">Position</span> <span class="o">-</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">).</span><span class="n">ToVector3</span><span class="p">();</span>        
+</span></span><span class="line"><span class="cl">        <span class="n">Vector3</span> <span class="n">faceNormal</span> <span class="o">=</span> <span class="n">edge1</span><span class="p">.</span><span class="n">Cross</span><span class="p">(</span><span class="n">edge2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">Vector3</span> <span class="n">viewDirection</span> <span class="o">=</span> <span class="o">-</span><span class="n">Vector3</span><span class="o">::</span><span class="n">UnitZ</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">faceNormal</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">viewDirection</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.f</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">LinearColor</span> <span class="n">finalColor</span> <span class="o">=</span> <span class="n">_WireframeColor</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">InColor</span> <span class="o">!=</span> <span class="n">LinearColor</span><span class="o">::</span><span class="n">Error</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">finalColor</span> <span class="o">=</span> <span class="n">InColor</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">DrawLine</span><span class="p">(</span><span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">,</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">Position</span><span class="p">,</span> <span class="n">finalColor</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">DrawLine</span><span class="p">(</span><span class="n">InVertices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Position</span><span class="p">,</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">Position</span><span class="p">,</span> <span class="n">finalColor</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">DrawLine</span><span class="p">(</span><span class="n">InVertices</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">Position</span><span class="p">,</span> <span class="n">InVertices</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">Position</span><span class="p">,</span> <span class="n">finalColor</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br />  <br /></p>
+<h2 id="오일러-각의-문제를-해결하는-로드리게스-회전-공식">오일러 각의 문제를 해결하는 로드리게스 회전 공식</h2>
+<ul>
+<li>Chapter 10에서 본 것처럼, 오일러 각은 짐벌락 현상이 발생하고 회전 보간이 어렵다는 문제가 있었다.</li>
+<li>축-각 회전(Axis-Angle rotation)을 사용해서 해결할 수 있다.
+<ul>
+<li>임의의 축에 직교하는 평면에서 회전을 하는 방법이다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>아래 그림과 같을 때 $\vec{u&rsquo;}$를 구해보자. <br /><br>
+<img src="/postimg/gamemath/11-12-rodrigues.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="회전 평면의 설정"
+	
+	
+>
+<ul>
+<li>먼저 점 $P$의 좌표가 $P = (x, y, z, 1)$이라면 $\vec{u} = P - O$이므로 $\vec{u} = (x, y, z, 0)$라고 할 수 있겠다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>$\vec{OO&rsquo;}$의 경우에는 Chapter 7에서 본 투영 공식에 의해서 구할 수 있다.
+<ul>
+<li>$\vec{v} = (\vec{u} \cdot \hat{n}) \cdot \hat{n}$ 이것을 간단히 $\vec{v}$라고 부르자.</li>
+<li>그렇다면 $\vec{O&rsquo;P}$의 경우에는 $\vec{u} - \vec{v}$로 구할 수 있다. <br /><br>
+<img src="/postimg/gamemath/11-13-rodVecV.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="투영 공식으로 구하는 벡터 v"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>이번에는 회전 평면을 위에서 내려다 보자. <br /><br>
+<img src="/postimg/gamemath/11-14-rodWidthHeight.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="가로와 세로벡터의 계산"
+	
+	
+>
+<ul>
+<li>벡터 $\vec{O&rsquo;P&rsquo;}$의 가로 성분
+<ul>
+<li>$\cos\theta \cdot (\vec{u} - \vec{v})$</li>
+</ul>
+</li>
+<li>벡터 $\vec{O&rsquo;P&rsquo;}$의 세로 성분
+<ul>
+<li>세로 성분과 같은 방향을 향하는 벡터를 $\vec{O&rsquo;Q}$라고 하자. 이것은 법선 벡터 $\hat{n}$와 벡터 $\vec{OP&rsquo;}$를 외적해서 얻을 수 있다.</li>
+<li>$\vec{O&rsquo;Q} = \hat{n} \times (\vec{u} - \vec{v})$</li>
+<li>여기에 $\sin\theta$를 곱하면 세로 성분에 대한 벡터를 얻을 수 있다.</li>
+<li>$\sin\theta \cdot (\hat{n} \times (\vec{u} - \vec{v}))$</li>
+</ul>
+</li>
+<li>따라서 다음과 같이 벡터 $\vec{O&rsquo;P&rsquo;}$를 계산할 수 있겠다.
+<ul>
+<li>$\vec{O&rsquo;P&rsquo;} = \cos\theta \cdot (\vec{u} - \vec{v}) + \sin\theta \cdot (\hat{n} \times (\vec{u} - \vec{v}))$ <br /><br>
+$ = \cos\theta \cdot (\vec{u} - \vec{v}) + \sin\theta \cdot (\hat{n} \times \vec{u} - \hat{n} \times \vec{v})$</li>
+</ul>
+</li>
+<li>$\hat{n}$과 $\vec{v}$는 평행하므로 $\hat{n} \times \vec{v}$는 $0$이므로 다음과 같이 정리된다.
+<ul>
+<li>$\vec{O&rsquo;P&rsquo;} = \cos\theta \cdot (\vec{u} - \vec{v}) + \sin\theta \cdot (\hat{n} \times \vec{u})$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>이제 우리의 목표인 $\vec{u&rsquo;}$를 구해보자. <br /><br>
+<img src="/postimg/gamemath/11-15-vecU.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="벡터 u&rsquo;구하기"
+	
+	
+>
+<ul>
+<li>이것은 $\vec{O&rsquo;P&rsquo;}$에다가 $\vec{v}$를 더해서 얻을 수 있다.</li>
+<li>$\vec{u&rsquo;} = \vec{v} + \cos\theta \cdot (\vec{u} - \vec{v}) + \sin\theta \cdot (\hat{n} \times \vec{u})$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>이제 $\vec{v}$를 $(\vec{u} \cdot \hat{n}) \cdot \hat{n}$로 치환하면 최종 수식이 유도된다.
+<ul>
+<li><span style='background-color: #c293d8'>$\vec{u&rsquo;} = \cos\theta \cdot \vec{u} + (1- \cos\theta)(\vec{u} \cdot \hat{n})\cdot \hat{n} + \sin\theta \cdot (\hat{n} \times \vec{u})$ </span></li>
+<li>이 공식은 프랑스 수학자 로드리게스가 1840년에 발표했으며, 그의 이름을 인용해서 로드리게스 회전 공식(Rodrigues&rsquo; rotation formula)이라고 한다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 메시를 그리는 함수
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="n">SoftRenderer</span><span class="o">::</span><span class="n">DrawMesh3D</span><span class="p">(</span><span class="k">const</span> <span class="n">Mesh</span><span class="o">&amp;</span> <span class="n">InMesh</span><span class="p">,</span> <span class="k">const</span> <span class="n">Matrix4x4</span><span class="o">&amp;</span> <span class="n">InMatrix</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">InScale</span><span class="p">,</span> <span class="k">const</span> <span class="n">LinearColor</span><span class="o">&amp;</span> <span class="n">InColor</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">size_t</span> <span class="n">vertexCount</span> <span class="o">=</span> <span class="n">InMesh</span><span class="p">.</span><span class="n">GetVertices</span><span class="p">().</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">size_t</span> <span class="n">indexCount</span> <span class="o">=</span> <span class="n">InMesh</span><span class="p">.</span><span class="n">GetIndices</span><span class="p">().</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">size_t</span> <span class="n">triangleCount</span> <span class="o">=</span> <span class="n">indexCount</span> <span class="o">/</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 렌더러가 사용할 정점 버퍼와 인덱스 버퍼로 변환
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex3D</span><span class="o">&gt;</span> <span class="n">vertices</span><span class="p">(</span><span class="n">vertexCount</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">size_t</span><span class="o">&gt;</span> <span class="n">indice</span><span class="p">(</span><span class="n">InMesh</span><span class="p">.</span><span class="n">GetIndices</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">vi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">vi</span> <span class="o">&lt;</span> <span class="n">vertexCount</span><span class="p">;</span> <span class="o">++</span><span class="n">vi</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">vertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">Position</span> <span class="o">=</span> <span class="n">Vector4</span><span class="p">(</span><span class="n">InMesh</span><span class="p">.</span><span class="n">GetVertices</span><span class="p">()[</span><span class="n">vi</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">InMesh</span><span class="p">.</span><span class="n">HasColor</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">vertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">Color</span> <span class="o">=</span> <span class="n">InMesh</span><span class="p">.</span><span class="n">GetColors</span><span class="p">()[</span><span class="n">vi</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">InMesh</span><span class="p">.</span><span class="n">HasUV</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">vertices</span><span class="p">[</span><span class="n">vi</span><span class="p">].</span><span class="n">UV</span> <span class="o">=</span> <span class="n">InMesh</span><span class="p">.</span><span class="n">GetUVs</span><span class="p">()[</span><span class="n">vi</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 정점 변환 진행
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="n">Vertex3D</span><span class="o">&amp;</span> <span class="nl">v</span> <span class="p">:</span> <span class="n">vertices</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">float</span> <span class="n">sin</span> <span class="o">=</span> <span class="mf">0.f</span><span class="p">,</span> <span class="n">cos</span> <span class="o">=</span> <span class="mf">0.f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Math</span><span class="o">::</span><span class="n">GetSinCos</span><span class="p">(</span><span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">thetaDegree</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector3</span> <span class="n">u</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">Position</span><span class="p">.</span><span class="n">ToVector3</span><span class="p">();</span> <span class="c1">// 원점에서 정점으로 향하는 벡터 u. 계산의 편의를 위해 4차원 벡터의 마지막 요소는 생략했다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        
+</span></span><span class="line"><span class="cl">        <span class="kt">float</span> <span class="n">udotn</span> <span class="o">=</span> <span class="n">u</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector3</span> <span class="n">ncrossu</span> <span class="o">=</span> <span class="n">n</span><span class="p">.</span><span class="n">Cross</span><span class="p">(</span><span class="n">u</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1">// 스케일을 적용한 후 로드리게스 공식으로 회전을 적용한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">Vector3</span> <span class="n">result</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">u</span> <span class="o">*</span> <span class="n">cos</span> <span class="o">+</span> <span class="n">n</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.f</span> <span class="o">-</span> <span class="n">cos</span><span class="p">)</span> <span class="o">*</span> <span class="n">udotn</span> <span class="o">+</span> <span class="n">ncrossu</span> <span class="o">*</span> <span class="n">sin</span><span class="p">)</span> <span class="o">*</span> <span class="n">InScale</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1">// 그다음 뷰 행렬(InMatrix로 전달됨)을 적용한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">v</span><span class="p">.</span><span class="n">Position</span> <span class="o">=</span> <span class="n">InMatrix</span> <span class="o">*</span> <span class="n">Vector4</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 삼각형 별로 그리기
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">ti</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ti</span> <span class="o">&lt;</span> <span class="n">triangleCount</span><span class="p">;</span> <span class="o">++</span><span class="n">ti</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">bi0</span> <span class="o">=</span> <span class="n">ti</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">bi1</span> <span class="o">=</span> <span class="n">ti</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bi2</span> <span class="o">=</span> <span class="n">ti</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex3D</span><span class="o">&gt;</span> <span class="n">tvs</span> <span class="o">=</span> <span class="p">{</span> <span class="n">vertices</span><span class="p">[</span><span class="n">indice</span><span class="p">[</span><span class="n">bi0</span><span class="p">]]</span> <span class="p">,</span> <span class="n">vertices</span><span class="p">[</span><span class="n">indice</span><span class="p">[</span><span class="n">bi1</span><span class="p">]]</span> <span class="p">,</span> <span class="n">vertices</span><span class="p">[</span><span class="n">indice</span><span class="p">[</span><span class="n">bi2</span><span class="p">]]</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">size_t</span> <span class="n">triangles</span> <span class="o">=</span> <span class="n">tvs</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">/</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">ti</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ti</span> <span class="o">&lt;</span> <span class="n">triangles</span><span class="p">;</span> <span class="o">++</span><span class="n">ti</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">size_t</span> <span class="n">si</span> <span class="o">=</span> <span class="n">ti</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex3D</span><span class="o">&gt;</span> <span class="n">sub</span><span class="p">(</span><span class="n">tvs</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">si</span><span class="p">,</span> <span class="n">tvs</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">si</span> <span class="o">+</span> <span class="mi">3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">DrawTriangle3D</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">InColor</span><span class="p">,</span> <span class="n">FillMode</span><span class="o">::</span><span class="n">Color</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />  
+<ul>
+<li>로드리게스 회전 공식을 활용하면 오일러 각으로 구현하기 어려운 임의의 축에 대한 회전 변환을 수행할 수 있다.
+<ul>
+<li>하지만, 행렬로의 변환이 어려워서 지금까지 구축했던 렌더링 파이프라인에 연동하기가 까다롭다.</li>
+<li>그래서 게임 엔진에서는 동일한 기능을 제공하지만 간결하고, 행렬로 변환이 용이한 <strong>사원수</strong>(Chapter 16)를 사용한다.</li>
+</ul>
+</li>
+</ul>
+<p><br />  <br /></p>
+<h2 id="삼중곱">삼중곱</h2>
+<ul>
+<li><strong>삼중곱(Triple product) 연산</strong>
+<ul>
+<li>벡터의 외적과 내적을 두 번 연속 사용 하는 연산이다.</li>
+<li>다음과 같은 경우의 수가 있다.</li>
+<li>(1) $\vec{u} \cdot (\vec{v} \cdot \vec{w})$ → 결과 값이 스칼라이므로 제외한다.</li>
+<li>(2) <span style='background-color: #c293d8'>$\vec{u} \cdot (\vec{v} \times \vec{w})$ </span></li>
+<li>(3) $\vec{u} \times (\vec{v} \cdot \vec{w})$ → 벡터와 스칼라는 외적할 수 없으므로 연산이 불가능해서 제외한다.</li>
+<li>(4) <span style='background-color: #c293d8'>$\vec{u} \times (\vec{v} \times \vec{w})$ </span></li>
+</ul>
+</li>
+</ul>
+<br />  
+<h3 id="스칼라-삼중곱">스칼라 삼중곱</h3>
+<ul>
+<li><strong>스칼라 삼중곱(Scalar triple product)</strong>
+<ul>
+<li>(2) <span style='background-color: #c293d8'>$\vec{u} \cdot (\vec{v} \times \vec{w})$ </span></li>
+<li>왼쪽과 오른쪽 판별 방법과, 벡페이스 컬링에 사용했던 공식이 바로 스칼라 삼중곱이었다.
+<ul>
+<li>$(\vec{f} \times \vec{v}) \cdot \vec{y}$</li>
+<li>$-\hat{z} \cdot (\vec{P_0P_1} \times \vec{P_0P_2})$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>스칼라 삼중곱의 <strong>절댓값</strong>은 세 벡터가 만드는 <strong>평행육면체(Parallelepiped)의 부피</strong>를 의미한다. <br /><br>
+<img src="/postimg/gamemath/11-16-parallelepiped.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="육면체의 부피"
+	
+	
+>
+<ul>
+<li>임의의 벡터 $\vec{u}$를 법선 벡터 $\vec{v} \times \vec{w}$에 투영한 벡터의 높이는 $|\vec{u}|\cos\theta$이다.</li>
+<li>여기에 평행사변형의 넓이 $|\vec{v} \times \vec{w}|$를 곱하면 육면체의 부피가 나온다.
+<ul>
+<li>$|\vec{u}||\vec{v} \times \vec{w}|\cos\theta$</li>
+</ul>
+</li>
+<li>이것은 스칼라 삼중곱이 만들어내는 값의 절댓값과 동일하다.
+<ul>
+<li>$|\vec{u} \cdot (\vec{v} \times \vec{w})| = |\vec{u}||\vec{v} \times \vec{w}|\cos\theta$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>이 세 백터에서 바닥에 해당하는 두 벡터를 다른 벡터로 변경해도 최종 육면체의 부피 값은 변하지 않아서 삼중곱의 결과는 동일하다. <br /><br>
+<img src="/postimg/gamemath/11-17-scalarTripleProductOrder.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="순서를 바꿔도 결과는 같은 스칼라 삼중곱의 예시"
+	
+	
+>
+<ul>
+<li>따라서 다음과 같은 성질을 도출할 수 있다.</li>
+<li>$\vec{u} \cdot (\vec{v} \times \vec{w}) = \vec{v} \cdot (\vec{w} \times \vec{u}) = \vec{w} \cdot (\vec{u} \times \vec{v})$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>스칼라 삼중곱이 <strong>$0$이 아니면</strong> 세 백터는 모두 <strong>선형 독립의 관계</strong>를 가진다.
+<ul>
+<li>Chapter 5에서 보았던 행렬식의 절댓값은 평행사변형의 넓이였다. 이것은 평면에서 평행사변형을 이루는 두 벡터가 서로 선형 독립의 관계를 가지는지 판단하는 수식이었다.</li>
+<li>외적으로 생성된 벡터의 크기는 평행사변형의 넓이와 같다.
+<ul>
+<li>따라서 스칼라 삼중곱은 3차원 공간의 세 벡터가 모두 선형 독립의 관계를 가지는지 판단하는 판별식으로 생각할 수 있다.</li>
+</ul>
+</li>
+<li>스칼라 삼중곱이 $0$이 나오는 경우 <br /><br>
+<img src="/postimg/gamemath/11-18-zero.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="스칼라 삼중곱이 0인 경우"
+	
+	
+>
+<ul>
+<li>(1) 외적의 결과가 영벡터이므로 스칼라 삼중곱이 $0$이 된다.</li>
+<li>(2) 외적의 결과로 만들어진 법선 벡터에 벡터 $\vec{u}$가 직교하므로 이의 내적은 $0$이 된다. 따라서 스칼라 삼중곱은 $0$이 된다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />  
+<h3 id="벡터-삼중곱">벡터 삼중곱</h3>
+<ul>
+<li><strong>벡터 삼중곱(Vector triple product)</strong>
+<ul>
+<li>(4) <span style='background-color: #c293d8'>$\vec{u} \times (\vec{v} \times \vec{w})$ </span></li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li><strong>삼중곱 전개(Triple product expansion)</strong> 또는 <strong>라그랑주 공식(Lagrange&rsquo;s formula)</strong>
+<ul>
+<li>벡터 삼중곱은 다음과 같은 성질을 지닌다.</li>
+<li><span style='background-color: #c293d8'>$(\vec{u} \cdot \vec{w}) \cdot \vec{v} - (\vec{u} \cdot \vec{v}) \cdot \vec{w}$</span></li>
+<li>이것을 직접 확인해보자. (풀이 간단 설명)
+<ul>
+<li>$(\vec{u} \times (\vec{v} \times \vec{w}))_x = v_x(\vec{u} \cdot \vec{w}) - w_x(\vec{u} \cdot \vec{v})$</li>
+<li>$(\vec{u} \times (\vec{v} \times \vec{w}))_y = v_y(\vec{u} \cdot \vec{w}) - w_y(\vec{u} \cdot \vec{v})$</li>
+<li>$(\vec{u} \times (\vec{v} \times \vec{w}))_z = v_z(\vec{u} \cdot \vec{w}) - w_z(\vec{u} \cdot \vec{v})$</li>
+</ul>
+</li>
+<li>이것은 $a\vec{v} + b\vec{w}$형태의 선형 결합식이므로, 벡터 삼중곱으로 만들어지는 벡터는 두 벡터$\vec{v}$, $\vec{w}$가 만드는 평면에 속한다. <br /><br>
+<img src="/postimg/gamemath/11-19-vectorTripleProduct.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="벡터 삼중곱으로 만들어진 벡터의 결과"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>이것은 2차원에서 동일 평면에 있는 직교 벡터를 구하는 데도 유용하게 쓸 수 있다.
+<ul>
+<li>$(\vec{u} \times \vec{v}) \times \vec{u}$ <br /><br>
+<img src="/postimg/gamemath/11-20-2dVectorTripleProduct.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2차원의 벡터 삼중곱"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<p><br />  <br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/game-math/">Game Math</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/init/game-math-10/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 10. 3차원 공간: 입체 공간의 생성</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-09/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 9. 게임 엔진: 콘텐츠를 만드는 기술</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-08/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 8. 삼각형: 물체를 구성하는 가장 작은 단위</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-07/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 7. 내적: 벡터 공간의 분석과 응용</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/game-math-06/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 6. 아핀 공간: 움직이는 가상 세계의 구축</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#벡터의-외적">벡터의 외적</a>
+      <ol>
+        <li><a href="#평행성-판별">평행성 판별</a></li>
+        <li><a href="#법선-벡터">법선 벡터</a></li>
+        <li><a href="#좌우-방향-판별">좌우 방향 판별</a></li>
+      </ol>
+    </li>
+    <li><a href="#벡터로부터-회전행렬-생성">벡터로부터 회전행렬 생성</a></li>
+    <li><a href="#렌더링-계산량을-줄여주는-백페이스-컬링">렌더링 계산량을 줄여주는 백페이스 컬링</a></li>
+    <li><a href="#오일러-각의-문제를-해결하는-로드리게스-회전-공식">오일러 각의 문제를 해결하는 로드리게스 회전 공식</a></li>
+    <li><a href="#삼중곱">삼중곱</a>
+      <ol>
+        <li><a href="#스칼라-삼중곱">스칼라 삼중곱</a></li>
+        <li><a href="#벡터-삼중곱">벡터 삼중곱</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='string 클래스 string 헤더파일을 통해 지원된다. C 스타일은 string.h와 cstring이다. string은 실제로는 템플릿 특수화 basic_string&amp;lt;char&amp;gt;에 대한 typedef이다. 1 2 3 4 5 6 7 8 9 10 11 12 // string 클래스는 템플릿 클래스에 기초한다. template&amp;lt;class charT, class traits = char_traits&amp;lt;charT&amp;gt;, class Allocator = allocator&amp;lt;charT&amp;gt;&amp;gt; class basic_string { // char 뿐만 아니라 다른형에 기초하는 문자열도 사용할 수 있게 허용한다. typedef basic_string&amp;lt;char&amp;gt; string; typedef basic_string&amp;lt;wchar_t&amp;gt; wstring; typedef basic_string&amp;lt;char16_t&amp;gt; u16string; // C&#43;&#43;11 typedef basic_string&amp;lt;char32_t&amp;gt; u32string; // C&#43;&#43;11 // .'><title>[C&#43;&#43; Primer Plus] Chapter 16. (1) string 클래스, 스마트 포인터 템플릿 클래스</title>
+
+<link rel='canonical' href='https://sopod.github.io/init/cpp-primer-plus-16-1/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[C&#43;&#43; Primer Plus] Chapter 16. (1) string 클래스, 스마트 포인터 템플릿 클래스'>
+<meta property='og:description' content='string 클래스 string 헤더파일을 통해 지원된다. C 스타일은 string.h와 cstring이다. string은 실제로는 템플릿 특수화 basic_string&amp;lt;char&amp;gt;에 대한 typedef이다. 1 2 3 4 5 6 7 8 9 10 11 12 // string 클래스는 템플릿 클래스에 기초한다. template&amp;lt;class charT, class traits = char_traits&amp;lt;charT&amp;gt;, class Allocator = allocator&amp;lt;charT&amp;gt;&amp;gt; class basic_string { // char 뿐만 아니라 다른형에 기초하는 문자열도 사용할 수 있게 허용한다. typedef basic_string&amp;lt;char&amp;gt; string; typedef basic_string&amp;lt;wchar_t&amp;gt; wstring; typedef basic_string&amp;lt;char16_t&amp;gt; u16string; // C&#43;&#43;11 typedef basic_string&amp;lt;char32_t&amp;gt; u32string; // C&#43;&#43;11 // .'>
+<meta property='og:url' content='https://sopod.github.io/init/cpp-primer-plus-16-1/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Init' /><meta property='article:tag' content='C&#43;&#43; Primer Plus' /><meta property='article:published_time' content='2022-03-23T12:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-03-23T12:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[C&#43;&#43; Primer Plus] Chapter 16. (1) string 클래스, 스마트 포인터 템플릿 클래스">
+<meta name="twitter:description" content="string 클래스 string 헤더파일을 통해 지원된다. C 스타일은 string.h와 cstring이다. string은 실제로는 템플릿 특수화 basic_string&amp;lt;char&amp;gt;에 대한 typedef이다. 1 2 3 4 5 6 7 8 9 10 11 12 // string 클래스는 템플릿 클래스에 기초한다. template&amp;lt;class charT, class traits = char_traits&amp;lt;charT&amp;gt;, class Allocator = allocator&amp;lt;charT&amp;gt;&amp;gt; class basic_string { // char 뿐만 아니라 다른형에 기초하는 문자열도 사용할 수 있게 허용한다. typedef basic_string&amp;lt;char&amp;gt; string; typedef basic_string&amp;lt;wchar_t&amp;gt; wstring; typedef basic_string&amp;lt;char16_t&amp;gt; u16string; // C&#43;&#43;11 typedef basic_string&amp;lt;char32_t&amp;gt; u32string; // C&#43;&#43;11 // .">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/c&#43;&#43;/" >
+                C&#43;&#43;
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/init/cpp-primer-plus-16-1/">[C&#43;&#43; Primer Plus] Chapter 16. (1) string 클래스, 스마트 포인터 템플릿 클래스</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 23, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    9 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br /><br /></p>
+<h2 id="string-클래스">string 클래스</h2>
+<ul>
+<li><code>string</code> 헤더파일을 통해 지원된다.
+<ul>
+<li>C 스타일은 <code>string.h</code>와 <code>cstring</code>이다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><code>string</code>은 실제로는 템플릿 특수화 <code>basic_string&lt;char&gt;</code>에 대한 <code>typedef</code>이다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// string 클래스는 템플릿 클래스에 기초한다.  
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">charT</span><span class="p">,</span> <span class="k">class</span> <span class="nc">traits</span> <span class="o">=</span> <span class="n">char_traits</span><span class="o">&lt;</span><span class="n">charT</span><span class="o">&gt;</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Allocator</span> <span class="o">=</span> <span class="n">allocator</span><span class="o">&lt;</span><span class="n">charT</span><span class="o">&gt;&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">basic_string</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// char 뿐만 아니라 다른형에 기초하는 문자열도 사용할 수 있게 허용한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">typedef</span> <span class="n">basic_string</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="n">string</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">typedef</span> <span class="n">basic_string</span><span class="o">&lt;</span><span class="kt">wchar_t</span><span class="o">&gt;</span> <span class="n">wstring</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">typedef</span> <span class="n">basic_string</span><span class="o">&lt;</span><span class="kt">char16_t</span><span class="o">&gt;</span> <span class="n">u16string</span><span class="p">;</span> <span class="c1">// C++11
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">typedef</span> <span class="n">basic_string</span><span class="o">&lt;</span><span class="kt">char32_t</span><span class="o">&gt;</span> <span class="n">u32string</span><span class="p">;</span> <span class="c1">// C++11
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>
+<p><code>string</code> 생성자들</p>
+<ul>
+<li>메모리와 관련된 선택적 매개변수를 생략했다.</li>
+</ul>
+</li>
+<li>
+<p>(1) <code>string(const char* s)</code></p>
+<ul>
+<li><code>string</code>객체를 <code>s</code>가 지시하는 NBTS로 초기화한다.</li>
+</ul>
+</li>
+<li>
+<p>(2) <code>string(size_type n, char c)</code></p>
+<ul>
+<li>문자 <code>c</code>로 모두 초기화된 원소 <code>n</code>개의 <code>string</code>객체를 생성한다.</li>
+</ul>
+</li>
+<li>
+<p>(3) <code>string(const string&amp; str)</code></p>
+<ul>
+<li><code>string</code>객체를 <code>string</code>객체 <code>str</code>(복사 생성자)로 초기화한다.</li>
+</ul>
+</li>
+<li>
+<p>(4) <code>string()</code></p>
+<ul>
+<li>크기가 0인 디폴트 <code>string</code>객체를 생성한다 (디폴트 생성자)</li>
+</ul>
+</li>
+<li>
+<p>(5) <code>string(const char* s, size_type n)</code></p>
+<ul>
+<li><code>string</code>객체를 <code>s</code>가 자시하는 NBTS로 초기화하되, NBTS의 크기를 초과하더라도 <code>n</code>개의 문자까지 진행한다.</li>
+</ul>
+</li>
+<li>
+<p>(6) <code>template&lt;class Iter&gt; string(Iter begin, Iter end)</code></p>
+<ul>
+<li><code>string</code>객체를 <code>begin</code>과 <code>end</code> - 1 범위에 있는 [<code>begin</code>, <code>end</code>) 값들로 초기화한다. <code>begin</code>과 <code>end</code>는 포인터와 비슷한 역할을 하여 위치를 지정한다. 그 범위는 <code>begin</code>을 포함하고 <code>end</code>는 포함하지 않는 <code>end</code> 바로 앞까지를 의미한다.</li>
+</ul>
+</li>
+<li>
+<p>(7) <code>string(const string&amp; std, size_type pos, size_type n = npos)</code></p>
+<ul>
+<li><code>string</code> 객체를 <code>string</code>객체 <code>str</code>로 초기화한다. <code>str</code>에 있는 <code>pos</code>위치에서 시작해서 <code>str</code>의 끝까지 가거나 <code>n</code>문자를 사용하되, <code>str</code>의 끝을 넘어갈 수 없다.</li>
+</ul>
+</li>
+<li>
+<p>(8) <code>string(string&amp;&amp; str) noexcept</code></p>
+<ul>
+<li>(C++11) <code>string</code>객체를 <code>string</code>객체 <code>str</code>로 초기화한다. <code>str</code>은 <code>const</code>가 아니므로 바뀔 수 있다. (move 생성자)</li>
+<li>컴파일러는 경우에 따라 성과를 최적화하기 위해서 복사 생성자 대신 이동 생성자를 사용한다.</li>
+</ul>
+</li>
+<li>
+<p>(9) <code>string(initilaizer_list&lt;char&gt; il)</code></p>
+<ul>
+<li>
+<p>(C++11) <code>string</code> 객체를 초기자 목록 <code>il</code>에 있는 문자로 초기화한다. 따라서 리스트 초기화를 가능하게 한다.</p>
+</li>
+<li>
+<p>NBTS</p>
+<ul>
+<li>null byte terminated string; 널 바이트 종료 문자열</li>
+</ul>
+</li>
+<li>
+<p><code>type_size</code></p>
+<ul>
+<li><code>string</code>헤더파일에 정의되어 있는, 시스템마다 다른 정수형이다.</li>
+<li><code>string::npos</code>를 문자열의 최대길이로 정의한다. 일반적으로 <code>unsigned char</code>의 최대값과 같다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">string</span> <span class="n">one</span><span class="p">(</span><span class="s">&#34;Lottery Winner!&#34;</span><span class="p">);</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">one</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>            
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">string</span> <span class="n">two</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="sc">&#39;$&#39;</span><span class="p">);</span>            
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">two</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">string</span> <span class="n">three</span><span class="p">(</span><span class="n">one</span><span class="p">);</span>              
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">three</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">one</span> <span class="o">+=</span> <span class="s">&#34; Oops!&#34;</span><span class="p">;</span>           <span class="c1">// 오버로딩 +=     
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">one</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">two</span> <span class="o">=</span> <span class="s">&#34;Sorry! That was &#34;</span><span class="p">;</span>  <span class="c1">// 오버로딩 =
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">three</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;P&#39;</span><span class="p">;</span>            <span class="c1">// 오버로딩 []
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">string</span> <span class="n">four</span><span class="p">;</span>                    
+</span></span><span class="line"><span class="cl">    <span class="n">four</span> <span class="o">=</span> <span class="n">two</span> <span class="o">+</span> <span class="n">three</span><span class="p">;</span>        <span class="c1">// 오버로딩 =, +        
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">four</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="n">alls</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&#34;All&#39;s well that ends well&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">string</span> <span class="n">five</span><span class="p">(</span><span class="n">alls</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>             
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">five</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;!</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 배열의 이름은 주소이다.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// 따라서 alls + 6은 char*형이다. 따라서 Iter가 char*형이 된다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">string</span> <span class="n">six</span><span class="p">(</span><span class="n">alls</span> <span class="o">+</span> <span class="mi">6</span><span class="p">,</span> <span class="n">alls</span> <span class="o">+</span> <span class="mi">10</span><span class="p">);</span>  <span class="c1">// 인덱스 6부터 9까지
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">six</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;, &#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// &amp;five[6] 또한 char*형이다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">string</span> <span class="n">six2</span><span class="p">(</span><span class="o">&amp;</span><span class="n">five</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">five</span><span class="p">[</span><span class="mi">10</span><span class="p">]);</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">six2</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;...</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">string</span> <span class="n">seven</span><span class="p">(</span><span class="n">four</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>        <span class="c1">// 인덱스 7부터 16개 문자
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">seven</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; in motion!&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">string</span> <span class="n">nine</span> <span class="o">=</span> <span class="p">{</span> <span class="sc">&#39;L&#39;</span><span class="p">,</span> <span class="sc">&#39;i&#39;</span><span class="p">,</span> <span class="sc">&#39;s&#39;</span><span class="p">,</span> <span class="sc">&#39;t&#39;</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>입력</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// C 스타일 문자열
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">char</span> <span class="n">info</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">info</span><span class="p">;</span>            <span class="c1">// 한 단어를 읽는다.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">cin</span><span class="p">.</span><span class="n">getline</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span> <span class="c1">// 한 행을 읽되, \n은 내버린다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>     <span class="c1">// 한 행을 읽되, \n은 큐에 남겨 둔다.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// string 객체
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">string</span> <span class="n">stuff</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">stuff</span><span class="p">;</span>           <span class="c1">// 한 단어를 읽는다.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">getline</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span> <span class="n">stuff</span><span class="p">);</span>    <span class="c1">// 한 행을 읽되, \n은 내버린다.
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>getline()</code>은 입력을 구분하기 위한 선택적 매개변수를 허용한다.
+<ul>
+<li>차이점은 <code>string</code>의 경우에는 객체의 크기를 자동으로 조절한다는 것이다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// C 스타일 문자열
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">cin</span><span class="p">.</span><span class="n">getline</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="sc">&#39;:&#39;</span><span class="p">);</span> <span class="c1">// :까지 읽고, :는 내버린다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// string 객체 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">getline</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span> <span class="n">stuff</span><span class="p">,</span> <span class="sc">&#39;:&#39;</span><span class="p">);</span>    <span class="c1">// :까지 읽고, :는 내버린다. 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>getline()</code>은 다음 중 하나가 일어나면 종료된다.
+<ul>
+<li>(1) 파일의 끝을 만났을 때. 입력 스트림의 <code>eofbit</code>가 설정된다.</li>
+<li>(2) 구분문자(디폴트는 <code>\n</code>이다. 만약 구분문자가 다른 것이되면 <code>\n</code>은 그냥 일반 문자가 된다)에 도달했을 때. 구분문자를 저장되지 않는다.</li>
+<li>(3) 가능한 최대 문자 수(<code>string::npos</code>와 대입에 사용할 수 있는 메모리 바이트 수 중 더 적은 것)를 읽었을 때. 입력 스트림의 <code>failbit</code>가 설정된다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><code>string</code> 문자열의 크기
+<ul>
+<li><code>length()</code>
+<ul>
+<li>오래된 버전부터 사용해온 것</li>
+</ul>
+</li>
+<li><code>size()</code>
+<ul>
+<li>STL 호환성을 위해 추가된 것</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><code>find()</code> 메서드의 네 가지 변형
+<ul>
+<li>
+<p>(1) <code>size_type find(const string&amp; str, size_type pos = 0) const</code></p>
+<ul>
+<li><code>pos</code>위치에서 시작해서 처음 나오는 <code>str</code>문자열을 찾는다.</li>
+</ul>
+</li>
+<li>
+<p>(2) <code>size_type find(const char* s, size_type pos = 0) const</code></p>
+<ul>
+<li><code>pos</code>위치에서 시작해서 처음 나오는 <code>s</code>문자열을 찾는다.</li>
+</ul>
+</li>
+<li>
+<p>(3) <code>size_type find(const char* s, size_type pos = 0, size_type n) const</code></p>
+<ul>
+<li><code>pos</code>위치에서 시작해서 <code>s</code>문자열의 처음 <code>n</code>개에 해당하는 부분 문자열을 찾는다.</li>
+</ul>
+</li>
+<li>
+<p>(4) <code>size_type find(char ch, size_type pos = 0) const</code></p>
+<ul>
+<li><code>pos</code>위치에서 시작해서 처음 나오는 문자 <code>ch</code>를 찾는다.</li>
+</ul>
+</li>
+<li>
+<p>찾으면, 첫 문자의 인덱스를 반환한다.</p>
+</li>
+<li>
+<p>찾지 못하면, <code>string::npos</code>를 리턴한다.</p>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><code>find()</code> 관련 메서드
+<ul>
+<li><code>rfind()</code>
+<ul>
+<li>가장 마지막으로 발생하는 부분 문자열이나 문자를 찾는다.</li>
+</ul>
+</li>
+<li><code>find_first_of()</code>
+<ul>
+<li>매개변수 문자열에서 처음 나오는 문자를 찾는다.</li>
+</ul>
+</li>
+<li><code>find_last_of()</code>
+<ul>
+<li>매개변수 문자열에 없는, 처음 나오는 문자를 찾는다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">string</span> <span class="nf">findHere</span><span class="p">(</span><span class="s">&#34;ACAB&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">where</span> <span class="o">=</span> <span class="n">findHere</span><span class="p">.</span><span class="n">find_first_of</span><span class="p">(</span><span class="s">&#34;BC&#34;</span><span class="p">);</span> <span class="c1">// &#39;C&#39; 인덱스 1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">where</span> <span class="o">=</span> <span class="n">findHere</span><span class="p">.</span><span class="n">find_last_of</span><span class="p">(</span><span class="s">&#34;BC&#34;</span><span class="p">);</span>      <span class="c1">// &#39;B&#39; 인덱스 3
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>자동 크기 조절
+<ul>
+<li>매번 크기가 늘어날 때마다 새로운 블록을 대입하고 복사하는 것은 비효율적이다.</li>
+<li>따라서 애초에 실제 문자열보다 훨씬 큰 메모리 블록을 대입한다.</li>
+<li>그리고, 그 크기를 넘으면 그것의 두 배가 되는 블록을 새로 대입한다.</li>
+<li><code>capacity()</code>
+<ul>
+<li>현재 블록의 크기를 리턴한다.</li>
+</ul>
+</li>
+<li><code>reserve(size_t n)</code>
+<ul>
+<li>블록의 최소한의 크기를 설정한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">string</span> <span class="n">empty</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">string</span> <span class="n">small</span> <span class="o">=</span> <span class="s">&#34;bit&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">string</span> <span class="n">larger</span> <span class="o">=</span> <span class="s">&#34;Elephants are a girl&#39;s best friend&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Sizes:</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\t</span><span class="s">empty: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">empty</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\t</span><span class="s">small: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">small</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\t</span><span class="s">larger: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">larger</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Capacities:</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\t</span><span class="s">empty: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">empty</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\t</span><span class="s">small: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">small</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\t</span><span class="s">larger: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">larger</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">empty</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="mi">50</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Capacity after empty.reserve(50): &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">empty</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Sizes:
+</span></span><span class="line"><span class="cl">        empty: 0
+</span></span><span class="line"><span class="cl">        small: 3
+</span></span><span class="line"><span class="cl">        larger: 34
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Capacities:
+</span></span><span class="line"><span class="cl">        empty: 15    // 이 시스템은 15문자의 최소용량을 사용한다. 
+</span></span><span class="line"><span class="cl">        small: 15
+</span></span><span class="line"><span class="cl">        larger: 47
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Capacity after empty.reserve(50): 63
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>c_str()</code>
+<ul>
+<li>C 스타일로 바꾸기</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// string에 들어있는 파일명이 필요할 경우.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// open()은 C 스타일 매개변수를 요구한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">string</span> <span class="n">filename</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">filename</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">ofstream</span> <span class="n">fout</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">fout</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="스마트-포인터-템플릿-클래스">스마트 포인터 템플릿 클래스</h2>
+<ul>
+<li>스마트 포인터가 필요한 이유
+<ul>
+<li>동적 메모리 할당 후 해제하는 것을 잊어서 메모리 누수가 발생할 수 있다.</li>
+<li>아래 예제와 같은 상황에서는 해제하는 코드를 작성하려면 <code>try</code> <code>catch</code>문을 또 작성해야할 것이다.</li>
+<li>이러한 문제를 해결할 수 있는 더 멋진 해결책이 없을까?</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Remodel</span><span class="p">(</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">str</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">string</span><span class="o">*</span> <span class="n">ps</span> <span class="o">=</span> <span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">//...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">weirdThing</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="k">throw</span> <span class="n">exception</span><span class="p">();</span>     
+</span></span><span class="line"><span class="cl">    <span class="c1">// 지역 변수인 ps가 차지하는 메모리는 블록을 나가면서 해제되지만
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// delete ps 하지 않았기 때문에 ps가 가리키는 메모리는 해제되지 않는다!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">str</span> <span class="o">=</span> <span class="o">*</span><span class="n">ps</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">delete</span> <span class="n">ps</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>스마트 포인터 (smart pointer)
+<ul>
+<li>포인터처럼 행동하는 클래스 객체이다.</li>
+<li><code>new</code>를 통해 얻어지는 주소를 대입할 포인터를 정의한다.</li>
+<li>그리고 이 객체의 수명이 다 하면, 파괴자는 <code>delete</code>를 사용해서 메모리를 자동으로 해제한다. (p.1230 그림 16.2 참고)</li>
+<li><code>auto_ptr</code>, <code>unique_ptr</code>, <code>shared_ptr</code>, <code>weak_ptr</code></li>
+<li><code>memory</code> 헤더파일에 정의되어있다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// auto_ptr는 클래스 템플릿을 사용해서 포인터의 종류를 구체화한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">X</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">auto_ptr</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">explicit</span> <span class="n">auto_ptr</span><span class="p">(</span><span class="n">X</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span> <span class="c1">// 생성자
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">auto_ptr</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ptr</span><span class="p">(</span><span class="k">new</span> <span class="kt">int</span><span class="p">);</span>       <span class="c1">// int형을 가리키는 auto_ptr이다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ptr</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">);</span> <span class="c1">// string형을 가리키는 auto_ptr이다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>auto_ptr</code>로 이전 예제의 문제점을 수정해보자.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Remodel</span><span class="p">(</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">str</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//string* ps = new string(str);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ps</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="n">str</span><span class="p">));</span>  <span class="c1">// auto_ptr을 사용한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">weirdThing</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="k">throw</span> <span class="n">exception</span><span class="p">();</span>  <span class="c1">// auto_ptr이 동적 메모리도 알아서 해제해준다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">str</span> <span class="o">=</span> <span class="o">*</span><span class="n">ps</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//delete ps;  이것은 이제 필요없다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>스마트 포인터 생성자에 <code>explicit</code>이 있으므로 명시적 변환만 허용된다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">ds</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">double</span><span class="o">*</span> <span class="n">d</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">double</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">ds</span> <span class="o">=</span> <span class="n">d</span><span class="p">;</span>                     <span class="c1">// (X) 암시적 변환은 안 된다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">ds</span> <span class="o">=</span> <span class="n">shared_ptr</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">);</span> <span class="c1">// (O) 명시적 변환은 된다. 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>스마트 포인터를 사용하면 안 되는 경우
+<ul>
+<li><code>delete</code>하려는 메모리가 힙에 없는 경우</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">string</span> <span class="nf">str</span><span class="p">(</span><span class="s">&#34;I want to study.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">pstr</span><span class="p">(</span><span class="o">&amp;</span><span class="n">str</span><span class="p">);</span>   <span class="c1">// (X)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>문제 상황
+<ul>
+<li>아래 예제는 한 번 해제한 메모리를 두 번 해제하게 된다.</li>
+<li>각각의 스마트 포인터는 이 상황을 어떻게 해결할까?</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ps</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="s">&#34;I&#39;m happy.&#34;</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">pps</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">pps</span> <span class="o">=</span> <span class="n">ps</span><span class="p">;</span>  
+</span></span><span class="line"><span class="cl"><span class="c1">// 이렇게 하면 ps와 pps 모두 하나의 똑같은 메모리를 가리키게 된다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 일반 포인터면 괜찮겠지만, 스마트 포인터는 delete 자동으로 호출하니까,
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 그럼 delete도 두 번 될텐데.. 각각의 스마트 포인터는 이 상황을 어떻게 해결했을까?
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>해결 방안
+<ul>
+<li>(1) 깊은 복사를 하는 대입연산자를 정의한다.</li>
+<li>(2) 소유권 개념을 도입한다.
+<ul>
+<li><code>auto_ptr</code>과 <code>shared_ptr</code>의 전략이다.</li>
+<li>스마트 포인터가 그 객체를 소유하는 경우에만 파괴자가 그 객체를 삭제한다. 그러고 나서, 대입을 통해 소유권을 이전시킨다.</li>
+</ul>
+</li>
+<li>(3) 참조 카운팅(reference counting)
+<ul>
+<li><code>shared_ptr</code>의 전략이다.</li>
+<li>특정 객체를 참조하는 스마트 포인터들이 몇 개인지 추적한다.</li>
+<li>대입할 때마다 참조 카운팅이 1씩 증가한다.</li>
+<li>스마트 포인터의 수명이 다하면 1씩 감소한다.</li>
+<li>그리고 마지막으로 스마트 포인터의 수명이 다했을 때 <code>delete</code>가 호출된다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>해결 방안 비교</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// auto_ptr
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ps</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="s">&#34;I&#39;m happy.&#34;</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">pps</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">pps</span> <span class="o">=</span> <span class="n">ps</span><span class="p">;</span>   <span class="c1">// ps의 소유권이 pss에게 넘어가서 ps는 더 이상 그 문자열을 참조하지 않는다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">ps</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">// (X) 실행 후 프로그램 크래시가 발생한다.  
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// shared_ptr
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ps</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="s">&#34;I&#39;m happy.&#34;</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">pps</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">pps</span> <span class="o">=</span> <span class="n">ps</span><span class="p">;</span>   <span class="c1">// 참조가 2번이 된다.  
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">ps</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">// (O) 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 참조카운트를 2에서 1로(pps), 1에서 0으로 줄이고(ps), 0이 되었을 때 힌 번 메모리를 해제한다.  
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// unique_ptr
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ps</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="s">&#34;I&#39;m happy.&#34;</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">pps</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">pps</span> <span class="o">=</span> <span class="n">ps</span><span class="p">;</span>   <span class="c1">// (X) 애초에 컴파일이 되지 않아서 실행도 안 된다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">ps</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>unique_ptr</code>이 <code>auto_ptr</code>보다 좋은 점
+<ul>
+<li>프로그램 크래시 보다 컴파일 에러가 더 안정적이다.</li>
+<li>대입 시 원본 객체가 임시 rvalue라면 그것을 허용한다.</li>
+<li>배열을 가리킬 수 있다.
+<ul>
+<li><code>auto_ptr</code>은 <code>new</code>와 <code>delete</code>는 사용할 수 있지만 <code>new []</code>, <code>delete []</code>은 안 된다. 반면, <code>unique_ptr</code>은 둘 다 가능하다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">p1</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="s">&#34;Uniquely special&#34;</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">p2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">p2</span> <span class="o">=</span> <span class="n">p1</span><span class="p">;</span> <span class="c1">// (X) 컴파일 에러
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">p2</span> <span class="o">=</span> <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="s">&#34;Uniquely special&#34;</span><span class="p">));</span> 
+</span></span><span class="line"><span class="cl"><span class="c1">// (O) 임시 rvalue이므로, 임시 객체는 삭제된다. 따라서 p2가 유일하기 때문에 이것은 허용 된다. 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// unique_ptr을 위한 대입 방법을 이렇게 제안한다.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">Demo</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">temp</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="n">s</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">temp</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ps</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ps</span> <span class="o">=</span> <span class="n">Demo</span><span class="p">(</span><span class="s">&#34;Uniquely Special&#34;</span><span class="p">);</span>  <span class="c1">// (O)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">string</span> <span class="n">strs</span><span class="p">[</span><span class="mi">3</span><span class="p">]{</span> <span class="s">&#34;AAA&#34;</span><span class="p">,</span> <span class="s">&#34;BBB&#34;</span><span class="p">,</span> <span class="s">&#34;CCC&#34;</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="p">[]</span><span class="o">&gt;</span> <span class="n">psa</span><span class="p">(</span><span class="n">strs</span><span class="p">);</span>   <span class="c1">// (X)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="p">[]</span><span class="o">&gt;</span> <span class="n">psu</span><span class="p">(</span><span class="n">strs</span><span class="p">);</span> <span class="c1">// (O) 배열을 가리킬 수 있다. 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>unique_ptr</code>의 대입을 가능하게 해주는 <code>move()</code> 표준 라이브러리 함수</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">p1</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="s">&#34;One&#34;</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">move</span><span class="p">(</span><span class="n">p1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">p1</span> <span class="o">=</span> <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="s">&#34;And more&#34;</span><span class="p">));</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>스마트 포인터를 선택하는 방법
+<ul>
+<li>하나의 객체를 여러개의 포인터가 가리켜야 한다
+<ul>
+<li><code>shared_ptr</code></li>
+</ul>
+</li>
+<li>다중 포인터가 필요 없다.
+<ul>
+<li><code>unique_ptr</code></li>
+</ul>
+</li>
+<li><code>new</code>로 대입된 메모리를 리턴하는 함수의 리턴 타입?
+<ul>
+<li><code>unique_ptr</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>만약 하나의 <code>unique_ptr</code>에서 다른 <code>unique_ptr</code>로 대입이 가능한 경우라면
+<ul>
+<li><code>shared_ptr</code>에 <code>unique_ptr</code>을 대입할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ps</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">ps</span> <span class="o">=</span> <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="s">&#34;Uniquely special&#34;</span><span class="p">));</span> <span class="c1">// (O)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">ps</span> <span class="o">=</span> <span class="n">Demo</span><span class="p">(</span><span class="s">&#34;Uniquely Special&#34;</span><span class="p">);</span> <span class="c1">// (O)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/c&#43;&#43;-primer-plus/">C&#43;&#43; Primer Plus</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-15-3/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 15. (3) RTTI</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-15-2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 15. (2) 예외</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-15-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 15. (1) 클래스 프렌드와 프렌드 멤버 함수, 내포 클래스</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-14-2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 14. C&#43;&#43; 코드의 재활용 (2) 템플릿</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/init/cpp-primer-plus-14-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 14. C&#43;&#43; 코드의 재활용 (1) 컨테인먼트와 private, protected 상속</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#string-클래스">string 클래스</a></li>
+    <li><a href="#스마트-포인터-템플릿-클래스">스마트 포인터 템플릿 클래스</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
