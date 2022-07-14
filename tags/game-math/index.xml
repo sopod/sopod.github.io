@@ -8,10 +8,10 @@
         <language>en-us</language>
         <lastBuildDate>Fri, 22 Apr 2022 13:00:00 +0900</lastBuildDate><atom:link href="https://sopod.github.io/tags/game-math/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>[Game Math] Chapter 14. 복소수: 2차원 평면의 수</title>
-        <link>https://sopod.github.io/init/game-math-14/</link>
+        <link>https://sopod.github.io/p/game-math-14/</link>
         <pubDate>Fri, 22 Apr 2022 13:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-14/</guid>
+        <guid>https://sopod.github.io/p/game-math-14/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;  &lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;복소수&#34;&gt;복소수&lt;/h2&gt;
@@ -417,10 +417,10 @@
         </item>
         <item>
         <title>[Game Math] Chapter 13. 절두체: 최적화된 3차원 공간 (2) </title>
-        <link>https://sopod.github.io/init/game-math-13-2/</link>
+        <link>https://sopod.github.io/p/game-math-13-2/</link>
         <pubDate>Thu, 21 Apr 2022 17:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-13-2/</guid>
+        <guid>https://sopod.github.io/p/game-math-13-2/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;  &lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;바운딩-볼륨&#34;&gt;바운딩 볼륨&lt;/h2&gt;
@@ -1819,10 +1819,10 @@
         </item>
         <item>
         <title>[Game Math] Chapter 13. 절두체: 최적화된 3차원 공간 (1)</title>
-        <link>https://sopod.github.io/init/game-math-13-1/</link>
+        <link>https://sopod.github.io/p/game-math-13-1/</link>
         <pubDate>Wed, 20 Apr 2022 17:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-13-1/</guid>
+        <guid>https://sopod.github.io/p/game-math-13-1/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;  &lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;절두체-컬링&#34;&gt;절두체 컬링&lt;/h2&gt;
@@ -2436,10 +2436,10 @@ $$ (P_{row4} - P_{row3} \cdot \vec{v}) \geq 0 $$&lt;/li&gt;
         </item>
         <item>
         <title>[Game Math] Chapter 12. 원근 투영: 화면에 현실감을 부여하는 변환</title>
-        <link>https://sopod.github.io/init/game-math-12/</link>
+        <link>https://sopod.github.io/p/game-math-12/</link>
         <pubDate>Fri, 15 Apr 2022 17:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-12/</guid>
+        <guid>https://sopod.github.io/p/game-math-12/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;  &lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;원근-투영-변환의-원리&#34;&gt;원근 투영 변환의 원리&lt;/h2&gt;
@@ -3755,10 +3755,10 @@ $P_{ndc} = (0, n_y)$&lt;/li&gt;
         </item>
         <item>
         <title>[Game Math] Chapter 11. 외적: 3차원 공간의 분석과 응용</title>
-        <link>https://sopod.github.io/init/game-math-11/</link>
+        <link>https://sopod.github.io/p/game-math-11/</link>
         <pubDate>Wed, 13 Apr 2022 18:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-11/</guid>
+        <guid>https://sopod.github.io/p/game-math-11/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;  &lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;벡터의-외적&#34;&gt;벡터의 외적&lt;/h2&gt;
@@ -4718,10 +4718,10 @@ $ = \cos\theta \cdot (\vec{u} - \vec{v}) + \sin\theta \cdot (\hat{n} \times \vec
         </item>
         <item>
         <title>[Game Math] Chapter 10. 3차원 공간: 입체 공간의 생성</title>
-        <link>https://sopod.github.io/init/game-math-10/</link>
+        <link>https://sopod.github.io/p/game-math-10/</link>
         <pubDate>Tue, 12 Apr 2022 18:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-10/</guid>
+        <guid>https://sopod.github.io/p/game-math-10/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;  &lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;3차원-공간의-설계&#34;&gt;3차원 공간의 설계&lt;/h2&gt;
@@ -5323,10 +5323,10 @@ $ \neq R_{(\alpha + \beta)}$&lt;/li&gt;
         </item>
         <item>
         <title>[Game Math] Chapter 9. 게임 엔진: 콘텐츠를 만드는 기술</title>
-        <link>https://sopod.github.io/init/game-math-09/</link>
+        <link>https://sopod.github.io/p/game-math-09/</link>
         <pubDate>Fri, 08 Apr 2022 18:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-09/</guid>
+        <guid>https://sopod.github.io/p/game-math-09/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;  &lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;게임-엔진의-구성-요소&#34;&gt;게임 엔진의 구성 요소&lt;/h2&gt;
@@ -6548,10 +6548,10 @@ $\vec{u} = (-\sin\theta, \cos\theta)$&lt;/li&gt;
         </item>
         <item>
         <title>[Game Math] Chapter 8. 삼각형: 물체를 구성하는 가장 작은 단위</title>
-        <link>https://sopod.github.io/init/game-math-08/</link>
+        <link>https://sopod.github.io/p/game-math-08/</link>
         <pubDate>Thu, 07 Apr 2022 18:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-08/</guid>
+        <guid>https://sopod.github.io/p/game-math-08/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;  &lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;세-점의-결합&#34;&gt;세 점의 결합&lt;/h2&gt;
@@ -7480,10 +7480,10 @@ $(\vec{w} \cdot \vec{v})(\vec{u} \cdot \vec{v}) = s(\vec{u} \cdot \vec{v})(\vec{
         </item>
         <item>
         <title>[Game Math] Chapter 7. 내적: 벡터 공간의 분석과 응용</title>
-        <link>https://sopod.github.io/init/game-math-07/</link>
+        <link>https://sopod.github.io/p/game-math-07/</link>
         <pubDate>Tue, 05 Apr 2022 18:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-07/</guid>
+        <guid>https://sopod.github.io/p/game-math-07/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;벡터의-내적&#34;&gt;벡터의 내적&lt;/h2&gt;
@@ -7937,10 +7937,10 @@ $$R_{\theta}^T \cdot R_{\theta} = \begin{bmatrix} \cos^2\theta + \sin^2\theta &a
         </item>
         <item>
         <title>[Game Math] Chapter 6. 아핀 공간: 움직이는 가상 세계의 구축</title>
-        <link>https://sopod.github.io/init/game-math-06/</link>
+        <link>https://sopod.github.io/p/game-math-06/</link>
         <pubDate>Mon, 04 Apr 2022 18:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-06/</guid>
+        <guid>https://sopod.github.io/p/game-math-06/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;이동-변환을-위한-아핀-공간&#34;&gt;이동 변환을 위한 아핀 공간&lt;/h2&gt;
@@ -8745,10 +8745,10 @@ $\vec{v} = P_2 - P_1$&lt;/li&gt;
         </item>
         <item>
         <title>[Game Math] Chapter 5. 행렬: 가상 세계의 변환 도구</title>
-        <link>https://sopod.github.io/init/game-math-05/</link>
+        <link>https://sopod.github.io/p/game-math-05/</link>
         <pubDate>Fri, 01 Apr 2022 18:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-05/</guid>
+        <guid>https://sopod.github.io/p/game-math-05/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;선형성-예측-가능한-비례-관계&#34;&gt;선형성: 예측 가능한 비례 관계&lt;/h2&gt;
@@ -9263,10 +9263,10 @@ $$R_{\theta}^{-1} = \begin{bmatrix} \cos\theta &amp;amp; \sin\theta \\ -\sin\the
         </item>
         <item>
         <title>[Game Math] Chapter 4. 삼각함수: 회전을 위한 수학</title>
-        <link>https://sopod.github.io/init/game-math-04/</link>
+        <link>https://sopod.github.io/p/game-math-04/</link>
         <pubDate>Thu, 31 Mar 2022 18:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-04/</guid>
+        <guid>https://sopod.github.io/p/game-math-04/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;삼각함수&#34;&gt;삼각함수&lt;/h2&gt;
@@ -9646,10 +9646,10 @@ $y&amp;rsquo; = x\sin\theta + y\cos\theta$&lt;/li&gt;
         </item>
         <item>
         <title>[Game Math] Chapter 3. 벡터: 가상 공간의 탄생</title>
-        <link>https://sopod.github.io/init/game-math-03/</link>
+        <link>https://sopod.github.io/p/game-math-03/</link>
         <pubDate>Tue, 29 Mar 2022 18:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-03/</guid>
+        <guid>https://sopod.github.io/p/game-math-03/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;데카르트-좌표계&#34;&gt;데카르트 좌표계&lt;/h2&gt;
@@ -9854,10 +9854,10 @@ $e_3 = (0, 0, 1)$&lt;/li&gt;
         </item>
         <item>
         <title>[Game Math] Chapter 2. 수: 가상 세계를 구성하는 가장 작은 단위</title>
-        <link>https://sopod.github.io/init/game-math-02/</link>
+        <link>https://sopod.github.io/p/game-math-02/</link>
         <pubDate>Mon, 28 Mar 2022 18:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/game-math-02/</guid>
+        <guid>https://sopod.github.io/p/game-math-02/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;수와-집합&#34;&gt;수와 집합&lt;/h2&gt;

@@ -8,10 +8,10 @@
         <language>en-us</language>
         <lastBuildDate>Sun, 27 Mar 2022 13:00:00 +0900</lastBuildDate><atom:link href="https://sopod.github.io/tags/c++-primer-plus/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>[C&#43;&#43; Primer Plus] Chapter 18. (2) 람다 함수, 래퍼, 가변인자 템플릿</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-18-2/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-18-2/</link>
         <pubDate>Sun, 27 Mar 2022 13:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-18-2/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-18-2/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;람다-함수&#34;&gt;람다 함수&lt;/h2&gt;
@@ -683,10 +683,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 18. (1) Move Semantics와 rvalue참조, 새로운 클래스 형태</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-18-1/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-18-1/</link>
         <pubDate>Sun, 27 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-18-1/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-18-1/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;move-semantics의-필요성&#34;&gt;Move Semantics의 필요성&lt;/h2&gt;
@@ -1745,10 +1745,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 16. (5) STL - 알고리즘, 기타 라이브러리</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-16-5/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-16-5/</link>
         <pubDate>Fri, 25 Mar 2022 13:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-16-5/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-16-5/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;알고리즘algorithm&#34;&gt;알고리즘(algorithm)&lt;/h2&gt;
@@ -2512,10 +2512,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 16. (4) STL - 함수 객체</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-16-4/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-16-4/</link>
         <pubDate>Fri, 25 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-16-4/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-16-4/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;함수-객체functor&#34;&gt;함수 객체(functor)&lt;/h2&gt;
@@ -2928,10 +2928,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 16. (3) STL - 컨테이너</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-16-3/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-16-3/</link>
         <pubDate>Thu, 24 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-16-3/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-16-3/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;컨테이너container&#34;&gt;컨테이너(container)&lt;/h2&gt;
@@ -3698,10 +3698,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 16. (2) STL - 이터레이터</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-16-2/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-16-2/</link>
         <pubDate>Wed, 23 Mar 2022 13:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-16-2/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-16-2/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;표준-템플릿-라이브러리&#34;&gt;표준 템플릿 라이브러리&lt;/h2&gt;
@@ -4684,10 +4684,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 16. (1) string 클래스, 스마트 포인터 템플릿 클래스</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-16-1/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-16-1/</link>
         <pubDate>Wed, 23 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-16-1/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-16-1/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;string-클래스&#34;&gt;string 클래스&lt;/h2&gt;
@@ -5611,10 +5611,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 15. (3) RTTI</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-15-3/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-15-3/</link>
         <pubDate>Tue, 22 Mar 2022 14:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-15-3/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-15-3/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;rtti-runtime-type-identification&#34;&gt;RTTI (runtime type identification)&lt;/h2&gt;
@@ -6238,10 +6238,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 15. (2) 예외</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-15-2/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-15-2/</link>
         <pubDate>Tue, 22 Mar 2022 13:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-15-2/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-15-2/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;예외&#34;&gt;예외&lt;/h2&gt;
@@ -7826,10 +7826,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 15. (1) 클래스 프렌드와 프렌드 멤버 함수, 내포 클래스</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-15-1/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-15-1/</link>
         <pubDate>Tue, 22 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-15-1/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-15-1/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;클래스-프렌드&#34;&gt;클래스 프렌드&lt;/h2&gt;
@@ -8630,10 +8630,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 14. C&#43;&#43; 코드의 재활용 (2) 템플릿</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-14-2/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-14-2/</link>
         <pubDate>Mon, 21 Mar 2022 13:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-14-2/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-14-2/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;코드의-재활용성을-높이는-방법&#34;&gt;코드의 재활용성을 높이는 방법&lt;/h2&gt;
@@ -10239,10 +10239,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 14. C&#43;&#43; 코드의 재활용 (1) 컨테인먼트와 private, protected 상속</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-14-1/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-14-1/</link>
         <pubDate>Mon, 21 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-14-1/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-14-1/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;코드의-재활용성을-높이는-방법&#34;&gt;코드의 재활용성을 높이는 방법&lt;/h2&gt;
@@ -11632,10 +11632,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 13. 클래스의 상속</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-13/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-13/</link>
         <pubDate>Sun, 20 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-13/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-13/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;서론&#34;&gt;서론&lt;/h2&gt;
@@ -13232,10 +13232,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 12. 클래스와 동적 메모리 대입</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-12/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-12/</link>
         <pubDate>Sat, 19 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-12/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-12/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;서론&#34;&gt;서론&lt;/h2&gt;
@@ -14745,10 +14745,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 11. 클래스의 활용</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-11/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-11/</link>
         <pubDate>Thu, 17 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-11/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-11/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;연산자-오버로딩&#34;&gt;연산자 오버로딩&lt;/h2&gt;
@@ -15483,10 +15483,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 10. 객체와 클래스</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-10/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-10/</link>
         <pubDate>Wed, 16 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-10/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-10/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;클래스&#34;&gt;클래스&lt;/h2&gt;
@@ -15956,10 +15956,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 9. 메모리 모델과 이름공간</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-09/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-09/</link>
         <pubDate>Thu, 10 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-09/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-09/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;분할-컴파일&#34;&gt;분할 컴파일&lt;/h2&gt;
@@ -16602,10 +16602,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 8. 함수의 활용</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-08/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-08/</link>
         <pubDate>Wed, 09 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-08/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-08/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;참조-변수&#34;&gt;참조 변수&lt;/h2&gt;
@@ -17121,10 +17121,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 7. 함수</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-07/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-07/</link>
         <pubDate>Tue, 08 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-07/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-07/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;함수&#34;&gt;함수&lt;/h2&gt;
@@ -17476,10 +17476,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 6. 분기 구문과 논리 연산자</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-06/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-06/</link>
         <pubDate>Mon, 07 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-06/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-06/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;연산자-우선순위&#34;&gt;연산자 우선순위&lt;/h2&gt;
@@ -17726,10 +17726,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 5. 루프와 관계표현식</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-05/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-05/</link>
         <pubDate>Sat, 05 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-05/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-05/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;표현식&#34;&gt;표현식&lt;/h2&gt;
@@ -17995,10 +17995,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 4. 복합 데이터형</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-04/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-04/</link>
         <pubDate>Fri, 04 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-04/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-04/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;배열&#34;&gt;배열&lt;/h2&gt;
@@ -18755,10 +18755,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 3. 데이터 처리</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-03/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-03/</link>
         <pubDate>Thu, 03 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-03/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-03/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;변수-이름-규칙&#34;&gt;변수 이름 규칙&lt;/h2&gt;
@@ -19060,10 +19060,10 @@
         </item>
         <item>
         <title>[C&#43;&#43; Primer Plus] Chapter 1, 2. 시작하기</title>
-        <link>https://sopod.github.io/init/cpp-primer-plus-01/</link>
+        <link>https://sopod.github.io/p/cpp-primer-plus-01/</link>
         <pubDate>Wed, 02 Mar 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/cpp-primer-plus-01/</guid>
+        <guid>https://sopod.github.io/p/cpp-primer-plus-01/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;c&#34;&gt;C++&lt;/h2&gt;

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='삼각함수 삼각비(Trigonometric ratio) 직각삼각형을 구성하는 세 변에서, 직각이 아닌 각에 대한 두 변의 비례관계를 나타낸 것이다. 삼각비를 구하려면 꼭 직각삼각형이어야 하므로, $\theta$는 늘 $0^\circ$와 $90^\circ$ 사이이다. 그렇다면 $90^\circ$를 넘어서는 각에 대해서는 삼각비를 구할 수 없을까? 삼각함수(Trigonometric function)
+각의 크기를 삼각비로 나타내는 함수이다. 직각삼각형을 데카르트 좌표계 상에 배치하고, 사잇각의 범위를 실수 전체인 $\mathbb{R^2}$집합으로 확장하였다. 반지름이 $1$인 원을 사용하면 삼각함수를 좀 더 쉽게 파악할 수 있다.
+$\sin\theta = \frac{b}{1} = b$이고, $\cos\theta = \frac{a}{1} = a$이므로, 원주 위의 모든 좌표는 $(\cos\theta, \sin\theta)$에 대응한다.'><title>[Game Math] Chapter 4. 삼각함수: 회전을 위한 수학</title>
+
+<link rel='canonical' href='https://sopod.github.io/p/game-math-04/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[Game Math] Chapter 4. 삼각함수: 회전을 위한 수학'>
+<meta property='og:description' content='삼각함수 삼각비(Trigonometric ratio) 직각삼각형을 구성하는 세 변에서, 직각이 아닌 각에 대한 두 변의 비례관계를 나타낸 것이다. 삼각비를 구하려면 꼭 직각삼각형이어야 하므로, $\theta$는 늘 $0^\circ$와 $90^\circ$ 사이이다. 그렇다면 $90^\circ$를 넘어서는 각에 대해서는 삼각비를 구할 수 없을까? 삼각함수(Trigonometric function)
+각의 크기를 삼각비로 나타내는 함수이다. 직각삼각형을 데카르트 좌표계 상에 배치하고, 사잇각의 범위를 실수 전체인 $\mathbb{R^2}$집합으로 확장하였다. 반지름이 $1$인 원을 사용하면 삼각함수를 좀 더 쉽게 파악할 수 있다.
+$\sin\theta = \frac{b}{1} = b$이고, $\cos\theta = \frac{a}{1} = a$이므로, 원주 위의 모든 좌표는 $(\cos\theta, \sin\theta)$에 대응한다.'>
+<meta property='og:url' content='https://sopod.github.io/p/game-math-04/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Game Math' /><meta property='article:published_time' content='2022-03-31T18:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-03-31T18:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[Game Math] Chapter 4. 삼각함수: 회전을 위한 수학">
+<meta name="twitter:description" content="삼각함수 삼각비(Trigonometric ratio) 직각삼각형을 구성하는 세 변에서, 직각이 아닌 각에 대한 두 변의 비례관계를 나타낸 것이다. 삼각비를 구하려면 꼭 직각삼각형이어야 하므로, $\theta$는 늘 $0^\circ$와 $90^\circ$ 사이이다. 그렇다면 $90^\circ$를 넘어서는 각에 대해서는 삼각비를 구할 수 없을까? 삼각함수(Trigonometric function)
+각의 크기를 삼각비로 나타내는 함수이다. 직각삼각형을 데카르트 좌표계 상에 배치하고, 사잇각의 범위를 실수 전체인 $\mathbb{R^2}$집합으로 확장하였다. 반지름이 $1$인 원을 사용하면 삼각함수를 좀 더 쉽게 파악할 수 있다.
+$\sin\theta = \frac{b}{1} = b$이고, $\cos\theta = \frac{a}{1} = a$이므로, 원주 위의 모든 좌표는 $(\cos\theta, \sin\theta)$에 대응한다.">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/game-math/" >
+                Game Math
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/game-math-04/">[Game Math] Chapter 4. 삼각함수: 회전을 위한 수학</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 03, 313131</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    4 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br /><br /></p>
+<h2 id="삼각함수">삼각함수</h2>
+<ul>
+<li><strong>삼각비(Trigonometric ratio)</strong>
+<ul>
+<li>직각삼각형을 구성하는 세 변에서, <strong>직각이 아닌 각에 대한 두 변의 비례관계</strong>를 나타낸 것이다. <br />
+<img src="/postimg/gamemath/04-01-trigonnometiRatio.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="삼각비"
+	
+	
+></li>
+<li>삼각비를 구하려면 꼭 직각삼각형이어야 하므로, $\theta$는 늘 $0^\circ$와 $90^\circ$ 사이이다.
+<ul>
+<li>그렇다면 $90^\circ$를 넘어서는 각에 대해서는 삼각비를 구할 수 없을까?</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>
+<p><strong>삼각함수(Trigonometric function)</strong></p>
+<ul>
+<li><strong>각의 크기를 삼각비로 나타내는 함수</strong>이다.</li>
+<li>직각삼각형을 데카르트 좌표계 상에 배치하고, 사잇각의 범위를 실수 전체인 $\mathbb{R^2}$집합으로 확장하였다.</li>
+</ul>
+</li>
+<li>
+<p>반지름이 $1$인 원을 사용하면 삼각함수를 좀 더 쉽게 파악할 수 있다.</p>
+<ul>
+<li>$\sin\theta = \frac{b}{1} = b$이고, $\cos\theta = \frac{a}{1} = a$이므로, 원주 위의 모든 좌표는 $(\cos\theta, \sin\theta)$에 대응한다. <br /><br>
+<img src="/postimg/gamemath/04-02-trigonometicFunction.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="삼각함수"
+	
+	
+></li>
+<li>이것을 피타고라스 정리에 대입하면, <span style='background-color: #c293d8'>$\cos^2\theta + \sin^2\theta = 1$</span>과 같은 공식을 얻을 수 있다.</li>
+</ul>
+</li>
+<li>
+<p>이번에는 반지름을 $r$으로 일반화시켜 생각해보자.</p>
+<ul>
+<li>벡터의 개념으로 생각했을 때, 길이가 $1$에서 $r$만큼 증가 했으므로, 스칼라 곱셈에 의해 $r\cdot(\cos\theta, \sin\theta)$라는 좌표를 얻을 수 있다.</li>
+<li>따라서 밑변과 높이는 각각 $r\cdot\cos\theta$와 $r\cdot\sin\theta$가 된다.</li>
+<li>이것을 피타고라스 정리에 대입하면, $r^2(\cos^2\theta + \sin^2\theta) = r^2$이므로, 반지름 길이와 무관하게 $\cos^2\theta + \sin^2\theta = 1$식은 성립한다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<h3 id="삼각함수의-성질">삼각함수의 성질</h3>
+<ul>
+<li>데카르트 좌표계에서의 각도란?
+<ul>
+<li>$x$축에서 원의 궤적을 따라 반시계 방향으로 회전한 크기를 의미한다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>반지름이 $1$인 단위 원에서 반시계 방향의 회전을 생각해보자.
+<ul>
+<li>아직 회전하지 않은 상태에서 빗변 $\vec{v}$는 $x$축에 위치하며, 좌표는 $(1, 0)$이다. 이것의 각도는 $0^\circ$이겠다.</li>
+</ul>
+</li>
+<li>여기서 각도를 서서히 증가시키다면?
+<ul>
+<li>$v_x$와 $v_y$의 변화량을 나타내면 아래 그림과 같을 것이다.</li>
+<li>값의 변화는 $[-1, 1]$범위(진폭, Amplitude) 내에서 $360^\circ$마다 반복(주기, Period)된다. <br />
+<img src="/postimg/gamemath/04-03-cos.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="cos함수그래프"
+	
+	
+>
+<img src="/postimg/gamemath/04-04-sin.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="sin함수그래프"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><strong>짝함수(Even function)</strong>
+<ul>
+<li>$y$축을 기준으로 좌우를 접었을 때 $\cos$함수와 같이 좌우 대칭인 함수.</li>
+<li><span style='background-color: #c293d8'>$\cos(-\theta) = \cos(\theta)$</span></li>
+</ul>
+</li>
+<li><strong>홀함수(Odd function)</strong>
+<ul>
+<li>$\sin$함수와 같이 원점 대칭인 함수.</li>
+<li><span style='background-color: #c293d8'>$\sin(-\theta) = -\sin(\theta)$</span></li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>$\tan$함수의 특징
+<ul>
+<li>빗변과 무관하게 밑변과 높이의 관계만을 나타낸다.
+<ul>
+<li>$\tan\theta = \frac{b}{a}$</li>
+</ul>
+</li>
+<li>분자와 분모를 모두 빗변 값으로 나누면?
+<ul>
+<li>$\tan\theta = \frac{\frac{b}{c}}{\frac{a}{c}} = \frac{\sin\theta}{\cos\theta}$</li>
+<li>분모의 값은 0이 될 수 없기 때문에, 분모인 $\cos$함수의 값이 $0$이 되는 각도(예를 들면, $90^\circ$)에서는 $\tan$값이 존재하지 않는다.</li>
+</ul>
+</li>
+<li>$\sin$함수처럼 홀함수의 성질을 지닌다.  <br />
+<img src="/postimg/gamemath/04-05-tan.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tan함수그래프"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />
+<h3 id="각의-측정법">각의 측정법</h3>
+<ul>
+<li>
+<p>각도법(Degree)</p>
+<ul>
+<li>우리가 일상생활에서 사용하듯이 $0$에서 $360$까지의 수를 사용하는 방법.</li>
+</ul>
+</li>
+<li>
+<p><strong>호도법(Radian)</strong></p>
+<ul>
+<li>호의 길이를 기준으로 각을 측정하는 방법.</li>
+<li>크기 1인 단위벡터를 사용해서 크기를 비교하는 것처럼, 호의 길이가 1이 되는 부채꼴의 각을 기준으로 각을 측정한다. <br />
+<img src="/postimg/gamemath/04-06-radian.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="호도법"
+	
+	
+></li>
+<li>반원의 호길이는 $\pi$이므로 다음과 같은 변환식을 만들 수 있다.</li>
+<li><span style='background-color: #c293d8'>$1^\circ = \frac{\pi}{180} (rad)$</span> <br />
+<span style='background-color: #c293d8'>$1 (rad) = (\frac{180}{\pi})^\circ$</span></li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="삼각함수를-활용한-물체의-회전">삼각함수를 활용한 물체의 회전</h2>
+<ul>
+<li>물체를 이동시키고, 크기를 늘리는 것은 $x$축과 $y$축이 서로 독립적으로 적용된다. 따라서 이 두 축을 서로 분리해서 따로 계산한 후 결합한 것과 동일하다.</li>
+<li>하지만 회전은 $x$와 $y$값이 함께 영향을 미치기 때문에 분리해서 독립적으로 계산할 수 없다.</li>
+</ul>
+<br />
+<ul>
+<li>
+<p>기저벡터 개념을 활용해서 회전시켜보자.</p>
+</li>
+<li>
+<p>$\mathbb{R^2}$의 기저벡터 $e_1 = (1, 0)$과 $e_2 = (0, 1)$을 각 $\theta$만큼 회전시키면?</p>
+<ul>
+<li><span style='background-color: #c293d8'>$e_1&rsquo; = (\cos\theta, \sin\theta)$</span>과 <span style='background-color: #c293d8'>$e_2&rsquo; = (-\sin\theta, \cos\theta)$</span>가 될 것이다. <br />
+<img src="/postimg/gamemath/04-07-vecRot1.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="기저벡터의 회전"
+	
+	
+></li>
+</ul>
+</li>
+<li>
+<p>$(1, 1)$에 위치한 벡터 $\vec{v}$는 $\vec{v} = 1 \cdot e_1 + 1 \cdot e_2$라고 표현할 수 있다.</p>
+</li>
+<li>
+<p>이 벡터를 $\theta$만큼 회전시키면?</p>
+<ul>
+<li>$\vec{v}&rsquo; = 1 \cdot (\cos\theta, \sin\theta) + 1 \cdot (-\sin\theta, \cos\theta)$이며, 따라서 $\vec{v}&rsquo; = (\cos\theta - \sin\theta, \sin\theta + \cos\theta)$가 된다. <br /><br>
+<img src="/postimg/gamemath/04-08-vecRot2.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="벡터의 회전"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>이것을 일반화시킨다면, $(x, y)$에 위치한 벡터를 $\theta$만큼 회전한 $(x&rsquo;, y&rsquo;)$는 다음과 같다.
+<ul>
+<li>$x&rsquo; = x\cos\theta - y\sin\theta$ <br />
+$y&rsquo; = x\sin\theta + y\cos\theta$</li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="삼각함수의-역함수">삼각함수의 역함수</h2>
+<ul>
+<li><strong>벡터의 좌표를 가지고 대응하는 각도를 알아내는 법.</strong>
+<ul>
+<li>각 <strong>삼각함수의 정의역과 공역의 범위를 제한</strong>시키면 <strong>전단사함수를 만들 수 있다.</strong> 이것은 <strong>역함수도 구할 수 있다</strong>는 것을 의미한다.</li>
+<li>$\sin$함수가 $\theta$값이 주어졌을 때, 두 변의 비례관계를 구한다면,</li>
+<li>$\arcsin$함수는 거꾸로 $\sin$함수의 값인 두 변의 비례관계가 주어지면, 그것을 통해 $\theta$ 값을 구할 수 있는 것이다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>
+<p><span style='background-color: #c293d8'>$\sin^{-1}(x) = \arcsin(x)$</span></p>
+<ul>
+<li>정의역: $[-90^\circ, 90^\circ]$</li>
+<li>공역: $[-1, 1]$ <br /><br>
+<img src="/postimg/gamemath/04-09-arcsin.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="arcsin"
+	
+	
+></li>
+</ul>
+</li>
+<li>
+<p><span style='background-color: #c293d8'>$\cos^{-1}(x) = \arccos(x)$</span></p>
+<ul>
+<li>정의역: $[0^\circ, 180^\circ]$</li>
+<li>공역: $[-1, 1]$ <br /><br>
+<img src="/postimg/gamemath/04-10-arccos.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="arccos"
+	
+	
+></li>
+</ul>
+</li>
+<li>
+<p><span style='background-color: #c293d8'>$\tan^{-1}(x) = \arctan(x)$</span></p>
+<ul>
+<li>정의역: $(-90^\circ, 90^\circ)$</li>
+<li>공역: 실수 영역 전체 <br /><br>
+<img src="/postimg/gamemath/04-11-arctan.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="arctan"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>
+<p>$\arctan$ 함수는 벡터의 각도를 구하는 데 유용하게 사용할 수 있다.</p>
+<ul>
+<li>$\vec{v} = (x, y)$라는 임의의 벡터가 있을 때, $\tan\theta$는 $\frac{y}{x}$이다. 이 값을 이용해서 $\arctan$함수로 $\theta$에 해당하는 각도값을 구할 수 있다.</li>
+<li>하지만! $\arctan$함수는 정의역이 $(-90^\circ, 90^\circ)$으로 한정되어 있다는 문제가 있다.</li>
+<li>따라서 각 축인 $x$와 $y$를 따로 분리해서 전달하는 함수인 $atan2$함수를 사용한다.</li>
+</ul>
+</li>
+<li>
+<p><span style='background-color: #c293d8'>$atan2(y, x)$</span></p>
+<ul>
+<li>정의역: $[-180^\circ, 180^\circ]$</li>
+<li>공역: 실수 영역 전체 <br /><br>
+<img src="/postimg/gamemath/04-12-atan2.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="atan2"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="극좌표계">극좌표계</h2>
+<ul>
+<li>
+<p>데카르트 좌표계</p>
+<ul>
+<li>앞에서 본 것처럼 회전을 구현하면 회전에 따른 $x$, $y$의 변화를 매번 계산하는 번거로움이 발생한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>극좌표계(Polar coordinate system)</strong></p>
+<ul>
+<li>$(r, \theta)$
+<ul>
+<li>원점으로부터의 거리 $r$과, 각 $\theta$의 두 요소로 구성된다.</li>
+</ul>
+</li>
+<li>극좌표계는 원형공간의 특징을 지닌다. 따라서 스킬 쿨타임 아이콘 등 회전에 관련된 효과를 줄 때 많이 사용된다.  <br /><br>
+<img src="/postimg/gamemath/04-13-polarCoordinateSystem.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="극좌표계"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>
+<p>데카르트 좌표계에서 극좌표계로 변환</p>
+<ul>
+<li><span style='background-color: #c293d8'>$r = \sqrt{x^2 + y^2}$</span> <br />
+<span style='background-color: #c293d8'>$\theta = atan2(x, y)$</span></li>
+</ul>
+</li>
+<li>
+<p>극좌표계에서 데카르트 좌표계로 변환</p>
+<ul>
+<li><span style='background-color: #c293d8'>$x = r \cdot \cos\theta$</span> <br />
+<span style='background-color: #c293d8'>$y = r \cdot \sin\theta$</span></li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/game-math/">Game Math</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/game-math-14/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 14. 복소수: 2차원 평면의 수</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/game-math-13-2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 13. 절두체: 최적화된 3차원 공간 (2) </h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/game-math-13-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 13. 절두체: 최적화된 3차원 공간 (1)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/game-math-12/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 12. 원근 투영: 화면에 현실감을 부여하는 변환</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/game-math-11/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 11. 외적: 3차원 공간의 분석과 응용</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#삼각함수">삼각함수</a>
+      <ol>
+        <li><a href="#삼각함수의-성질">삼각함수의 성질</a></li>
+        <li><a href="#각의-측정법">각의 측정법</a></li>
+      </ol>
+    </li>
+    <li><a href="#삼각함수를-활용한-물체의-회전">삼각함수를 활용한 물체의 회전</a></li>
+    <li><a href="#삼각함수의-역함수">삼각함수의 역함수</a></li>
+    <li><a href="#극좌표계">극좌표계</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

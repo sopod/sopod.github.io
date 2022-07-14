@@ -15,7 +15,8 @@
         <description>&lt;hr&gt;
 &lt;h1 id=&#34;projects&#34;&gt;Projects&lt;/h1&gt;
 &lt;h2 id=&#34;fantasy-land&#34;&gt;Fantasy Land&lt;/h2&gt;
-&lt;p&gt;2021.4Q | Unity3D, C# | Windows&lt;/p&gt;
+&lt;p&gt;2021.4Q ··· Unity3D, C# ··· Windows ··· &lt;a class=&#34;link&#34; href=&#34;https://github.com/sopod/project_unity_fantasy_land.git&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Github repository&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;video-wrapper&#34;&gt;
     &lt;iframe loading=&#34;lazy&#34; 
             src=&#34;https://www.youtube.com/embed/amzeWNZxyxw&#34; 
@@ -28,7 +29,7 @@
 &lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;dragon-nest&#34;&gt;Dragon Nest&lt;/h2&gt;
-&lt;p&gt;2021.4Q | Unreal 4 3D, C++ | Windows&lt;/p&gt;
+&lt;p&gt;2021.4Q ··· Unreal 4 3D, C++ ··· Windows&lt;/p&gt;
 &lt;div class=&#34;video-wrapper&#34;&gt;
     &lt;iframe loading=&#34;lazy&#34; 
             src=&#34;https://www.youtube.com/embed/dcFLSekzJWg&#34; 
@@ -41,7 +42,8 @@
 &lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;drink-stadium&#34;&gt;Drink Stadium&lt;/h2&gt;
-&lt;p&gt;2021.3Q | Unity3D, C# | Windows&lt;/p&gt;
+&lt;p&gt;2021.3Q ··· Unity3D, C# ··· Windows ··· &lt;a class=&#34;link&#34; href=&#34;https://github.com/sopod/project_unity_drink_stadium.git&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Github repository&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;video-wrapper&#34;&gt;
     &lt;iframe loading=&#34;lazy&#34; 
             src=&#34;https://www.youtube.com/embed/rk63gd4CGwc&#34; 
@@ -54,7 +56,8 @@
 &lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;bubble-bobble&#34;&gt;Bubble Bobble&lt;/h2&gt;
-&lt;p&gt;2021.3Q | WinAPI, C++ | Windows&lt;/p&gt;
+&lt;p&gt;2021.3Q ··· WinAPI, C++ ··· Windows ··· &lt;a class=&#34;link&#34; href=&#34;https://github.com/sopod/project_winapi_bubble_bobble.git&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Github repository&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;video-wrapper&#34;&gt;
     &lt;iframe loading=&#34;lazy&#34; 
             src=&#34;https://www.youtube.com/embed/vzk4j18VeTM&#34; 
@@ -65,6 +68,22 @@
 &lt;/div&gt;
 
 </description>
+        </item>
+        <item>
+        <title>Archives</title>
+        <link>https://sopod.github.io/archives/</link>
+        <pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://sopod.github.io/archives/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Search</title>
+        <link>https://sopod.github.io/search/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://sopod.github.io/search/</guid>
+        <description></description>
         </item>
         
     </channel>

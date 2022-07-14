@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='배열 배열을 선언할 때 원소의 개수는 다음 중에 하나여야 한다. 값 정수 상수 상수 수식 1 2 3 4 5 6 int values1[40]; // 1 const int length = 40; int values2[length]; // 2 int values3[10 * sizeof(int)]; // 3 생성과 동시에 초기화할 수 있다. 반면, 초기화를 나중에 할 수는 없다. 1 int arr[3] = {1, 2, 3}; 초기화할 때 처음 원소를 명시적으로 하면 나머지는 알아서 0이 된다. 1 int arr[3] = {0}; [] 속을 비우면 초기화 개수 대로 배열이 만들어진다.'><title>[C&#43;&#43; Primer Plus] Chapter 4. 복합 데이터형</title>
+
+<link rel='canonical' href='https://sopod.github.io/p/cpp-primer-plus-04/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[C&#43;&#43; Primer Plus] Chapter 4. 복합 데이터형'>
+<meta property='og:description' content='배열 배열을 선언할 때 원소의 개수는 다음 중에 하나여야 한다. 값 정수 상수 상수 수식 1 2 3 4 5 6 int values1[40]; // 1 const int length = 40; int values2[length]; // 2 int values3[10 * sizeof(int)]; // 3 생성과 동시에 초기화할 수 있다. 반면, 초기화를 나중에 할 수는 없다. 1 int arr[3] = {1, 2, 3}; 초기화할 때 처음 원소를 명시적으로 하면 나머지는 알아서 0이 된다. 1 int arr[3] = {0}; [] 속을 비우면 초기화 개수 대로 배열이 만들어진다.'>
+<meta property='og:url' content='https://sopod.github.io/p/cpp-primer-plus-04/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='C&#43;&#43; Primer Plus' /><meta property='article:published_time' content='2022-03-04T12:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-03-04T12:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[C&#43;&#43; Primer Plus] Chapter 4. 복합 데이터형">
+<meta name="twitter:description" content="배열 배열을 선언할 때 원소의 개수는 다음 중에 하나여야 한다. 값 정수 상수 상수 수식 1 2 3 4 5 6 int values1[40]; // 1 const int length = 40; int values2[length]; // 2 int values3[10 * sizeof(int)]; // 3 생성과 동시에 초기화할 수 있다. 반면, 초기화를 나중에 할 수는 없다. 1 int arr[3] = {1, 2, 3}; 초기화할 때 처음 원소를 명시적으로 하면 나머지는 알아서 0이 된다. 1 int arr[3] = {0}; [] 속을 비우면 초기화 개수 대로 배열이 만들어진다.">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/c&#43;&#43;/" >
+                C&#43;&#43;
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/cpp-primer-plus-04/">[C&#43;&#43; Primer Plus] Chapter 4. 복합 데이터형</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 03, 4044</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    7 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br /><br /></p>
+<h2 id="배열">배열</h2>
+<ul>
+<li>배열을 선언할 때 원소의 개수는 다음 중에 하나여야 한다.</li>
+</ul>
+<ol>
+<li>값</li>
+<li>정수 상수</li>
+<li>상수 수식</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">values1</span><span class="p">[</span><span class="mi">40</span><span class="p">];</span>  <span class="c1">// 1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">values2</span><span class="p">[</span><span class="n">length</span><span class="p">];</span>  <span class="c1">// 2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">values3</span><span class="p">[</span><span class="mi">10</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)];</span>  <span class="c1">// 3
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>생성과 동시에 초기화할 수 있다. 반면, 초기화를 나중에 할 수는 없다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">arr</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>초기화할 때 처음 원소를 명시적으로 하면 나머지는 알아서 0이 된다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">arr</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>[]</code> 속을 비우면 초기화 개수 대로 배열이 만들어진다.</li>
+<li>배열의 원소 개수는 <code>sizeof(arr) / sizeof(int)</code> 로 구할 수 있다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">arr</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>  <span class="c1">// 3개의 int형 데이터를 가진 배열로 만들어진다. 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>배열 초기화 시 <code>=</code> 가 없어도 된다.</li>
+<li>중괄호 공백으로 <code>0</code>으로 다 초기화할 수 있다.</li>
+<li>초기화 시 narrowing은 안 된다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">arr</span><span class="p">[]</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">arr</span><span class="p">[]</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">arr</span><span class="p">[]</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">3.3333</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>  <span class="c1">// (X)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="문자열">문자열</h2>
+<ul>
+<li>모든 문자열의 마지막 문자는 널 문자(<code>\0</code>)여야 한다.</li>
+<li>문자열 상수로 배열을 초기화할 때 널 문자까지 고려해야 한다.</li>
+<li><code>[]</code> 속을 배우면 알아서 널 문자까지 고려 해 준다.</li>
+<li>배열이 문자열 상수보다 더 크면 널 문자로 계속 채운다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">char</span> <span class="n">arr</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&#34;Hello&#34;</span><span class="p">;</span>  <span class="c1">// 6개의 char형 데이터를 가진 배열로 만들어진다. 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>‘S’</code>는 문자이다.</li>
+<li><code>&quot;S&quot;</code>는 문자열이며 S문자와 널 문자가 합쳐진 두 개의 문자로 이루어진 문자열이다.
+<ul>
+<li>따라서 아래와 같은 것은 안 된다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">char</span> <span class="n">keyword</span> <span class="o">=</span> <span class="s">&#34;S&#34;</span><span class="p">;</span> <span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>White space(빈칸, 탭, 캐리지리턴)로 분리된 두 개의 문자열 상수는 하나의 문자열 상수로 결합된다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Hello &#34;</span> <span class="s">&#34;My friend&#34;</span><span class="p">;</span>  <span class="c1">// &#34;Hello My friend&#34;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>&lt;cstring&gt;</code> 헤더 파일에 있는 <code>strlen()</code>함수는 배열의 전체 크기가 아니라 배열에 저장된 문자열의 크기를 리턴한다. 널 문자는 제외한다.</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="문자열-읽기">문자열 읽기</h2>
+<ul>
+<li><code>cin</code>은 White Space를 문자열의 끝으로 간주한다. 그래서 중간에 White Space가 있는 문자열을 입력하면 White Space 전까지만 저장하고 그 이후 문자들은 입력 큐에 남겨 놓는다. 그러면 다음 <code>cin</code>에서는 사용자 입력을 받지 않고 입력 큐에 남아있던 문자들을 저장한다.</li>
+</ul>
+<br />
+<ul>
+<li>전체 한 줄의 문자열을 저장하기 위해서는&hellip;</li>
+<li><code>cin.getline(배열이름, 배열크기)</code>
+<ul>
+<li><code>getline</code>은 매개변수로 입력받은 (배열크기 – 1)크기를 넘어서거나, 개행 문자를 만나면 개행 문자를 널 문자로 교체하고 입력한 후 읽기를 종료한다.</li>
+<li><code>getline</code>이 지정된 배열 크기를 넘어서는 문자를 입력받으면 나머지는 입력 큐에 남겨두고, <code>failbit</code>를 설정한다.</li>
+</ul>
+</li>
+<li><code>cin.get(배열이름, 배열크기)</code>
+<ul>
+<li><code>get</code>은 개행 문자를 입력 큐에 남겨둔다. 다음 입력이 개행 문자를 입력하는 것을 방지하기 위해 <code>cin.get()</code>을 사용해 문자 하나를 읽어버릴 수 있다. 아니면 <code>cin.get(배열이름, 배열크기).get()</code> 이렇게 할 수도 있다.</li>
+<li><code>get</code>이 빈 행을 읽으면 <code>failbit</code>라는 것이 설정되어서 추가적은 입력을 막는다. 이것을 복원하려면 <code>cin.clear()</code>를 해주어야 한다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>함수</th>
+<th>입력</th>
+<th>버퍼남김</th>
+<th>무엇을 읽으면 failbit?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cin</code></td>
+<td>White Space 이전까지</td>
+<td>개행 문자</td>
+<td></td>
+</tr>
+<tr>
+<td><code>cin.getline(배열이름, 크기)</code></td>
+<td>개행까지</td>
+<td>X (개행은 널로 대체)</td>
+<td>초과 크기의 문자열</td>
+</tr>
+<tr>
+<td><code>cin.get(배열이름, 크기)</code></td>
+<td>개행까지</td>
+<td>개행 문자</td>
+<td>빈 행</td>
+</tr>
+</tbody>
+</table></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="n">cin</span><span class="p">.</span><span class="n">fail</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cin</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>                <span class="c1">// 내부 상태 플러그 초기화
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">cin</span><span class="p">.</span><span class="n">ignore</span><span class="p">(</span><span class="n">INT_MAX</span><span class="p">,</span> <span class="sc">&#39;\n&#39;</span><span class="p">);</span>  <span class="c1">// 해당 길이 만큼 or 개행 문자까지 읽어서 입력 버퍼를 비운다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="string-클래스">string 클래스</h2>
+<ul>
+<li>리스트 초기화가 가능하다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">char</span> <span class="n">arr</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#34;Hello&#34;</span><span class="p">};</span>  
+</span></span><span class="line"><span class="cl"><span class="n">string</span> <span class="n">str</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#34;Hello&#34;</span><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>문자배열</th>
+<th>string</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>크기</strong></td>
+<td>선언만 하면 크기가 제각각이다. <br /> 이후에 <code>cin</code>으로 입력을 저장하면 지정된 크기 만큼만 저장된다.</td>
+<td>선언만 하면 크기가 <code>0</code>이다. <br /> 이후에 <code>cin</code>으로 입력을 저장해도 자동으로 크기를 조절해 문자열을 넣는다.</td>
+</tr>
+<tr>
+<td><strong>대입과 추가</strong></td>
+<td>C라이브러리 <code>&lt;cstring&gt;</code>를 사용해서 <code>strcpy(arr1, arr2)</code>로 복사한다. <br /> <code>strcat(arr1, arr2)</code>로 덧붙인다.</td>
+<td><code>=</code>로 대입한다. <br /> <code>+</code>, <code>+=</code> 으로 덧붙인다.</td>
+</tr>
+<tr>
+<td><strong>길이구하기</strong></td>
+<td>길이는 <code>strlen(arr)</code> 로 구할 수 있다.</td>
+<td>길이는 <code>str.size()</code> 로 구할 수 있다.</td>
+</tr>
+</tbody>
+</table></div>
+<br />
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 문자배열
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">cin</span><span class="p">.</span><span class="n">getline</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">arrSize</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// string
+</span></span></span><span class="line"><span class="cl"><span class="c1">// &lt;istream&gt;은 string형을 인식하지 못한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">getline</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="다른-형태의-문자열-상수">다른 형태의 문자열 상수</h2>
+<ul>
+<li><code>wchar_t</code>, <code>char16_t</code>, <code>char32_t</code>
+<ul>
+<li><code>L</code>, <code>u</code>, <code>U</code> 접두사를 사용해서 문자열 상수로 초기화할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">wchar_t</span> <span class="n">arr</span><span class="p">[]</span> <span class="o">=</span> <span class="sa">L</span><span class="s">&#34;Hello&#34;</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>접두사 <code>R</code>을 붙여서 raw 문자열을 사용할 수도 있다.</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="구조체">구조체</h2>
+<ul>
+<li>여러 종류의 데이터를 모아서 하나의 단위로 묶어서 저장할 수 있다.</li>
+<li>함수도 멤버로 가질 수 있다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Student</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span> 
+</span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span> 
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Student</span> <span class="n">s1</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#34;KimKim&#34;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">Student</span> <span class="n">s2</span> <span class="p">{};</span>    <span class="c1">// =를 생략할 수도 있다, 0으로 모두 초기화.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s1</span><span class="p">.</span><span class="n">age</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span>            <span class="err">// 데이터형 이름 없음. 구조체의 정의와 동시에 변수생성.</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span> 
+</span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">;</span>   
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>구조체 배열</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">Student</span> <span class="n">sArr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="p">{</span> <span class="s">&#34;KimKim&#34;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="s">&#34;SoSo&#34;</span><span class="p">,</span> <span class="mi">2</span> <span class="p">}</span> <span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="공용체">공용체</h2>
+<ul>
+<li>여러 종류의 데이터를 모아서 하나의 단위로 묶었지만, 하나의 데이터만 보관할 수 있다.</li>
+<li>공용체의 크기 = 제일 큰 멤버의 크기</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">union</span> <span class="nc">OneForAll</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span> 
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">Num</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="n">Name</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span> 
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="열거체">열거체</h2>
+<ul>
+<li><code>0</code>부터 순서대로 대입되며, 명시적으로 지정하면 기본값은 무시된다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">enum</span> <span class="nc">Color</span> <span class="p">{</span> <span class="n">Red</span><span class="p">,</span> <span class="n">Orange</span><span class="p">,</span> <span class="n">Yellow</span><span class="p">,</span> <span class="n">Blue</span><span class="p">,</span> <span class="n">Green</span><span class="p">,</span> <span class="n">Purple</span> <span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>int</code>형으로 자동으로 승급될 수 있다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">number</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">Red</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>반대로 <code>int</code>형이 자동으로 <code>enum</code>형으로 되진 않는다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">Color</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Color</span> <span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>대입연산자만 사용할 수 있고, 산술 연산자는 안 된다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="o">++</span><span class="n">c</span><span class="p">;</span>  <span class="c1">// (X)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>주로 기호 상수들을 정의하는 용도로 사용되므로 이름을 생략할 수도 있다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">enum</span> <span class="p">{</span> <span class="n">Red</span><span class="p">,</span> <span class="n">Orange</span><span class="p">,</span> <span class="n">Yellow</span><span class="p">,</span> <span class="n">Blue</span><span class="p">,</span> <span class="n">Green</span><span class="p">,</span> <span class="n">Purple</span> <span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>어떤 정수값이 열거체 값 범위 안에 들어있으면, 그 값이 열거자 값이 아니더라도, 데이터형 변환을 통해서 열거체 변수에 대입할 수 있다.</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="포인터">포인터</h2>
+<ul>
+<li><code>int *</code> 이든 <code>double *</code>이든 그 크기는 같다. (컴퓨터 시스템에 따라 다름)</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">number</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="o">*</span> <span class="n">pointer</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">number</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// *pointer == number  == number의 값
+</span></span></span><span class="line"><span class="cl"><span class="c1">//  pointer == &amp;number == number의 주소값
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="o">*</span> <span class="n">ptr</span><span class="p">,</span> <span class="n">num</span><span class="p">;</span> <span class="c1">// ptr은 포인터형으로 num은 int형으로 생성된다. 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>포인터에 직접 주소를 대입할 수 있다. 데이터형을 반드시 명시해야 한다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="o">*</span> <span class="n">number</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="mh">0xB8000000</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="new연산자로-런타임에-메모리-할당-c의-malloc-대체">new연산자로 런타임에 메모리 할당 (C의 malloc 대체)</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">;</span>  
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>여기서 <code>ptr</code>이 가리키고 있는 메모리의 이름(<code>number</code>같은 변수 이름)이 없다. 그냥 메모리 블록을 가리키고 있다. 그래서 <code>ptr</code>을 통해서만 메모리 접근이 가능하다.</li>
+<li>컴퓨터 메모리가 부족해서 <code>new</code>의 메모리 할당 요청을 허용할 수 없으면 <code>new</code>는 <code>0</code>을 리턴한다. 이렇게 값이 <code>0</code>인 포인터는 널 포인터라고 부른다. 널 포인터는 무언가 일이 잘못되었다는 것을 나타낼 때 사용된다.</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="delete-연산자로-메모리-해제">delete 연산자로 메모리 해제</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">;</span>  
+</span></span><span class="line"><span class="cl"><span class="k">delete</span> <span class="n">ptr</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>메모리 누수를 방지하기 위해 다 쓴 메모리는 <code>delete</code> 연산자를 사용해 메모리를 해제해 주어야한다.</li>
+<li><code>delete</code>로 해제된 메모리를 또 다시 <code>delete</code>로 해제하면 안 된다. 보통의 변수로 대입한 메모리도 <code>delete</code>로 해제할 수 없다.</li>
+<li>널 포인터를 <code>delete</code>하면 아무일도 일어나지 않는다 (안전하다)</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="new를-사용해-생성한-동적-배열-동적-바인딩">new를 사용해 생성한 동적 배열 (동적 바인딩)</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span> <span class="p">[</span><span class="mi">10</span><span class="p">];</span> 
+</span></span><span class="line"><span class="cl"><span class="k">delete</span> <span class="p">[]</span> <span class="n">ptr</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>*ptr</code>이나 <code>ptr[0]</code>으로 배열의 첫번째 원소에 접근 가능 하다.</li>
+<li><code>ptr + 1</code>을 하면 <code>ptr</code>이 가리키는 데이터형의 크기만큼 한 칸 뒤로 가서, <code>ptr[0]</code>은 두번째 원소인 <code>ptr[1]</code>을 가리키게 된다.</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="포인터와-배열">포인터와 배열</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">numbers</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">numbers</span><span class="p">;</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p><code>numbers</code> == <code>&amp;numbers[0]</code></p>
+<ul>
+<li><code>numbers</code> 배열의 첫 번째 원소의 주소값</li>
+</ul>
+</li>
+<li>
+<p><code>numbers</code> != <code>&amp;numbers</code></p>
+<ul>
+<li><code>&amp;numbers</code>는 배열 전체의 주소값이다.</li>
+<li>따라서 <code>numbers + 1</code>은 다음 원소의 주소값이지만,</li>
+<li><code>&amp;numbers + 1</code>을 하면 전체 배열을 넘어간 다음의 주소값이다.</li>
+</ul>
+</li>
+<li>
+<p><code>*numbers</code> == <code>numbers[0]</code></p>
+<ul>
+<li><code>numbers</code> 배열의 첫 번째 원소의 값</li>
+</ul>
+</li>
+<li>
+<p><code>*(numbers + 1)</code> == <code>numbers[1]</code></p>
+<ul>
+<li><code>numbers</code> 배열의 두 번째 원소의 값</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>여기서 <code>numbers</code> 대신 <code>ptr</code>을 넣어도 똑같다.</li>
+<li>다른점:
+<ul>
+<li>(1) <code>ptr</code>은 값을 변경할 수 있지만 배열 이름인 <code>numbers</code>는 값을 변경할 수 없다.</li>
+<li>(2) <code>sizeof(numbers)</code>는 배열 전체의 크기이지만 <code>sizeof(ptr)</code>은 포인터의 크기이다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>포인터 배열과 배열 포인터</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">short</span> <span class="o">*</span> <span class="n">ptr</span> <span class="p">[</span><span class="mi">20</span><span class="p">];</span>	<span class="c1">// short* 형 포인터가 20개 있는 배열
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">short</span> <span class="p">(</span><span class="o">*</span><span class="n">ptr</span><span class="p">)[</span><span class="mi">20</span><span class="p">];</span>	<span class="c1">// short 형 자료가 20개 있는 배열을 가리키는 포인터
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="포인터와-문자열">포인터와 문자열</h2>
+<ul>
+<li>배열의 이름, 포인터, 문자열 상수 모두 동등하게 첫번째 문자열의 주소를 나타낸다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">char</span> <span class="n">arr</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#34;beautiful&#34;</span><span class="p">;</span>    
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">arr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">char</span> <span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="s">&#34;beautiful&#34;</span><span class="p">;</span>      
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;beautiful&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>문자열 상수나 초기화되지 않은 포인터를 문자열 입력에 절대 사용하지 않아야 한다. 포인터의 경우, 초기회되지 않았다면, 입력된 문자가 어디에 저장될지 알 수 없어진다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">ptr1</span> <span class="o">=</span> <span class="s">&#34;notgood&#34;</span><span class="p">;</span>  
+</span></span><span class="line"><span class="cl"><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">ptr1</span><span class="p">;</span>    
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">char</span> <span class="o">*</span> <span class="n">ptr2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">ptr2</span>  <span class="c1">//(X)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>strncpy(arr1, arr2, 최대 문자 수);</code>
+<ul>
+<li>이것은 최대 문자수가 다 안 담기면 널 문자를 추가하지 않는다. 따라서 반드시 수기로 추가해야 한다.</li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="new를-사용한-동적-구조체-생성">new를 사용한 동적 구조체 생성</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>연산자</th>
+<th>형식</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>도트 멤버 연산자</td>
+<td><code>[구조체의 이름.멤버]</code>, <code>[(*포인터).멤버]</code></td>
+</tr>
+<tr>
+<td>화살표 멤버 연산자</td>
+<td><code>[구조체를 지시하는 포인터-&gt;멤버]</code></td>
+</tr>
+</tbody>
+</table></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Flower</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span> 
+</span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span> 
+</span></span><span class="line"><span class="cl">    <span class="kt">double</span> <span class="n">price</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Flower</span> <span class="o">*</span> <span class="n">f</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Flower</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">f</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">price</span><span class="p">;</span>    
+</span></span><span class="line"><span class="cl"><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">).</span><span class="n">price</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">delete</span> <span class="n">f</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="데이터-저장을-위한-메모리-공간의-종류">데이터 저장을 위한 메모리 공간의 종류</h2>
+<ul>
+<li><strong>자동 공간(automatic)</strong>
+<ul>
+<li>변수들이 자신이 정의되어있는 함수가 호출되는 순간에 생겨나서, 함수가 종료되는 시점까지만 존재한다. (블록 안에서만 유효하다)</li>
+<li>스택에 저장된다. 따라서 순차적으로 저장되고 역순으로 해제된다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><strong>정적 공간(static)</strong>
+<ul>
+<li>프로그램이 실행되는 동안에 지속적으로 존재하는 공간이다.</li>
+<li>함수 외부에서 변수를 정의하거나 <code>static</code> 키워드로 정의하면 된다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">double</span> <span class="n">fee</span> <span class="o">=</span> <span class="mf">56.5</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><strong>동적 공간(힙)(dynamic)</strong>
+<ul>
+<li><code>new</code>와 <code>delete</code>을 사용해서 동적으로 메모리를 할당하고 해제한다.</li>
+<li>힙에 저장된다.</li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="배열의-대안">배열의 대안</h2>
+<ul>
+<li><code>vector</code> 템플릿 클래스
+<ul>
+<li><code>string</code> 클래스처럼 자동으로 런타임에 메모리가 할당/해제 된다. (힙)</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vec</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>  
+</span></span><span class="line"><span class="cl"><span class="c1">// 10개 원소를 가진 int형 배열. 
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 10자리에 변수가능.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 자동으로 0으로 모두 초기화 됨.
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>array</code> 템플릿 클래스
+<ul>
+<li>크기가 고정되어 크기를 런타임에 바꿀 수 없다. (스택)</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="mi">10</span><span class="o">&gt;</span> <span class="n">arr</span><span class="p">;</span>    <span class="c1">// 10자리에 변수 불가능.
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/c&#43;&#43;-primer-plus/">C&#43;&#43; Primer Plus</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-18-2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 18. (2) 람다 함수, 래퍼, 가변인자 템플릿</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-18-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 18. (1) Move Semantics와 rvalue참조, 새로운 클래스 형태</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-16-5/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 16. (5) STL - 알고리즘, 기타 라이브러리</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-16-4/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 16. (4) STL - 함수 객체</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-16-3/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 16. (3) STL - 컨테이너</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#배열">배열</a></li>
+    <li><a href="#문자열">문자열</a></li>
+    <li><a href="#문자열-읽기">문자열 읽기</a></li>
+    <li><a href="#string-클래스">string 클래스</a></li>
+    <li><a href="#다른-형태의-문자열-상수">다른 형태의 문자열 상수</a></li>
+    <li><a href="#구조체">구조체</a></li>
+    <li><a href="#공용체">공용체</a></li>
+    <li><a href="#열거체">열거체</a></li>
+    <li><a href="#포인터">포인터</a></li>
+    <li><a href="#new연산자로-런타임에-메모리-할당-c의-malloc-대체">new연산자로 런타임에 메모리 할당 (C의 malloc 대체)</a></li>
+    <li><a href="#delete-연산자로-메모리-해제">delete 연산자로 메모리 해제</a></li>
+    <li><a href="#new를-사용해-생성한-동적-배열-동적-바인딩">new를 사용해 생성한 동적 배열 (동적 바인딩)</a></li>
+    <li><a href="#포인터와-배열">포인터와 배열</a></li>
+    <li><a href="#포인터와-문자열">포인터와 문자열</a></li>
+    <li><a href="#new를-사용한-동적-구조체-생성">new를 사용한 동적 구조체 생성</a></li>
+    <li><a href="#데이터-저장을-위한-메모리-공간의-종류">데이터 저장을 위한 메모리 공간의 종류</a></li>
+    <li><a href="#배열의-대안">배열의 대안</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

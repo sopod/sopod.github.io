@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='프로세스와 스레드 프로세스(Process) 프로그램이 실행되어 메모리에 적재된 인스턴스이다. 스레드(Thread) 프로세스 내에서 실행되는 흐름의 단위이다. 운영체제가 CPU 시간을 할당하는 기본 단위이다. 멀티 스레드의 장점 응답성을 높일 수 있다. 자원 공유가 쉽다. 자원을 공유하므로 경제적이다. 멀티 스레드의 단점 구현이 까다롭다. 스레드를 너무 많이 사용하면 문맥교환이 잦아져서 오히려 성능이 더 저하된다. 스레드 시작하기 .NET은 스레드를 제어하는 System.Threading.Thread 클래스를 제공한다. Thread의 인스턴스를 생성한다. 인수로 실행할 메소드를 넘긴다. Thread.Start()메소드를 호출해서 스레드를 시작한다. Thread.Join()메소드를 호출해서 스레드가 끝날 때까지 기다린다.'><title>[This is C#] Chapter 19. 스레드와 태스크</title>
+
+<link rel='canonical' href='https://sopod.github.io/p/this-is-c-sharp-19/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[This is C#] Chapter 19. 스레드와 태스크'>
+<meta property='og:description' content='프로세스와 스레드 프로세스(Process) 프로그램이 실행되어 메모리에 적재된 인스턴스이다. 스레드(Thread) 프로세스 내에서 실행되는 흐름의 단위이다. 운영체제가 CPU 시간을 할당하는 기본 단위이다. 멀티 스레드의 장점 응답성을 높일 수 있다. 자원 공유가 쉽다. 자원을 공유하므로 경제적이다. 멀티 스레드의 단점 구현이 까다롭다. 스레드를 너무 많이 사용하면 문맥교환이 잦아져서 오히려 성능이 더 저하된다. 스레드 시작하기 .NET은 스레드를 제어하는 System.Threading.Thread 클래스를 제공한다. Thread의 인스턴스를 생성한다. 인수로 실행할 메소드를 넘긴다. Thread.Start()메소드를 호출해서 스레드를 시작한다. Thread.Join()메소드를 호출해서 스레드가 끝날 때까지 기다린다.'>
+<meta property='og:url' content='https://sopod.github.io/p/this-is-c-sharp-19/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='This is C-Sharp' /><meta property='article:published_time' content='2022-05-08T16:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-05-08T16:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[This is C#] Chapter 19. 스레드와 태스크">
+<meta name="twitter:description" content="프로세스와 스레드 프로세스(Process) 프로그램이 실행되어 메모리에 적재된 인스턴스이다. 스레드(Thread) 프로세스 내에서 실행되는 흐름의 단위이다. 운영체제가 CPU 시간을 할당하는 기본 단위이다. 멀티 스레드의 장점 응답성을 높일 수 있다. 자원 공유가 쉽다. 자원을 공유하므로 경제적이다. 멀티 스레드의 단점 구현이 까다롭다. 스레드를 너무 많이 사용하면 문맥교환이 잦아져서 오히려 성능이 더 저하된다. 스레드 시작하기 .NET은 스레드를 제어하는 System.Threading.Thread 클래스를 제공한다. Thread의 인스턴스를 생성한다. 인수로 실행할 메소드를 넘긴다. Thread.Start()메소드를 호출해서 스레드를 시작한다. Thread.Join()메소드를 호출해서 스레드가 끝날 때까지 기다린다.">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/c-sharp/" >
+                C-Sharp
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/this-is-c-sharp-19/">[This is C#] Chapter 19. 스레드와 태스크</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">May 05, 8088</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    9 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br /><br /></p>
+<h2 id="프로세스와-스레드">프로세스와 스레드</h2>
+<ul>
+<li>프로세스(Process)
+<ul>
+<li>프로그램이 실행되어 메모리에 적재된 인스턴스이다.</li>
+</ul>
+</li>
+<li>스레드(Thread)
+<ul>
+<li>프로세스 내에서 실행되는 흐름의 단위이다.</li>
+<li>운영체제가 CPU 시간을 할당하는 기본 단위이다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>멀티 스레드의 장점
+<ul>
+<li>응답성을 높일 수 있다.</li>
+<li>자원 공유가 쉽다.</li>
+<li>자원을 공유하므로 경제적이다.</li>
+</ul>
+</li>
+<li>멀티 스레드의 단점
+<ul>
+<li>구현이 까다롭다.</li>
+<li>스레드를 너무 많이 사용하면 문맥교환이 잦아져서 오히려 성능이 더 저하된다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<h3 id="스레드-시작하기">스레드 시작하기</h3>
+<ul>
+<li>.NET은 스레드를 제어하는 <code>System.Threading.Thread</code> 클래스를 제공한다.
+<ol>
+<li><code>Thread</code>의 인스턴스를 생성한다. 인수로 실행할 메소드를 넘긴다.</li>
+<li><code>Thread.Start()</code>메소드를 호출해서 스레드를 시작한다.</li>
+<li><code>Thread.Join()</code>메소드를 호출해서 스레드가 끝날 때까지 기다린다.</li>
+</ol>
+</li>
+</ul>
+<br />
+<h3 id="스레드-임의로-종료시키기">스레드 임의로 종료시키기</h3>
+<ul>
+<li><code>Thread.Abort()</code>메소드를 호출하면 즉시 종료되지는 않는다.
+<ul>
+<li>CLR은 해당 스레드가 실행 중이던 코드에 <code>ThreadAbortException</code>을 던진다. 이 때 예외를 <code>catch</code>하는 코드가 있으면 처리한 다음 <code>finally</code> 블록까지 실행한 후에야 해당 스레드는 완전히 종료된다.</li>
+<li>왠만하면 사용하지 않는 것이 좋다. 해당 스레드가 독점 자원을 잠근 후 종료되면, 그 자원은 해제되지 못하기 때문이다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<h3 id="스레드의-상태-변화">스레드의 상태 변화</h3>
+<ul>
+<li>.NET은 스레드의 상태를 <code>ThreadState</code> 열거형에 정의해두었다.</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>상태</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unstarted</td>
+<td>스레드 객체를 생성한 후 <code>Thread.Start()</code> 메소드가 호출되기 전의 상태이다.</td>
+</tr>
+<tr>
+<td>Running</td>
+<td>스레드가 시작하여 동작 중인 상태이다. <code>Unstarted</code>에서 <code>Thread.Start()</code>하면 이 상태가 된다.</td>
+</tr>
+<tr>
+<td>Suspended</td>
+<td>스레드의 일시 중단 상태이다. <code>Thread.Suspend()</code> 메소드를 통해 이 상태로 만들 수 있으며, <code>Thread.Resume()</code> 메소드를 통해 다시 <code>Running</code> 상태로 만들 수 있다.</td>
+</tr>
+<tr>
+<td>WaitSleepJoin</td>
+<td>스레드가 블록(Block)된 상태이다. <code>Monitor.Enter()</code>나 <code>Thread.Sleep()</code>나 <code>Thread.Join()</code> 메소드를 호출하면 이 상태가 된다.</td>
+</tr>
+<tr>
+<td>Aborted</td>
+<td>스레드가 취소된 상태이다. <code>Thread.Abort()</code> 메소드를 호출하면 이 상태가 된다. 이후 <code>Stopped</code> 상태로 전환되어 완전히 중지된다.</td>
+</tr>
+<tr>
+<td>Stopped</td>
+<td>스레드가 중지된 상태이다. <code>Thread.Abort()</code> 메소드를 호출하거나 실행 중인 메소드가 종료되면 이 상태가 된다.</td>
+</tr>
+<tr>
+<td>Background</td>
+<td>스레드가 백그라운드로 동작하고 있음을 나타낸다. 포어그라운드의 경우 스레드가 하나라도 살아 있으면 프로세스가 죽지 않는다. 반면 백그라운드의 경우 스레드가 살아 있는지와 관계없이 프로세스가 죽으면 스레드도 모두 죽는다.</td>
+</tr>
+</tbody>
+</table></div>
+<br />
+<ul>
+<li><code>ThreadState</code> 열거형은 <code>Flags</code>애트리뷰트를 갖고 있다.
+<ul>
+<li>따라서 이 열거형의 요소들의 집합으로 표현할 수 있다. 즉, 비트 필드(Bit field)로 처리할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="na">[Flags]</span>
+</span></span><span class="line"><span class="cl"><span class="k">enum</span> <span class="n">MyEnum</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Apple</span> <span class="p">=</span> <span class="m">1</span> <span class="p">&lt;&lt;</span> <span class="m">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Orange</span> <span class="p">=</span> <span class="m">1</span> <span class="p">&lt;&lt;</span> <span class="m">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Kiwi</span> <span class="p">=</span> <span class="m">1</span> <span class="p">&lt;&lt;</span> <span class="m">2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Mango</span> <span class="p">=</span> <span class="m">1</span> <span class="p">&lt;&lt;</span> <span class="m">3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">((</span><span class="n">MyEnum</span><span class="p">)</span> <span class="m">1</span><span class="p">);</span>       <span class="c1">// Apple</span>
+</span></span><span class="line"><span class="cl"><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">((</span><span class="n">MyEnum</span><span class="p">)</span> <span class="p">(</span><span class="m">1</span> <span class="p">|</span> <span class="m">4</span><span class="p">));</span> <span class="c1">// Apple, Kiwi </span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Flags 애트리뷰트를 갖고 있는 열거형은 요소의 집합으로 표현될 수 있다.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>비트 연산을 통해 <code>ThreadState</code> 필드의 값을 확인할 수 있다.</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>상태</th>
+<th>10진수</th>
+<th>2진수</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Running</code></td>
+<td>0</td>
+<td>000000000</td>
+</tr>
+<tr>
+<td><code>StopRequested</code></td>
+<td>1</td>
+<td>000000001</td>
+</tr>
+<tr>
+<td><code>SuspendRequested</code></td>
+<td>2</td>
+<td>000000010</td>
+</tr>
+<tr>
+<td><code>Background</code></td>
+<td>4</td>
+<td>000000100</td>
+</tr>
+<tr>
+<td><code>Unstarted</code></td>
+<td>8</td>
+<td>000001000</td>
+</tr>
+<tr>
+<td><code>Stopped</code></td>
+<td>16</td>
+<td>000010000</td>
+</tr>
+<tr>
+<td><code>WaitSleepJoin</code></td>
+<td>32</td>
+<td>000100000</td>
+</tr>
+<tr>
+<td><code>Suspended</code></td>
+<td>64</td>
+<td>001000000</td>
+</tr>
+<tr>
+<td><code>AbortRequested</code></td>
+<td>128</td>
+<td>010000000</td>
+</tr>
+<tr>
+<td><code>Aborted</code></td>
+<td>256</td>
+<td>100000000</td>
+</tr>
+</tbody>
+</table></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="n">Thread</span> <span class="n">th</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="p">(...);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">((</span><span class="n">th</span><span class="p">.</span><span class="n">ThreadState</span> <span class="p">&amp;</span> <span class="n">ThreadState</span><span class="p">.</span><span class="n">Aborted</span><span class="p">)</span> <span class="p">==</span> <span class="n">ThreadState</span><span class="p">.</span><span class="n">Aborted</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;스레드가 정지했습니다.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">else</span> <span class="k">if</span> <span class="p">((</span><span class="n">th</span><span class="p">.</span><span class="n">ThreadState</span> <span class="p">&amp;</span> <span class="n">ThreadState</span><span class="p">.</span><span class="n">Stopped</span><span class="p">)</span> <span class="p">==</span> <span class="n">ThreadState</span><span class="p">.</span><span class="n">Stopped</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;스레드가 취소되었습니다.&#34;</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<h3 id="인터럽트-스레드를-임의로-종료하는-다른-방법">인터럽트: 스레드를 임의로 종료하는 다른 방법</h3>
+<ul>
+<li><code>Thread.Interrupt()</code>메소드
+<ul>
+<li><code>Thread.Abort()</code>메소드는 강제로 종료하지만, <code>Thread.Interrupt()</code>메소드는 스레드가 동작중인 상태(Running 상태)를 피해서 WaitJoinSleep상태에 들어갔을 때 <code>ThreadInterruptedException</code> 예외를 던져서 스레드를 중지시킨다.</li>
+<li>절대로 중단되면 안 되는 작업을 하고 있을 때는 중단되지 않는다는 보장을 받을 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<h3 id="스레드-간의-동기화">스레드 간의 동기화</h3>
+<ul>
+<li><strong>동기화(Synchronization)</strong>
+<ul>
+<li>스레드의 자원에 대한 접근을 제어하는 방법이다.</li>
+<li>스레드 동기화에서 가장 중요한 것은 <strong>자원을 한 번에 하나의 스레드가 사용</strong>하도록 보장하는 것이다.</li>
+<li>.NET은 <code>lock</code> 키워드와 <code>Monitor</code> 클래스를 제공한다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li>
+<p><code>lock</code> 키워드로 동기화하기</p>
+<ul>
+<li><code>lock</code> 키워드로 코드 영역을 감싸주면 <strong>크리티컬 섹션</strong>으로 바꿀 수 있다.</li>
+<li>한 스레드가 그 코드를 실행하고 마칠 때까지 다른 스레드는 그 코드 영역을 실행할 수 없다.</li>
+</ul>
+</li>
+<li>
+<p><code>lock</code> 키원드의 매개변수로 사용하는 객체로 <strong>부적절한 것들</strong>이 있다. 외부 코드에서도 접근할 수 있는 것은 안 된다.</p>
+<ul>
+<li><code>this</code></li>
+<li><code>Type</code> 형식
+<ul>
+<li><code>typeof</code> 연산자나 <code>GetType()</code>메소드는 피하자.</li>
+</ul>
+</li>
+<li><code>string</code> 형식</li>
+</ul>
+</li>
+</ul>
+<br />
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Counter</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">int</span> <span class="n">LOOP_COUNT</span> <span class="p">=</span> <span class="m">100</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">readonly</span> <span class="kt">object</span> <span class="n">thisLock</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="kt">int</span> <span class="n">count</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="kt">int</span> <span class="n">Count</span> <span class="p">{</span> <span class="k">get</span> <span class="p">=&gt;</span> <span class="n">count</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="n">Counter</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">thisLock</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">object</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">count</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="k">void</span> <span class="n">Increase</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">loopCount</span> <span class="p">=</span> <span class="n">LOOP_COUNT</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="p">(</span><span class="n">loopCount</span><span class="p">--</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">lock</span> <span class="p">(</span><span class="n">thisLock</span><span class="p">)</span> <span class="c1">// 여기는 크리티컬 섹션이다</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">count</span><span class="p">++;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&#34;Increase: {count}&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Thread</span><span class="p">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="k">void</span> <span class="n">Decrease</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">loopCount</span> <span class="p">=</span> <span class="n">LOOP_COUNT</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="p">(</span><span class="n">loopCount</span><span class="p">--</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">lock</span> <span class="p">(</span><span class="n">thisLock</span><span class="p">)</span> <span class="c1">// 여기는 크리티컬 섹션이다</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">count</span><span class="p">--;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&#34;Decrease: {count}&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Thread</span><span class="p">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">MainApp</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="k">void</span> <span class="n">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Counter</span> <span class="n">counter</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Counter</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 두 개의 스레드 </span>
+</span></span><span class="line"><span class="cl">        <span class="n">Thread</span> <span class="n">inc</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="p">(</span><span class="k">new</span> <span class="n">ThreadStart</span><span class="p">(</span><span class="n">counter</span><span class="p">.</span><span class="n">Increase</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Thread</span> <span class="n">dec</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="p">(</span><span class="k">new</span> <span class="n">ThreadStart</span><span class="p">(</span><span class="n">counter</span><span class="p">.</span><span class="n">Decrease</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 스레드 시작</span>
+</span></span><span class="line"><span class="cl">        <span class="n">inc</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">dec</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 스레드가 끝날 때까지 기다린다</span>
+</span></span><span class="line"><span class="cl">        <span class="n">inc</span><span class="p">.</span><span class="n">Join</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">dec</span><span class="p">.</span><span class="n">Join</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&#34;Count: {counter.Count}&#34;</span><span class="p">);</span> <span class="c1">// 0</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>Monitor</code> 클래스로 동기화하기
+<ul>
+<li><code>lock</code> 키워드로 똑같은 기능을 하는 <code>Monitor.Enter()</code>(크리티컬 섹션 만들기)와 <code>Monitor.Exit()</code>(크리티컬 섹션 제거하기)이 있다.</li>
+<li><code>lock</code> 키워드도 사실은 이 두 메서드들을 바탕으로 구현되어있다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">void</span> <span class="n">Increase</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">loopCount</span> <span class="p">=</span> <span class="n">LOOP_COUNT</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">(</span><span class="n">loopCount</span><span class="p">--</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Monitor</span><span class="p">.</span><span class="n">Enter</span><span class="p">(</span><span class="n">thisLock</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">count</span><span class="p">++;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">finally</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Monitor</span><span class="p">.</span><span class="n">Exit</span><span class="p">(</span><span class="n">thisLock</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Thread</span><span class="p">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>lock</code>보다 좀 더 섬세하게 멀티 스레드 간의 동기화를 가능하게 해주는 메서드들&hellip;
+<ul>
+<li><code>Monitor.Wait()</code>메서드
+<ul>
+<li>스레드를 WaitSleepJoin상태로 만든다. 해당 스레드는 갖고 있던 lock을 내려놓고 Waiting Queue에 입력된다.</li>
+</ul>
+</li>
+<li><code>Monitor.Pulse()</code>메서드
+<ul>
+<li>CLR은 Waiting Queue에서 첫 번째 위치에 있는 스레드를 꺼내서 Ready Queue에 입력시킨다. 그 스레드는 차례로 lock을 얻어서 Running상태에 들어간다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">void</span> <span class="n">Increase</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">loopCount</span> <span class="p">=</span> <span class="n">LOOP_COUNT</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">(</span><span class="n">loopCount</span><span class="p">--</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">lock</span> <span class="p">(</span><span class="n">thisLock</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// count가 0보다 크거나 </span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 다른 스레드에 의해 lockedCount가 true가 되면</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// Wait()으로 블록된다. </span>
+</span></span><span class="line"><span class="cl">            <span class="k">while</span> <span class="p">(</span><span class="n">count</span> <span class="p">&gt;</span> <span class="m">0</span> <span class="p">||</span> <span class="n">lockedCount</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Monitor</span><span class="p">.</span><span class="n">Wait</span><span class="p">(</span><span class="n">thisLock</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="n">lockedCount</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>  <span class="c1">// 다른 스레드가 사용하지 못하도록한다. </span>
+</span></span><span class="line"><span class="cl">            <span class="n">count</span><span class="p">++;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="n">lockedCount</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>  
+</span></span><span class="line"><span class="cl">            <span class="n">Monitor</span><span class="p">.</span><span class="n">Pulse</span><span class="p">(</span><span class="n">thisLock</span><span class="p">);</span> <span class="c1">// 다른 스레드를 깨운다.</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Thread</span><span class="p">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="task와-taskresult-그리고-parallel">Task와 Task<Result> 그리고 Parallel</h2>
+<ul>
+<li>지금까지 보았던 멀티 스레드는&hellip;
+<ul>
+<li>여러 개의 작업을 각각 처리해야하는 상황이었다. (쪼갠 것 아님)</li>
+</ul>
+</li>
+<li>지금부터 볼 병렬 처리는&hellip;
+<ul>
+<li>하나의 작업을 쪼갠 뒤 쪼개진 작업들을 동시에 처리하는 것이다.</li>
+</ul>
+</li>
+<li>비동기(Asynchronous) 처리는&hellip;
+<ul>
+<li>메소드를 호출한 뒤에 메소드의 종료를 기다리지 않고 바로 다음 코드를 실행하는 것이다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<h3 id="systemthreadingtaskstask-클래스">System.Threading.Tasks.Task 클래스</h3>
+<ul>
+<li><code>Task</code> 클래스
+<ul>
+<li>비동기적으로 실행되는 단일 작업이다.</li>
+<li>인스턴스를 생성할 때 <code>Action</code> 대리자를 넘겨받는다. 즉, 반환형을 갖지 않는 메소드, 익명 메소드, 무명 함수 등을 넘겨받는다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="c1">// 실행할 작업물</span>
+</span></span><span class="line"><span class="cl"><span class="n">Action</span> <span class="n">action</span> <span class="p">=</span> <span class="p">()</span> <span class="p">=&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Thread</span><span class="p">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">1000</span><span class="p">);</span> <span class="c1">// 이 코드에 상관없이 &#34;동기&#34;가 출력된다. </span>
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;비동기&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Task로 할당</span>
+</span></span><span class="line"><span class="cl"><span class="n">Task</span> <span class="n">task</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Task</span><span class="p">(</span><span class="n">action</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 비동기로 실행한다. </span>
+</span></span><span class="line"><span class="cl"><span class="n">task</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;동기&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 비동기 코드가 완료될 때까지 대기한다. </span>
+</span></span><span class="line"><span class="cl"><span class="n">task</span><span class="p">.</span><span class="n">Wait</span><span class="p">();</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="c1">// 위와 같은 코드인데</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Task의 생성과 시작을 한번에 한다.</span>
+</span></span><span class="line"><span class="cl"><span class="kt">var</span> <span class="n">task</span> <span class="p">=</span> <span class="n">Task</span><span class="p">.</span><span class="n">Run</span><span class="p">(()</span> <span class="p">=&gt;</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Thread</span><span class="p">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">1000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;비동기&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;동기&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">task</span><span class="p">.</span><span class="n">Wait</span><span class="p">();</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<h3 id="코드의-비동기-실행-결과를-주는-taskresult-클래스">코드의 비동기 실행 결과를 주는 Task<Result> 클래스</h3>
+<ul>
+<li><code>Task&lt;Result&gt;</code> 클래스
+<ul>
+<li>비동기 실행 결과를 손쉽게 얻을 수 있다.</li>
+<li>인스턴스를 생성할 때 <code>Func</code> 대리자를 넘겨받아서 결과를 반환한다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="kt">var</span> <span class="n">task</span> <span class="p">=</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;.</span><span class="n">Run</span><span class="p">(()</span> <span class="p">=&gt;</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Thread</span><span class="p">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">1000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">list</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">list</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">list</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">list</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">list</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">task</span><span class="p">.</span><span class="n">Wait</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">total</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;();</span>
+</span></span><span class="line"><span class="cl"><span class="n">total</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">total</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">total</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">total</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="n">task</span><span class="p">.</span><span class="n">Result</span><span class="p">.</span><span class="n">ToArray</span><span class="p">());</span> <span class="c1">// 0, 1, 2, 3, 4, 5</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<h3 id="손쉬운-병렬-처리를-가능케-하는-parallel-클래스">손쉬운 병렬 처리를 가능케 하는 Parallel 클래스</h3>
+<ul>
+<li><code>System.Threading.Tasks.Parallel</code> 클래스
+<ul>
+<li><code>For()</code>, <code>Foreach()</code> 등의 메소드로 병렬 처리를 좀 더 쉽게 구현할 수 있다.</li>
+<li>해당 메소드를 병렬로 호출할 때 몇 개의 스레드를 사용할지는 <code>Parallel</code>클래스가 내부적으로 판단하여 최적화한다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">total</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 0부터 100사이의 정수를 메소드의 인수로 넘긴다. </span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 병렬로 처리된다. </span>
+</span></span><span class="line"><span class="cl"><span class="n">Parallel</span><span class="p">.</span><span class="n">For</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">100</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">=&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="p">%</span> <span class="m">2</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">lock</span> <span class="p">(</span><span class="n">total</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">total</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">total</span><span class="p">.</span><span class="n">Count</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="s">$&#34;{total[i]} &#34;</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="async-한정자와-await-연산자로-만드는-비동기-코드">async 한정자와 await 연산자로 만드는 비동기 코드</h2>
+<ul>
+<li>
+<p><code>async</code> 한정자</p>
+<ul>
+<li>컴파일러에게 해당 메서드가 비동기 작업이 포함된 <code>await</code>를 가지고 있음을 알려준다.</li>
+<li>내부에서 <code>await</code> 연산자를 찾으면 그곳에서 호출자에게 제어를 돌려준다.</li>
+<li>내부에서 <code>await</code> 연산자를 만나지 못하면 제어를 돌려주지 않으므로, 그냥 동기적으로 실행하게 된다.</li>
+<li>반환 형식
+<ul>
+<li><code>void</code>: 실행하고 잊어버릴 작업을 수행하는 메소드일 때. 리턴형이 없으므로 비동기 메서드를 호출하는 쪽에서 비동기 제어를 할 수 없게 된다.</li>
+<li><code>Task</code>: 리턴값이 없는 경우.</li>
+<li><code>Task&lt;Result&gt;</code>: 리턴값이 있는 경우.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>await</code> 연산자</p>
+<ul>
+<li>단항 연산자이며 <code>awaitable</code> 클래스(<code>GetAwaiter()</code>메서드를 갖는다)를 인수로 갖는다.
+<ul>
+<li>이것은 <code>Task</code> 혹은 <code>Task&lt;T&gt;</code> 가 일반적이다.</li>
+</ul>
+</li>
+<li>이 작업을 하는 동안 스레드가 차단되지 않도록(다른 일도 할 수 있도록)한다. 그리고 그 결과를 사용하기 전에 해당 <code>Task</code>가 끝날 때까지 기다린다. 완료 되면 다음 실행문부터 실행을 계속한다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><code>async</code> 메소드의 리턴형 종류</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="c1">// void</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">async</span> <span class="k">void</span> <span class="n">AsyncFunc</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Task</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="n">AsyncFunc</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span> 
+</span></span><span class="line"><span class="cl">        <span class="k">await</span> <span class="n">Task</span><span class="p">.</span><span class="n">Delay</span><span class="p">(</span><span class="m">1000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Task&lt;TResult&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">AsyncFunc</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span> 
+</span></span><span class="line"><span class="cl">        <span class="k">await</span> <span class="n">Task</span><span class="p">.</span><span class="n">Delay</span><span class="p">(</span><span class="m">1000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="m">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>void</code> 를 반환하는 <code>async</code> 메서드</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="n">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TaskTest</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;Main Thread is NOT Blocked&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">ReadLine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span> <span class="k">static</span> <span class="k">async</span> <span class="k">void</span> <span class="n">TaskTest</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">await</span> <span class="n">Task</span><span class="p">.</span><span class="n">Delay</span><span class="p">(</span><span class="m">5000</span><span class="p">);</span> <span class="c1">// 5초를 기다린다. </span>
+</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;TaskTest Done&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>Task</code>를 반환하는 <code>async</code> 메서드</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="c1">// async 한정자가 있으므로 await를 가질 수 있다. </span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">static</span> <span class="k">async</span> <span class="n">Task</span> <span class="n">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Task</span> <span class="n">t</span> <span class="p">=</span> <span class="n">TaskTest1</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;Do Something Before TaskTest&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">await</span> <span class="n">t</span><span class="p">;</span> <span class="c1">// 여기서 t가 끝날 때까지 기다린다. </span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;Do Something after TaskTest&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">ReadLine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">private</span> <span class="k">static</span> <span class="k">async</span> <span class="n">Task</span> <span class="n">TaskTest1</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">await</span> <span class="n">Task</span><span class="p">.</span><span class="n">Delay</span><span class="p">(</span><span class="m">5000</span><span class="p">);</span> <span class="c1">// 5초를 기다린다. </span>
+</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;TaskTest Done&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>Task&lt;TResult&gt;</code>를 반환하는 <code>async</code> 메서드</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">static</span> <span class="k">async</span> <span class="n">Task</span> <span class="n">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Task</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">t</span> <span class="p">=</span> <span class="n">TaskTest</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            
+</span></span><span class="line"><span class="cl">    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;Do Something Before TaskTest&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">UID</span> <span class="p">=</span> <span class="k">await</span> <span class="n">t</span><span class="p">;</span> <span class="c1">// await을 통해서 반환값을 추출할 수 있다. </span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&#34;UserID : {UID}&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">ReadLine</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">private</span> <span class="k">static</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">TaskTest</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">UID</span> <span class="p">=</span> <span class="k">await</span> <span class="p">...;</span> <span class="c1">// DB or server에서 UID 얻어오는 비동기 메서드 호출</span>
+</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;TaskTest Done&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">UID</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>await</code>와 <code>async</code> 예제</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="k">async</span> <span class="k">static</span> <span class="k">private</span> <span class="k">void</span> <span class="n">AsyncMethod</span><span class="p">(</span><span class="kt">int</span> <span class="n">count</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;B&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 호출자에게 제어를 돌려주고 아래 코드는 비동기적으로 처리된다. </span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 아래 Task가 끝나야지 다음 문장이 실행 된다. </span>
+</span></span><span class="line"><span class="cl">    <span class="k">await</span> <span class="n">Task</span><span class="p">.</span><span class="n">Run</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="p">=&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">count</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&#34;{i} / {count} ...&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">await</span> <span class="n">Task</span><span class="p">.</span><span class="n">Delay</span><span class="p">(</span><span class="m">100</span><span class="p">);</span> <span class="c1">// Thread.Sleep()의 비동기 버전이다. </span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;D&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="k">void</span> <span class="n">Caller</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;A&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">AsyncMethod</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;C&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="k">void</span> <span class="n">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Caller</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">Console</span><span class="p">.</span><span class="n">ReadLine</span><span class="p">();</span> <span class="c1">// (프로그램 종료 방지)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">A
+</span></span><span class="line"><span class="cl">B
+</span></span><span class="line"><span class="cl">C
+</span></span><span class="line"><span class="cl">0 / 3 ...
+</span></span><span class="line"><span class="cl">1 / 3 ...
+</span></span><span class="line"><span class="cl">2 / 3 ...
+</span></span><span class="line"><span class="cl">D
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/this-is-c-sharp/">This is C-Sharp</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/this-is-c-sharp-14/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[This is C#] Chapter 14. 람다식</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/this-is-c-sharp-13/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[This is C#] Chapter 13. 대리자와 이벤트</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/this-is-c-sharp-11/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[This is C#] Chapter 11. 일반화 프로그래밍</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/this-is-c-sharp-10/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[This is C#] Chapter 10. 배열과 컬렉션 그리고 인덱서</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/this-is-c-sharp-09/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[This is C#] Chapter 9. 프로퍼티</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#프로세스와-스레드">프로세스와 스레드</a>
+      <ol>
+        <li><a href="#스레드-시작하기">스레드 시작하기</a></li>
+        <li><a href="#스레드-임의로-종료시키기">스레드 임의로 종료시키기</a></li>
+        <li><a href="#스레드의-상태-변화">스레드의 상태 변화</a></li>
+        <li><a href="#인터럽트-스레드를-임의로-종료하는-다른-방법">인터럽트: 스레드를 임의로 종료하는 다른 방법</a></li>
+        <li><a href="#스레드-간의-동기화">스레드 간의 동기화</a></li>
+      </ol>
+    </li>
+    <li><a href="#task와-taskresult-그리고-parallel">Task와 Task<Result> 그리고 Parallel</a>
+      <ol>
+        <li><a href="#systemthreadingtaskstask-클래스">System.Threading.Tasks.Task 클래스</a></li>
+        <li><a href="#코드의-비동기-실행-결과를-주는-taskresult-클래스">코드의 비동기 실행 결과를 주는 Task<Result> 클래스</a></li>
+        <li><a href="#손쉬운-병렬-처리를-가능케-하는-parallel-클래스">손쉬운 병렬 처리를 가능케 하는 Parallel 클래스</a></li>
+      </ol>
+    </li>
+    <li><a href="#async-한정자와-await-연산자로-만드는-비동기-코드">async 한정자와 await 연산자로 만드는 비동기 코드</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='분할 컴파일 형식 설명 #include &amp;lt; ... &amp;gt; 컴파일러가 표준 헤더 파일이 들어 있는 호스트 시스템의 파일 시스템 영역에서 찾는다. #include &amp;quot; ... &amp;quot; 컴파일러가 현재 작업 디렉토리나 소스 코드 디렉토리에서 찾는다. 그곳에서 찾지 못하면 표준 위치에서 찾는다. 따라서 사용자가 만든 헤더 파일을 포함할 때는 큰 따옴표를 사용해야 한다. 서로 다른 컴파일러는 하나의 동일한 함수에 대해 다르게 장식한 이름을 만들어 낸다. 따라서 컴파일 된 모듈을 링크시켜야 할 때는 각각의 목적파일이나 라이브러리들이 같은 컴파일러로 만들어진 것인 것 반드시 확인해야 한다.'><title>[C&#43;&#43; Primer Plus] Chapter 9. 메모리 모델과 이름공간</title>
+
+<link rel='canonical' href='https://sopod.github.io/p/cpp-primer-plus-09/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[C&#43;&#43; Primer Plus] Chapter 9. 메모리 모델과 이름공간'>
+<meta property='og:description' content='분할 컴파일 형식 설명 #include &amp;lt; ... &amp;gt; 컴파일러가 표준 헤더 파일이 들어 있는 호스트 시스템의 파일 시스템 영역에서 찾는다. #include &amp;quot; ... &amp;quot; 컴파일러가 현재 작업 디렉토리나 소스 코드 디렉토리에서 찾는다. 그곳에서 찾지 못하면 표준 위치에서 찾는다. 따라서 사용자가 만든 헤더 파일을 포함할 때는 큰 따옴표를 사용해야 한다. 서로 다른 컴파일러는 하나의 동일한 함수에 대해 다르게 장식한 이름을 만들어 낸다. 따라서 컴파일 된 모듈을 링크시켜야 할 때는 각각의 목적파일이나 라이브러리들이 같은 컴파일러로 만들어진 것인 것 반드시 확인해야 한다.'>
+<meta property='og:url' content='https://sopod.github.io/p/cpp-primer-plus-09/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='C&#43;&#43; Primer Plus' /><meta property='article:published_time' content='2022-03-10T12:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-03-10T12:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[C&#43;&#43; Primer Plus] Chapter 9. 메모리 모델과 이름공간">
+<meta name="twitter:description" content="분할 컴파일 형식 설명 #include &amp;lt; ... &amp;gt; 컴파일러가 표준 헤더 파일이 들어 있는 호스트 시스템의 파일 시스템 영역에서 찾는다. #include &amp;quot; ... &amp;quot; 컴파일러가 현재 작업 디렉토리나 소스 코드 디렉토리에서 찾는다. 그곳에서 찾지 못하면 표준 위치에서 찾는다. 따라서 사용자가 만든 헤더 파일을 포함할 때는 큰 따옴표를 사용해야 한다. 서로 다른 컴파일러는 하나의 동일한 함수에 대해 다르게 장식한 이름을 만들어 낸다. 따라서 컴파일 된 모듈을 링크시켜야 할 때는 각각의 목적파일이나 라이브러리들이 같은 컴파일러로 만들어진 것인 것 반드시 확인해야 한다.">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/c&#43;&#43;/" >
+                C&#43;&#43;
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/cpp-primer-plus-09/">[C&#43;&#43; Primer Plus] Chapter 9. 메모리 모델과 이름공간</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 03, 101010</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    7 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br /><br /></p>
+<h2 id="분할-컴파일">분할 컴파일</h2>
+<br /> 
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>형식</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>#include &lt; ... &gt;</code></td>
+<td>컴파일러가 표준 헤더 파일이 들어 있는 호스트 시스템의 파일 시스템 영역에서 찾는다.</td>
+</tr>
+<tr>
+<td><code>#include &quot; ... &quot;</code></td>
+<td>컴파일러가 현재 작업 디렉토리나 소스 코드 디렉토리에서 찾는다.  <br />  그곳에서 찾지 못하면 표준 위치에서 찾는다. <br />  따라서 사용자가 만든 헤더 파일을 포함할 때는 큰 따옴표를 사용해야 한다.</td>
+</tr>
+</tbody>
+</table></div>
+<br /> 
+<ul>
+<li>서로 다른 컴파일러는 하나의 동일한 함수에 대해 다르게 장식한 이름을 만들어 낸다.</li>
+<li>따라서 컴파일 된 모듈을 링크시켜야 할 때는 각각의 목적파일이나 라이브러리들이 같은 컴파일러로 만들어진 것인 것 반드시 확인해야 한다.</li>
+</ul>
+<br /> 
+<ul>
+<li>헤더 파일은 단 한 번만 포함시켜야 하므로 다음과 같이 중복을 방지할 수 있다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="cp">#ifndef MYHEADER_H_
+</span></span></span><span class="line"><span class="cl"><span class="cp">#def MYHEADER_H_
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#endif
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="기억-존속-시간-storage-duration">기억 존속 시간 (storage duration)</h2>
+<ul>
+<li>C++은 네 가지 유형으로 데이터를 저장한다. 이 네 가지 유형은 메모리에 데이터를 존속시키는 시간에서 차이가 난다.</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>유형</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>자동 기억 존속 시간 (automatic)</strong></td>
+<td>함수 정의 안에 선언된 변수. <br /> 함수 안에서만 유효하다.</td>
+</tr>
+<tr>
+<td><strong>정적 기억 존속 시간 (static)</strong></td>
+<td>함수 바깥에서 선언된 변수, 혹은 static 키워드로 선언된 변수. <br /> 프로그램 실행 중에 유효하다.</td>
+</tr>
+<tr>
+<td><strong>쓰레드 존속 시간 (Theard)</strong></td>
+<td>여러 작업을 동시에 실행할 수 있는 CPU(멀티코어 프로세서)를 사용해서 <br /> 연산 작업을 쓰레드 단위로 쪼개서 처리한다.</td>
+</tr>
+<tr>
+<td><strong>동적 기억 존속 시간 (dynamic)</strong></td>
+<td>new를 통해 할당되고, delete를 통해 해제된다.</td>
+</tr>
+</tbody>
+</table></div>
+<p><br /><br /></p>
+<h2 id="사용범위-scope">사용범위 (scope)</h2>
+<ul>
+<li>어떤 이름이 하나의 파일(번역 단위) 안에서 얼마나 널리 알려지는가를 의미한다.</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>유형</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>지역 사용범위 = 블록 사용범위 (local)</strong></td>
+<td>그 변수를 정의한 블록 안에만 알려진다.</td>
+</tr>
+<tr>
+<td><strong>전역 사용범위 = 파일 사용범위 (global)</strong></td>
+<td>파일 전체에 알려진다.</td>
+</tr>
+<tr>
+<td><strong>함수 원형 사용 범위</strong></td>
+<td>함수 안에서만 알려진다.</td>
+</tr>
+<tr>
+<td><strong>클래스 사용 범위</strong></td>
+<td>클래스 안에서만 알려진다.</td>
+</tr>
+<tr>
+<td><strong>이름 공간 사용 범위</strong></td>
+<td>이름 공간 안에서만 알려진다.</td>
+</tr>
+</tbody>
+</table></div>
+<p><br /><br /></p>
+<h2 id="링크-linkage">링크 (linkage)</h2>
+<ul>
+<li>서로 다른 파일(번역 단위)들이 이름을 공유하는 것을 말한다.</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>유형</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>외부 링크 (external)</strong></td>
+<td>여러 파일들이 이름을 공유할 수 있다.</td>
+</tr>
+<tr>
+<td><strong>내부 링크 (internal)</strong></td>
+<td>한 파일 안에서 이름을 공유할 수 있다.</td>
+</tr>
+<tr>
+<td><strong>링크 없음</strong></td>
+<td>한 블록 안에서만 이름을 공유할 수 있다.</td>
+</tr>
+</tbody>
+</table></div>
+<p><br /><br /></p>
+<h2 id="네-가지-종류의-변수들">네 가지 종류의 변수들</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>분류1</th>
+<th>분류2</th>
+<th style="text-align:center">기억존속시간</th>
+<th style="text-align:center">사용 범위</th>
+<th style="text-align:center">링크</th>
+<th>선언 방법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>자동 변수 <br/> 지역 변수  <br/>(local)</strong></td>
+<td></td>
+<td style="text-align:center">자동</td>
+<td style="text-align:center">지역</td>
+<td style="text-align:center">없음</td>
+<td>블록 안에서 선언</td>
+</tr>
+<tr>
+<td><strong>정적 변수</strong></td>
+<td><strong>외부 변수 <br/> 전역 변수 <br/>(global)</strong></td>
+<td style="text-align:center">정적</td>
+<td style="text-align:center">전역</td>
+<td style="text-align:center">외부</td>
+<td>어떤 블록에도 속하지 않는 바깥에 선언</td>
+</tr>
+<tr>
+<td><strong>정적 변수</strong></td>
+<td></td>
+<td style="text-align:center">정적</td>
+<td style="text-align:center">전역</td>
+<td style="text-align:center">내부</td>
+<td>어떤 블록에도 속하지 않는 바깥에 선언 + static 키워드</td>
+</tr>
+<tr>
+<td><strong>정적 변수</strong></td>
+<td></td>
+<td style="text-align:center">정적</td>
+<td style="text-align:center">지역</td>
+<td style="text-align:center">없음</td>
+<td>블록 안에서 선언 + static 키워드</td>
+</tr>
+</tbody>
+</table></div>
+<br />
+<p>1. 자동 변수</p>
+<ul>
+<li>블록 안에서 선언된 변수이다.</li>
+<li><code>auto</code> 키워드는 자동 변수에만 사용할 수 있다.</li>
+<li><code>register</code> 키워드는 C++11이전에 레지스터를 사용해서 자동 변수를 저장함으로써 좀 더 빠르게 접근하게 만들기 위해서 나온 것이었다.</li>
+<li>스택과 두개의 포인터를 사용해서 관리된다. 포인터 중 하나는 스택의 시작점인 바닥을, 하나는 스택의 다음 메모리 저장위치인 꼭대기를 가리킨다. 함수가 호출되었다가 종료되면 꼭대기를 가리키는 포인터가 이전 위치를 지시한다. 값들은 지워지지 않는다.</li>
+</ul>
+<br />
+<p>2. 정적 변수</p>
+<ul>
+<li>정적 변수를 명시적으로 초기화하지 않으면, 컴파일러가 자동으로 0으로 초기화한다.</li>
+</ul>
+<br />
+<p>2-1. 전역 변수</p>
+<ul>
+<li>어떤 블록에도 속하지 않는 바깥에 선언</li>
+<li>여러 파일에서 똑같은 이름의 전역 변수를 사용한다면 <code>extern</code> 키워드를 넣어준다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 파일 1에서 전역 변수 num을 선언한다. extern을 생략해도 된다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">extern</span> <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 파일 2에서 전역 변수 num을 사용하기 위해 extern 키워드를 사용한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">extern</span> <span class="kt">int</span> <span class="n">num</span><span class="p">;</span>      
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Global</span><span class="p">()</span>     
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">extern</span> <span class="kt">int</span> <span class="n">num</span><span class="p">;</span>  <span class="c1">// 함수 안에서 선택적으로 재선언해서 전역 변수를 사용 할 수도 있다.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Local</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>    <span class="c1">// 지역 변수가 전역 변수를 가린다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">::</span><span class="n">num</span><span class="p">;</span>   <span class="c1">// 전역 변수 사용을 위한 사용 범위 결정 연산자 :: 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<p>2-2. 내부 링크 정적 변수</p>
+<ul>
+<li>어떤 블록에도 속하지 않는 바깥에 선언 + <code>static</code> 키워드</li>
+<li>서로 다른 파일에서 같은 이름으로 각각 다른 변수를 만들 수 있다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 파일 1에서 전역 변수를 선언한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>   
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 파일 2에서 내부 링크를 가진 정적 변수를 선언한다. 이 파일에서만 쓰는 또 다른 변수이다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>   
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<p>2-3. 링크 없음 정적 변수</p>
+<ul>
+<li>블록 안에서 선언 + <code>static</code> 키워드</li>
+<li>프로그램이 시작할 때 한번만 초기화 된다.</li>
+<li>함수가 호출될 때 누적되는 값으로 사용할 수 있다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Function</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 블록 안에서 링크가 없는 정적 변수를 선언한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">static</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">total</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br/><br/></p>
+<h2 id="cv-제한자">CV-제한자</h2>
+<ul>
+<li><code>const</code>
+<ul>
+<li>메모리가 초기화 된 후에는 프로그램이 그 메모리를 변경할 수 없다.</li>
+<li>특이한 점은, <code>const</code> 전역변수는 외부링크가 아니라 내부링크가 디폴트라는 점이다.</li>
+<li>따라서 외부링크인 <code>const</code> 전역변수를 만들고 싶으면 <code>extern</code> 키워드를 사용한다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 파일 1에서 const 전역변수를 extern 키워드를 사용해서 선언한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">extern</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">states</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>  
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// 파일 2에서 states을 사용하기 위해서 extern 키워드를 사용한다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">extern</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">states</span><span class="p">;</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>volatile</code>
+<ul>
+<li>외부적인 요인으로 그 변수의 값이 언제든지 바뀔 수 있음을 뜻한다. 컴파일러의 최적화를 막아서 레지스터에 로드된 값을 사용하지 않고 매번 메모리를 참조하게 만든다.</li>
+<li>같은 변수를 여러 번 대입하면 마지막 대입만 의미 있다. 따라서 컴파일러는 나머지 앞의 불필요한 구문을 누락시킴으로써 최적화한다. <code>volatile</code> 제한자는 이러한 최적화를 막는다.</li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="기억-공간-제한자">기억 공간 제한자</h2>
+<ul>
+<li><code>auto</code> (C++11에서는 의미 변경)</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">auto</span> <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">// (X) auto는 더 이상 자동 변수라는 의미의 선언이 아니다.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>     <span class="c1">// (O) auto는 자동 형변환에 사용한다.  
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>register</code> (C++11에서는 의미 변경)
+<ul>
+<li>변수를 RAM이 아니라, 가능한 Register에 저장하도록 요청한다.</li>
+<li>C++11에서는 단순히 자동 변수임을 명시하는 방법이다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><code>static</code>
+<ul>
+<li>바깥에 선언하면 내부 링크, 블록 안에 선언하면 링크 없음.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><code>extern</code>
+<ul>
+<li>다른 파일에 존재하는 전역변수를 사용할 수 있게 한다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><code>thread_local</code> (C++11에서 추가됨)
+<ul>
+<li><code>thread_local</code> 키워드로 선언한 변수는 그 존속 시간이 변수를 포함하는 쓰레드의 존속 시간이 된다.</li>
+</ul>
+</li>
+</ul>
+<br />
+<ul>
+<li><code>mutable</code>
+<ul>
+<li>특정 구조체나 클래스가 <code>const</code>로 선언되어 있더라도 그 안의 특정 멤버를 변경할 수 있음을 나타낸다.</li>
+</ul>
+</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="함수">함수</h2>
+<ul>
+<li>
+<p>정적 기억 존속 시간, 외부 링크</p>
+</li>
+<li>
+<p><code>static</code> 키워드로 내부 링크를 부여할 수 있다. 이것은 함수의 사용 범위를 파일 하나로 제한한다.</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">// static 키워드로 내부 링크를 가진 함수를 만든다. 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">Function</span><span class="p">();</span>    <span class="c1">// 함수 원형
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="kt">void</span> <span class="nf">Function</span><span class="p">()</span> <span class="p">{}</span>  <span class="c1">// 함수 정의
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li>함수는 모두 하나의 정의만을 가진다. 하지만 인라인 함수는 각각의 파일에서 모두 인라인함수의 정의를 가진다.</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="언어-링크">언어 링크</h2>
+<ul>
+<li>
+<p>각 언어의 컴파일러는 각기 다른 방식으로 함수들의 이름을 장식한다.</p>
+</li>
+<li>
+<p>만약 C++프로그램에서 C 라이브러리의 미리 컴파일된 함수를 사용하고 싶다면, 사용할 프로토콜을 알려주는 함수 원형을 사용할 수 있다.</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"> <span class="k">extern</span> <span class="s">&#34;C&#34;</span> <span class="kt">void</span> <span class="n">Function</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="동적-메모리">동적 메모리</h2>
+<ul>
+<li>동적메모리는 사용 범위나 링크 규칙이 아닌, <code>new</code>와 <code>delete</code>에 의해 관리된다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>4바이트의 메모리가 <code>new</code>에 의해 대입된다. <code>delete</code>에 의해 해제될 때까지 메모리에 유지된다.</li>
+<li>반면 <code>ptr</code>은 선언된 함수가 종료될 때 사라진다.</li>
+</ul>
+<br />
+<ul>
+<li><code>new</code> 연산자를 이용한 초기화</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span> <span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span> <span class="p">{</span><span class="mi">10</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li> <code>new</code>는 필요한 메모리 양을 확보할 수 없는 경우 <code>std::bad_alloc</code> 예외를 반환한다.</li>
+</ul>
+<p><br /><br /></p>
+<h2 id="위치-지정-new">위치 지정 new</h2>
+<ul>
+<li>사용할 메모리를 프로그래머가 지정할 수 있는 <code>new</code>이다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;new&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">StructSample</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span> 
+</span></span><span class="line"><span class="cl">   <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">char</span> <span class="n">buffer</span><span class="p">[</span><span class="mi">50</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 정적 메모리인 buffer를 사용한다. delete는 안 한다.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">StructSample</span> <span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="n">StructSample</span><span class="p">;</span>  
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="이름-공간">이름 공간</h2>
+<ul>
+<li>
+<p>새로운 종류의 선언영역을 정의하는 것이다.</p>
+</li>
+<li>
+<p>전역위치나 다른 이름 공간 안에 놓일 수 있다. 하지만 블록 안에는 놓일 수 없다.</p>
+</li>
+<li>
+<p>기본적으로 외부 링크를 가진다.</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">namespace</span> <span class="n">Jack</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">jackNum</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>    
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">isJackHome</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Jack</span><span class="o">::</span><span class="n">jackNum</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span> <span class="c1">// 사용 범위 결정 연산자 ::를 사용해서 이름공간 안에 이름을 접근한다.
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="using-선언과-using-지시자">using 선언과 using 지시자</h2>
+<ul>
+<li><code>using 선언</code>
+<ul>
+<li><code>using 선언</code>으로 특정 이름을 선언된 영역에 추가할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">using</span> <span class="n">Jack</span><span class="o">::</span><span class="n">jackNum</span><span class="p">;</span> <span class="c1">// using 선언
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">jackNum</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">jackNum</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="c1">// (X)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br />
+<ul>
+<li><code>using 지시자</code>
+<ul>
+<li><code>using 선언</code>이 하나의 이름만을 사용할 수 있게 만든다면, <code>using 지시자</code>는 모든 이름을 사용할 수 있게 만든다.</li>
+<li><code>using 선언</code>은 그 위치에 그 이름을 선언하는 것이라면, <code>using 지시자</code>는 해당 범위에 <code>namespace</code>를 넣는 것이다. </li>
+<li>따라서 똑같은 이름을 이후에 재선언했을 때 그 전에 <code>using 선언</code>을 했다면 에러가 나지만, <code>using 지시자</code>의 경우에는 <code>namespace</code>의 변수를 가리기만 한다. 따라서 일반적으로 <code>using 선언</code>이 좀 더 안전하다.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">Jack</span><span class="p">;</span> <span class="c1">// using 지시자
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">jackNum</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">isTrue</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">jackNum</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="c1">// (O)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="이름공간의-대용이름">이름공간의 대용이름</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">namespace</span> <span class="n">J</span> <span class="o">=</span> <span class="n">Jack</span><span class="p">;</span>   <span class="c1">// 이렇게 대용이름을 만들 수도 있다.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="n">J</span><span class="o">::</span><span class="n">jackNum</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">jackNum</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="명명하지-않은-이름공간">명명하지 않은 이름공간</h2>
+<ul>
+<li>다른 파일에서 사용할 수 없다. 마치 내부링크를 가진 정적변수와 같다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">namespace</span>     <span class="c1">// static int count;와 같다.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>  
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">count</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/c&#43;&#43;-primer-plus/">C&#43;&#43; Primer Plus</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-18-2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 18. (2) 람다 함수, 래퍼, 가변인자 템플릿</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-18-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 18. (1) Move Semantics와 rvalue참조, 새로운 클래스 형태</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-16-5/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 16. (5) STL - 알고리즘, 기타 라이브러리</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-16-4/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 16. (4) STL - 함수 객체</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-16-3/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 16. (3) STL - 컨테이너</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#분할-컴파일">분할 컴파일</a></li>
+    <li><a href="#기억-존속-시간-storage-duration">기억 존속 시간 (storage duration)</a></li>
+    <li><a href="#사용범위-scope">사용범위 (scope)</a></li>
+    <li><a href="#링크-linkage">링크 (linkage)</a></li>
+    <li><a href="#네-가지-종류의-변수들">네 가지 종류의 변수들</a></li>
+    <li><a href="#cv-제한자">CV-제한자</a></li>
+    <li><a href="#기억-공간-제한자">기억 공간 제한자</a></li>
+    <li><a href="#함수">함수</a></li>
+    <li><a href="#언어-링크">언어 링크</a></li>
+    <li><a href="#동적-메모리">동적 메모리</a></li>
+    <li><a href="#위치-지정-new">위치 지정 new</a></li>
+    <li><a href="#이름-공간">이름 공간</a></li>
+    <li><a href="#using-선언과-using-지시자">using 선언과 using 지시자</a></li>
+    <li><a href="#이름공간의-대용이름">이름공간의 대용이름</a></li>
+    <li><a href="#명명하지-않은-이름공간">명명하지 않은 이름공간</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

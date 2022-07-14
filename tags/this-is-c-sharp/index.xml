@@ -8,10 +8,10 @@
         <language>en-us</language>
         <lastBuildDate>Sun, 08 May 2022 16:00:00 +0900</lastBuildDate><atom:link href="https://sopod.github.io/tags/this-is-c-sharp/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>[This is C#] Chapter 19. 스레드와 태스크</title>
-        <link>https://sopod.github.io/init/this_is_c_sharp-19/</link>
+        <link>https://sopod.github.io/p/this-is-c-sharp-19/</link>
         <pubDate>Sun, 08 May 2022 16:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/this_is_c_sharp-19/</guid>
+        <guid>https://sopod.github.io/p/this-is-c-sharp-19/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;프로세스와-스레드&#34;&gt;프로세스와 스레드&lt;/h2&gt;
@@ -1031,10 +1031,10 @@
         </item>
         <item>
         <title>[This is C#] Chapter 14. 람다식</title>
-        <link>https://sopod.github.io/init/this_is_c_sharp-14/</link>
+        <link>https://sopod.github.io/p/this-is-c-sharp-14/</link>
         <pubDate>Sun, 08 May 2022 11:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/this_is_c_sharp-14/</guid>
+        <guid>https://sopod.github.io/p/this-is-c-sharp-14/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;람다식&#34;&gt;람다식&lt;/h2&gt;
@@ -1367,10 +1367,10 @@
         </item>
         <item>
         <title>[This is C#] Chapter 13. 대리자와 이벤트</title>
-        <link>https://sopod.github.io/init/this_is_c_sharp-13/</link>
+        <link>https://sopod.github.io/p/this-is-c-sharp-13/</link>
         <pubDate>Sun, 08 May 2022 10:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/this_is_c_sharp-13/</guid>
+        <guid>https://sopod.github.io/p/this-is-c-sharp-13/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;대리자&#34;&gt;대리자&lt;/h2&gt;
@@ -2310,10 +2310,10 @@
         </item>
         <item>
         <title>[This is C#] Chapter 11. 일반화 프로그래밍</title>
-        <link>https://sopod.github.io/init/this_is_c_sharp-11/</link>
+        <link>https://sopod.github.io/p/this-is-c-sharp-11/</link>
         <pubDate>Sat, 07 May 2022 13:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/this_is_c_sharp-11/</guid>
+        <guid>https://sopod.github.io/p/this-is-c-sharp-11/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;일반화-프로그래밍&#34;&gt;일반화 프로그래밍&lt;/h2&gt;
@@ -2716,10 +2716,10 @@
         </item>
         <item>
         <title>[This is C#] Chapter 10. 배열과 컬렉션 그리고 인덱서</title>
-        <link>https://sopod.github.io/init/this_is_c_sharp-10/</link>
+        <link>https://sopod.github.io/p/this-is-c-sharp-10/</link>
         <pubDate>Sat, 07 May 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/this_is_c_sharp-10/</guid>
+        <guid>https://sopod.github.io/p/this-is-c-sharp-10/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;배열&#34;&gt;배열&lt;/h2&gt;
@@ -3420,10 +3420,10 @@
         </item>
         <item>
         <title>[This is C#] Chapter 9. 프로퍼티</title>
-        <link>https://sopod.github.io/init/this_is_c_sharp-09/</link>
+        <link>https://sopod.github.io/p/this-is-c-sharp-09/</link>
         <pubDate>Sat, 07 May 2022 11:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/this_is_c_sharp-09/</guid>
+        <guid>https://sopod.github.io/p/this-is-c-sharp-09/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;public-필드의-유혹&#34;&gt;public 필드의 유혹&lt;/h2&gt;
@@ -4057,10 +4057,10 @@
         </item>
         <item>
         <title>[This is C#] Chapter 8. 인터페이스와 추상 클래스</title>
-        <link>https://sopod.github.io/init/this_is_c_sharp-08/</link>
+        <link>https://sopod.github.io/p/this-is-c-sharp-08/</link>
         <pubDate>Sat, 07 May 2022 10:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/this_is_c_sharp-08/</guid>
+        <guid>https://sopod.github.io/p/this-is-c-sharp-08/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;인터페이스의-선언&#34;&gt;인터페이스의 선언&lt;/h2&gt;
@@ -4637,10 +4637,10 @@
         </item>
         <item>
         <title>[This is C#] Chapter 7. 클래스</title>
-        <link>https://sopod.github.io/init/this_is_c_sharp-07/</link>
+        <link>https://sopod.github.io/p/this-is-c-sharp-07/</link>
         <pubDate>Sat, 07 May 2022 09:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/this_is_c_sharp-07/</guid>
+        <guid>https://sopod.github.io/p/this-is-c-sharp-07/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;객체지향-프로그래밍과-클래스&#34;&gt;객체지향 프로그래밍과 클래스&lt;/h2&gt;
@@ -6030,10 +6030,10 @@
         </item>
         <item>
         <title>[This is C#] Chapter 6. 메소드로 코드 간추리기</title>
-        <link>https://sopod.github.io/init/this_is_c_sharp-06/</link>
+        <link>https://sopod.github.io/p/this-is-c-sharp-06/</link>
         <pubDate>Fri, 06 May 2022 13:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/this_is_c_sharp-06/</guid>
+        <guid>https://sopod.github.io/p/this-is-c-sharp-06/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;메소드&#34;&gt;메소드&lt;/h2&gt;
@@ -6427,10 +6427,10 @@
         </item>
         <item>
         <title>[This is C#] Chapter 5. 코드의 흐름 제어하기</title>
-        <link>https://sopod.github.io/init/this_is_c_sharp-05/</link>
+        <link>https://sopod.github.io/p/this-is-c-sharp-05/</link>
         <pubDate>Fri, 06 May 2022 12:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/this_is_c_sharp-05/</guid>
+        <guid>https://sopod.github.io/p/this-is-c-sharp-05/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;분기문&#34;&gt;분기문&lt;/h2&gt;
@@ -6764,10 +6764,10 @@
         </item>
         <item>
         <title>[This is C#] Chapter 4. 데이터를 가공하는 연산자</title>
-        <link>https://sopod.github.io/init/this_is_c_sharp-04/</link>
+        <link>https://sopod.github.io/p/this-is-c-sharp-04/</link>
         <pubDate>Fri, 06 May 2022 11:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/this_is_c_sharp-04/</guid>
+        <guid>https://sopod.github.io/p/this-is-c-sharp-04/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;null-조건부-연산자&#34;&gt;null 조건부 연산자&lt;/h2&gt;
@@ -6920,10 +6920,10 @@
         </item>
         <item>
         <title>[This is C#] Chapter 3. 데이터 보관하기</title>
-        <link>https://sopod.github.io/init/this_is_c_sharp-03/</link>
+        <link>https://sopod.github.io/p/this-is-c-sharp-03/</link>
         <pubDate>Fri, 06 May 2022 10:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/this_is_c_sharp-03/</guid>
+        <guid>https://sopod.github.io/p/this-is-c-sharp-03/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;데이터의-종류&#34;&gt;데이터의 종류&lt;/h2&gt;
@@ -7320,10 +7320,10 @@
         </item>
         <item>
         <title>[This is C#] Chapter 1, 2. 시작하기</title>
-        <link>https://sopod.github.io/init/this_is_c_sharp-02/</link>
+        <link>https://sopod.github.io/p/this-is-c-sharp-02/</link>
         <pubDate>Fri, 06 May 2022 09:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/this_is_c_sharp-02/</guid>
+        <guid>https://sopod.github.io/p/this-is-c-sharp-02/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;clr에-대하여&#34;&gt;CLR에 대하여&lt;/h2&gt;

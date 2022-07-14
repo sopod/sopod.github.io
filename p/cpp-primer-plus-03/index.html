@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='변수 이름 규칙 영문자, 숫자, 밑줄만 사용 가능 대문자와 소문자는 구별됨 첫 문자가 숫자일 수는 없음 C&#43;&#43;의 키워드는 사용 못함 예약어는 사용 못함 길이 제한은 없음 비트와 바이트 비트 컴퓨터 메모리를 구성하는 기본 단위 바이트 8비트. C&#43;&#43;에서는 컴파일러의 기본 문자 세트를 수용할 수 있는 최소한의 연속된 비트들로 구성한다. sizeof 연산자 데이터형의 크기를 바이트 단위로 리턴한다. climits 헤더파일 컴파일러에 알맞은 최대값들을 정의해놓은 헤더파일 (INT_MAX 등) 변수 초기화 문법 1 2 3 4 int var = 10; int var = {10}; int var {10}; int var (10); 진법 진법 조건 10진수 첫 숫자가 1~9 8진수 첫 숫자가 0이고 두번째 숫자가 1~7 16진수 첫 두 문자가 0x 혹은 0X 조정자 hex, oct를 사용하면 16진법, 8진법으로 출력가능 1 2 cout &amp;lt;&amp;lt; hex cout &amp;lt;&amp;lt; oct 정수형 상수의 데이터형을 결정하는 방법 접미어를 붙이면 해당 데이터형으로 10진 정수 int &amp;lt; long &amp;lt; long long형 중에서 크기가 작은 것으로 8진, 16진 정수 int, unsigned int &amp;lt; long, unsigned long &amp;lt; long long, unsigned long long 중에서 크기가 작은 것으로 문자 이스케이프 시퀀스(escape sequence)'><title>[C&#43;&#43; Primer Plus] Chapter 3. 데이터 처리</title>
+
+<link rel='canonical' href='https://sopod.github.io/p/cpp-primer-plus-03/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[C&#43;&#43; Primer Plus] Chapter 3. 데이터 처리'>
+<meta property='og:description' content='변수 이름 규칙 영문자, 숫자, 밑줄만 사용 가능 대문자와 소문자는 구별됨 첫 문자가 숫자일 수는 없음 C&#43;&#43;의 키워드는 사용 못함 예약어는 사용 못함 길이 제한은 없음 비트와 바이트 비트 컴퓨터 메모리를 구성하는 기본 단위 바이트 8비트. C&#43;&#43;에서는 컴파일러의 기본 문자 세트를 수용할 수 있는 최소한의 연속된 비트들로 구성한다. sizeof 연산자 데이터형의 크기를 바이트 단위로 리턴한다. climits 헤더파일 컴파일러에 알맞은 최대값들을 정의해놓은 헤더파일 (INT_MAX 등) 변수 초기화 문법 1 2 3 4 int var = 10; int var = {10}; int var {10}; int var (10); 진법 진법 조건 10진수 첫 숫자가 1~9 8진수 첫 숫자가 0이고 두번째 숫자가 1~7 16진수 첫 두 문자가 0x 혹은 0X 조정자 hex, oct를 사용하면 16진법, 8진법으로 출력가능 1 2 cout &amp;lt;&amp;lt; hex cout &amp;lt;&amp;lt; oct 정수형 상수의 데이터형을 결정하는 방법 접미어를 붙이면 해당 데이터형으로 10진 정수 int &amp;lt; long &amp;lt; long long형 중에서 크기가 작은 것으로 8진, 16진 정수 int, unsigned int &amp;lt; long, unsigned long &amp;lt; long long, unsigned long long 중에서 크기가 작은 것으로 문자 이스케이프 시퀀스(escape sequence)'>
+<meta property='og:url' content='https://sopod.github.io/p/cpp-primer-plus-03/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='C&#43;&#43; Primer Plus' /><meta property='article:published_time' content='2022-03-03T12:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-03-03T12:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[C&#43;&#43; Primer Plus] Chapter 3. 데이터 처리">
+<meta name="twitter:description" content="변수 이름 규칙 영문자, 숫자, 밑줄만 사용 가능 대문자와 소문자는 구별됨 첫 문자가 숫자일 수는 없음 C&#43;&#43;의 키워드는 사용 못함 예약어는 사용 못함 길이 제한은 없음 비트와 바이트 비트 컴퓨터 메모리를 구성하는 기본 단위 바이트 8비트. C&#43;&#43;에서는 컴파일러의 기본 문자 세트를 수용할 수 있는 최소한의 연속된 비트들로 구성한다. sizeof 연산자 데이터형의 크기를 바이트 단위로 리턴한다. climits 헤더파일 컴파일러에 알맞은 최대값들을 정의해놓은 헤더파일 (INT_MAX 등) 변수 초기화 문법 1 2 3 4 int var = 10; int var = {10}; int var {10}; int var (10); 진법 진법 조건 10진수 첫 숫자가 1~9 8진수 첫 숫자가 0이고 두번째 숫자가 1~7 16진수 첫 두 문자가 0x 혹은 0X 조정자 hex, oct를 사용하면 16진법, 8진법으로 출력가능 1 2 cout &amp;lt;&amp;lt; hex cout &amp;lt;&amp;lt; oct 정수형 상수의 데이터형을 결정하는 방법 접미어를 붙이면 해당 데이터형으로 10진 정수 int &amp;lt; long &amp;lt; long long형 중에서 크기가 작은 것으로 8진, 16진 정수 int, unsigned int &amp;lt; long, unsigned long &amp;lt; long long, unsigned long long 중에서 크기가 작은 것으로 문자 이스케이프 시퀀스(escape sequence)">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/c&#43;&#43;/" >
+                C&#43;&#43;
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/cpp-primer-plus-03/">[C&#43;&#43; Primer Plus] Chapter 3. 데이터 처리</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 03, 3033</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    3 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br /><br /></p>
+<h2 id="변수-이름-규칙">변수 이름 규칙</h2>
+<ol>
+<li>영문자, 숫자, 밑줄만 사용 가능</li>
+<li>대문자와 소문자는 구별됨</li>
+<li>첫 문자가 숫자일 수는 없음</li>
+<li>C++의 키워드는 사용 못함</li>
+<li>예약어는 사용 못함</li>
+<li>길이 제한은 없음
+<br /><br /></li>
+</ol>
+<h2 id="비트와-바이트">비트와 바이트</h2>
+<ul>
+<li><strong>비트</strong>
+<ul>
+<li>컴퓨터 메모리를 구성하는 기본 단위</li>
+</ul>
+</li>
+<li><strong>바이트</strong>
+<ul>
+<li>8비트. C++에서는 컴파일러의 기본 문자 세트를 수용할 수 있는 최소한의 연속된 비트들로 구성한다.</li>
+</ul>
+</li>
+<li><strong><code>sizeof</code> 연산자</strong>
+<ul>
+<li>데이터형의 크기를 바이트 단위로 리턴한다.</li>
+</ul>
+</li>
+<li><strong><code>climits</code> 헤더파일</strong>
+<ul>
+<li>컴파일러에 알맞은 최대값들을 정의해놓은 헤더파일 (<code>INT_MAX</code> 등)
+<br /><br /></li>
+</ul>
+</li>
+</ul>
+<h2 id="변수-초기화-문법">변수 초기화 문법</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">var</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>    
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="mi">10</span><span class="p">};</span>   
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">var</span> <span class="p">{</span><span class="mi">10</span><span class="p">};</span>   
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">var</span> <span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="진법">진법</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>진법</th>
+<th>조건</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>10진수</strong></td>
+<td>첫 숫자가 1~9</td>
+</tr>
+<tr>
+<td><strong>8진수</strong></td>
+<td>첫 숫자가 0이고 두번째 숫자가 1~7</td>
+</tr>
+<tr>
+<td><strong>16진수</strong></td>
+<td>첫 두 문자가 0x 혹은 0X</td>
+</tr>
+</tbody>
+</table></div>
+<br />
+<ul>
+<li>조정자 <code>hex</code>, <code>oct</code>를 사용하면 16진법, 8진법으로 출력가능</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">hex</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">oct</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="정수형-상수의-데이터형을-결정하는-방법">정수형 상수의 데이터형을 결정하는 방법</h2>
+<ul>
+<li>접미어를 붙이면 해당 데이터형으로</li>
+<li><strong>10진 정수</strong>
+<ul>
+<li><code>int</code> &lt; <code>long</code> &lt; <code>long long</code>형 중에서 크기가 작은 것으로</li>
+</ul>
+</li>
+<li><strong>8진, 16진 정수</strong>
+<ul>
+<li><code>int</code>, <code>unsigned int</code> &lt; <code>long</code>, <code>unsigned long</code> &lt; <code>long long</code>, <code>unsigned long long</code> 중에서 크기가 작은 것으로
+<br /><br /></li>
+</ul>
+</li>
+</ul>
+<h2 id="문자">문자</h2>
+<ul>
+<li>
+<p><strong>이스케이프 시퀀스(escape sequence)</strong></p>
+<ul>
+<li><code>'\n'</code> <code>&quot;\n&quot;</code> 개행은 정식 문자로 취급된다.</li>
+</ul>
+</li>
+<li>
+<p><strong>유니버셜 코드 네임(universal character names)</strong></p>
+<ul>
+<li><code>\u</code>나 <code>\U</code> 뒤에 16진수 숫자가 온다. 이 숫자들은 특정 문자에 해당하는 ISO10646코드를 나타낸다. 이것으로 어떤 문자도 영어가 아니어도 소스코드 안에 쓸 수 가 있다.</li>
+</ul>
+</li>
+<li>
+<p><code>char</code>형을 수에 쓰려고 한다면 <code>unsigned char</code>와 <code>signed char</code>가 중요해진다. 하지만 문자라면 단순히 <code>char</code>라고만 하면 된다.</p>
+</li>
+<li>
+<p>1바이트로 표현할 수 없는 한국어 문자 세트 같은 경우는 확장문자 세트를 제공한다. <code>wchar_t</code>이다. 이것은 기초 데이터형과 동일한 크기와 부호 속성을 가진다. 이 문자의 스트림을 처리하기 위해 <code>wcout</code>, <code>wcin</code>이 존재하고, 문자열 앞에 <code>L</code>을 붙여 나타낸다.
+<br /><br /></p>
+</li>
+</ul>
+<h2 id="const">const</h2>
+<ul>
+<li>상수를 기호 이름으로 나타내기 위해서는 <code>#define</code>과 <code>const</code>를 사용할 수 있다.</li>
+<li>하지만 <code>const</code>가 나은 이유는&hellip;
+<ul>
+<li>(1) 데이터형을 명시 가능</li>
+<li>(2) 특정 함수나 파일에서만 사용 하게 가능</li>
+<li>(3) 복잡한 데이터형도 가능
+<br /><br /></li>
+</ul>
+</li>
+</ul>
+<h2 id="부동-소수점형">부동 소수점형</h2>
+<p><img src="/postimg/cppprimerplus/fp1.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="부동 소수점형 저장방식"
+	
+	
+>
+<img src="/postimg/cppprimerplus/fp2.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="부동 소수점형 표기"
+	
+	
+></p>
+<ul>
+<li><code>3.14</code> : 가수, <code>16</code> : 지수</li>
+</ul>
+<ol>
+<li><strong>유효숫자</strong>: 의미 있는 숫자 (<code>3.14</code>이므로 3개), 유효숫자의 개수: 정밀도</li>
+<li><strong>지수 허용범위</strong></li>
+</ol>
+<br />
+<ul>
+<li>고정 소수점 표기로 결과를 출력한다. (소수점 6자리까지)</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">cout</span><span class="p">.</span><span class="n">setf</span><span class="p">(</span><span class="n">ios_base</span><span class="o">::</span><span class="n">fixed</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">floatfield</span><span class="p">)</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="부동-소수점형-상수의-데이터형을-결정하는-방법">부동 소수점형 상수의 데이터형을 결정하는 방법</h2>
+<ul>
+<li>기본은 <code>double</code>형</li>
+<li><code>float</code>로 하고 싶으면 <code>f</code>, <code>F</code>를 붙이고</li>
+<li><code>long double</code>형으로 하고 싶으면 <code>l</code>, <code>L</code>을 접미어로 붙인다.
+<br /><br /></li>
+</ul>
+<h2 id="산술-연산자">산술 연산자</h2>
+<ul>
+<li><code>%</code>연산자의 두개의 피연산자는 모두 정수여야한다. 아니면 컴파일 에러가 발생한다.</li>
+<li><code>/</code>연산자의 두개의 피연산자 중 한 개이상이 부동 소수점형이면 결과도 부동 소수점형이다.
+<br /><br /></li>
+</ul>
+<h2 id="수식에서의-데이터-형-변환">수식에서의 데이터 형 변환</h2>
+<ul>
+<li><code>bool</code>, <code>char</code>, <code>unsigned char</code>, <code>signed char</code>, <code>short</code>형은 <code>int</code>로 정수 승급된다.</li>
+<li>서로 다른 데이터형을 혼합하면 큰 크기의 데이터형으로 변환된다
+<br /><br /></li>
+</ul>
+<h2 id="데이터형-변환자">데이터형 변환자</h2>
+<ul>
+<li>강제로 데이터형을 변환시킨다.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">var</span><span class="p">;</span>   
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="p">(</span><span class="n">var</span><span class="p">);</span>   
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br /><br /></p>
+<h2 id="정수-데이터형">정수 데이터형</h2>
+<ul>
+<li>모든 컴퓨터에서 사용하기 위해 데이터의 폭(width, 메모리의 크기)은 최소 크기만 정한다.</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>데이터형</th>
+<th>크기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bool</code></td>
+<td>1바이트</td>
+</tr>
+<tr>
+<td><code>char</code></td>
+<td>1바이트. 시스템의 기본 문자세트의 어떤 문자라도 저장할 만큼 커야 함</td>
+</tr>
+<tr>
+<td><code>signed char</code></td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td><code>unsigned char</code></td>
+<td>0~255</td>
+</tr>
+<tr>
+<td><code>short</code></td>
+<td>최소한 2바이트</td>
+</tr>
+<tr>
+<td><code>unsigned short</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td>4바이트. 최소한 <code>short</code>만큼은 크다</td>
+</tr>
+<tr>
+<td><code>unsigned int</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>long</code></td>
+<td>최소한 4바이트의 폭, <code>int</code>만큼은 크다</td>
+</tr>
+<tr>
+<td><code>unsigned long</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>long long</code></td>
+<td>최소한 8바이트의 폭, <code>long</code>만큼은 크다</td>
+</tr>
+</tbody>
+</table></div>
+<p><br /><br /></p>
+<h2 id="부동-소수점-데이터형">부동 소수점 데이터형</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>데이터형</th>
+<th>크기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>float</code></td>
+<td>4바이트</td>
+</tr>
+<tr>
+<td><code>double</code></td>
+<td>8바이트. 최소한 <code>float</code>만큼은 크다</td>
+</tr>
+<tr>
+<td><code>long double</code></td>
+<td>16바이트. 최소한 <code>double</code>만큼은 크다</td>
+</tr>
+</tbody>
+</table></div>
+<p><br /><br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/c&#43;&#43;-primer-plus/">C&#43;&#43; Primer Plus</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-18-2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 18. (2) 람다 함수, 래퍼, 가변인자 템플릿</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-18-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 18. (1) Move Semantics와 rvalue참조, 새로운 클래스 형태</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-16-5/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 16. (5) STL - 알고리즘, 기타 라이브러리</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-16-4/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 16. (4) STL - 함수 객체</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/cpp-primer-plus-16-3/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[C&#43;&#43; Primer Plus] Chapter 16. (3) STL - 컨테이너</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#변수-이름-규칙">변수 이름 규칙</a></li>
+    <li><a href="#비트와-바이트">비트와 바이트</a></li>
+    <li><a href="#변수-초기화-문법">변수 초기화 문법</a></li>
+    <li><a href="#진법">진법</a></li>
+    <li><a href="#정수형-상수의-데이터형을-결정하는-방법">정수형 상수의 데이터형을 결정하는 방법</a></li>
+    <li><a href="#문자">문자</a></li>
+    <li><a href="#const">const</a></li>
+    <li><a href="#부동-소수점형">부동 소수점형</a></li>
+    <li><a href="#부동-소수점형-상수의-데이터형을-결정하는-방법">부동 소수점형 상수의 데이터형을 결정하는 방법</a></li>
+    <li><a href="#산술-연산자">산술 연산자</a></li>
+    <li><a href="#수식에서의-데이터-형-변환">수식에서의 데이터 형 변환</a></li>
+    <li><a href="#데이터형-변환자">데이터형 변환자</a></li>
+    <li><a href="#정수-데이터형">정수 데이터형</a></li>
+    <li><a href="#부동-소수점-데이터형">부동 소수점 데이터형</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='복소수 체의 구조를 가지는 수 집합은 실수 외에도 복소수(Complex number) 가 있다. 복소수는 다음과 같이 실수(Real number) 와 허수(Imaginary number) 의 독립된 2개 요소로 구성된 수 집합이다. 허수 허수 단위(Imaginary unit) $i$라는 기호를 사용한다. 제곱했을 때 $-1$이 되는 수를 말한다. $$ i^2 = -1 $$ 복소수는 실수부(Real part)와 허수부(Imaginary part)로 분리되어 있으며 허수부는 항상 $i$를 사용해서 표기한다. 그래서 실수부가 $a$, 허수부가 $b$인 복소수는 다음과 같이 표기한다. $$ a &#43; bi $$ $$ (a, b) $$ 복소수의 구조 복소수의 덧셈 결합법칙 $(a, b) &#43; ((c, d) &#43; (e, f)) = ((a, b) &#43; (c, d)) &#43; (e, f)$ 교환법칙 $(a, b) &#43; (c, d) = (c, d) &#43; (a, b)$ 항등원 $(a, b) &#43; (0, 0) = (a, b)$ 역원 $(a, b) &#43; (-a, -b) = (0, 0)$ 복소수 덧셈 연산의 성질 연산의 성질 만족 여부 덧셈에 대해 닫혀 있음 O 덧셈에 대한 결합법칙이 성립함 O 덧셈에 대한 교환법칙이 성립함 O 덧셈에 대한 항등원의 존재함 O 덧셈에 대한 역원이 존재함 O 복소수의 곱셈 결합법칙 $(a, b) \cdot ((c, d) \cdot (e, f)) = ((a, b) \cdot (c, d)) \cdot (e, f)$ 교환법칙 $(a, b) \cdot (c, d) = (c, d) \cdot (a, b)$ 분배법칙 $(a, b) \cdot ((c, d) &#43; (e, f)) = (a, b) \cdot (c, d) &#43; (a, b) \cdot (e, f)$ 항등원 $(a, b) \cdot (1, 0) = (a, b)$ 복소수 곱셈 연산의 성질 연산의 성질 만족 여부 곱셈에 대해 닫혀 있음 O 곱셈에 대한 결합법칙이 성립함 O 곱셈에 대한 교환법칙이 성립함 O 덧셈과 곱셈에 대한 분배법칙이 성립함 O 곱셈에 대한 항등원의 존재함 O 곱셈에 대한 역원이 존재함 O (알아보자.'><title>[Game Math] Chapter 14. 복소수: 2차원 평면의 수</title>
+
+<link rel='canonical' href='https://sopod.github.io/p/game-math-14/'>
+
+<link rel="stylesheet" href="/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css"><meta property='og:title' content='[Game Math] Chapter 14. 복소수: 2차원 평면의 수'>
+<meta property='og:description' content='복소수 체의 구조를 가지는 수 집합은 실수 외에도 복소수(Complex number) 가 있다. 복소수는 다음과 같이 실수(Real number) 와 허수(Imaginary number) 의 독립된 2개 요소로 구성된 수 집합이다. 허수 허수 단위(Imaginary unit) $i$라는 기호를 사용한다. 제곱했을 때 $-1$이 되는 수를 말한다. $$ i^2 = -1 $$ 복소수는 실수부(Real part)와 허수부(Imaginary part)로 분리되어 있으며 허수부는 항상 $i$를 사용해서 표기한다. 그래서 실수부가 $a$, 허수부가 $b$인 복소수는 다음과 같이 표기한다. $$ a &#43; bi $$ $$ (a, b) $$ 복소수의 구조 복소수의 덧셈 결합법칙 $(a, b) &#43; ((c, d) &#43; (e, f)) = ((a, b) &#43; (c, d)) &#43; (e, f)$ 교환법칙 $(a, b) &#43; (c, d) = (c, d) &#43; (a, b)$ 항등원 $(a, b) &#43; (0, 0) = (a, b)$ 역원 $(a, b) &#43; (-a, -b) = (0, 0)$ 복소수 덧셈 연산의 성질 연산의 성질 만족 여부 덧셈에 대해 닫혀 있음 O 덧셈에 대한 결합법칙이 성립함 O 덧셈에 대한 교환법칙이 성립함 O 덧셈에 대한 항등원의 존재함 O 덧셈에 대한 역원이 존재함 O 복소수의 곱셈 결합법칙 $(a, b) \cdot ((c, d) \cdot (e, f)) = ((a, b) \cdot (c, d)) \cdot (e, f)$ 교환법칙 $(a, b) \cdot (c, d) = (c, d) \cdot (a, b)$ 분배법칙 $(a, b) \cdot ((c, d) &#43; (e, f)) = (a, b) \cdot (c, d) &#43; (a, b) \cdot (e, f)$ 항등원 $(a, b) \cdot (1, 0) = (a, b)$ 복소수 곱셈 연산의 성질 연산의 성질 만족 여부 곱셈에 대해 닫혀 있음 O 곱셈에 대한 결합법칙이 성립함 O 곱셈에 대한 교환법칙이 성립함 O 덧셈과 곱셈에 대한 분배법칙이 성립함 O 곱셈에 대한 항등원의 존재함 O 곱셈에 대한 역원이 존재함 O (알아보자.'>
+<meta property='og:url' content='https://sopod.github.io/p/game-math-14/'>
+<meta property='og:site_name' content='Sopod'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Game Math' /><meta property='article:published_time' content='2022-04-22T13:00:00&#43;09:00'/><meta property='article:modified_time' content='2022-04-22T13:00:00&#43;09:00'/>
+<meta name="twitter:title" content="[Game Math] Chapter 14. 복소수: 2차원 평면의 수">
+<meta name="twitter:description" content="복소수 체의 구조를 가지는 수 집합은 실수 외에도 복소수(Complex number) 가 있다. 복소수는 다음과 같이 실수(Real number) 와 허수(Imaginary number) 의 독립된 2개 요소로 구성된 수 집합이다. 허수 허수 단위(Imaginary unit) $i$라는 기호를 사용한다. 제곱했을 때 $-1$이 되는 수를 말한다. $$ i^2 = -1 $$ 복소수는 실수부(Real part)와 허수부(Imaginary part)로 분리되어 있으며 허수부는 항상 $i$를 사용해서 표기한다. 그래서 실수부가 $a$, 허수부가 $b$인 복소수는 다음과 같이 표기한다. $$ a &#43; bi $$ $$ (a, b) $$ 복소수의 구조 복소수의 덧셈 결합법칙 $(a, b) &#43; ((c, d) &#43; (e, f)) = ((a, b) &#43; (c, d)) &#43; (e, f)$ 교환법칙 $(a, b) &#43; (c, d) = (c, d) &#43; (a, b)$ 항등원 $(a, b) &#43; (0, 0) = (a, b)$ 역원 $(a, b) &#43; (-a, -b) = (0, 0)$ 복소수 덧셈 연산의 성질 연산의 성질 만족 여부 덧셈에 대해 닫혀 있음 O 덧셈에 대한 결합법칙이 성립함 O 덧셈에 대한 교환법칙이 성립함 O 덧셈에 대한 항등원의 존재함 O 덧셈에 대한 역원이 존재함 O 복소수의 곱셈 결합법칙 $(a, b) \cdot ((c, d) \cdot (e, f)) = ((a, b) \cdot (c, d)) \cdot (e, f)$ 교환법칙 $(a, b) \cdot (c, d) = (c, d) \cdot (a, b)$ 분배법칙 $(a, b) \cdot ((c, d) &#43; (e, f)) = (a, b) \cdot (c, d) &#43; (a, b) \cdot (e, f)$ 항등원 $(a, b) \cdot (1, 0) = (a, b)$ 복소수 곱셈 연산의 성질 연산의 성질 만족 여부 곱셈에 대해 닫혀 있음 O 곱셈에 대한 결합법칙이 성립함 O 곱셈에 대한 교환법칙이 성립함 O 덧셈과 곱셈에 대한 분배법칙이 성립함 O 곱셈에 대한 항등원의 존재함 O 곱셈에 대한 역원이 존재함 O (알아보자.">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    <img src="/main.png" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Sopod</a></h1>
+            <h2 class="site-description">Always hungry to keep learning.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sopod'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/game-math/" >
+                Game Math
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/game-math-14/">[Game Math] Chapter 14. 복소수: 2차원 평면의 수</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Apr 04, 222222</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    6 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <hr>
+<p><br />  <br /></p>
+<h2 id="복소수">복소수</h2>
+<ul>
+<li>체의 구조를 가지는 수 집합은 실수 외에도 <strong>복소수(Complex number)</strong> 가 있다.
+<ul>
+<li>복소수는 다음과 같이 <strong>실수(Real number)</strong> 와 <strong>허수(Imaginary number)</strong> 의 독립된 2개 요소로 구성된 수 집합이다. <br /><br>
+<img src="/postimg/gamemath/14-01-complexNumber.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="복소수 집합의 구성"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />  
+<h3 id="허수">허수</h3>
+<ul>
+<li><strong>허수 단위(Imaginary unit)</strong>
+<ul>
+<li>$i$라는 기호를 사용한다.</li>
+<li>제곱했을 때 $-1$이 되는 수를 말한다.</li>
+<li>$$ i^2 = -1 $$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>복소수는 실수부(Real part)와 허수부(Imaginary part)로 분리되어 있으며 허수부는 항상 $i$를 사용해서 표기한다.
+<ul>
+<li>그래서 실수부가 $a$, 허수부가 $b$인 복소수는 다음과 같이 표기한다.</li>
+<li>$$ a + bi $$</li>
+<li>$$ (a, b) $$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<h3 id="복소수의-구조">복소수의 구조</h3>
+<ul>
+<li><strong>복소수의 덧셈</strong>
+<ul>
+<li>결합법칙
+<ul>
+<li>$(a, b) + ((c, d) + (e, f)) = ((a, b) + (c, d)) + (e, f)$</li>
+</ul>
+</li>
+<li>교환법칙
+<ul>
+<li>$(a, b) + (c, d) = (c, d) + (a, b)$</li>
+</ul>
+</li>
+<li>항등원
+<ul>
+<li>$(a, b) + (0, 0) = (a, b)$</li>
+</ul>
+</li>
+<li>역원
+<ul>
+<li>$(a, b) + (-a, -b) = (0, 0)$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>복소수 덧셈 연산의 성질</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>연산의 성질</th>
+<th>만족 여부</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>덧셈에 대해 닫혀 있음</td>
+<td>O</td>
+</tr>
+<tr>
+<td>덧셈에 대한 결합법칙이 성립함</td>
+<td>O</td>
+</tr>
+<tr>
+<td>덧셈에 대한 교환법칙이 성립함</td>
+<td>O</td>
+</tr>
+<tr>
+<td>덧셈에 대한 항등원의 존재함</td>
+<td>O</td>
+</tr>
+<tr>
+<td>덧셈에 대한 역원이 존재함</td>
+<td>O</td>
+</tr>
+</tbody>
+</table></div>
+<br />  
+<ul>
+<li><strong>복소수의 곱셈</strong>
+<ul>
+<li>결합법칙
+<ul>
+<li>$(a, b) \cdot ((c, d) \cdot (e, f)) = ((a, b) \cdot (c, d)) \cdot (e, f)$</li>
+</ul>
+</li>
+<li>교환법칙
+<ul>
+<li>$(a, b) \cdot (c, d) = (c, d) \cdot (a, b)$</li>
+</ul>
+</li>
+<li>분배법칙
+<ul>
+<li>$(a, b) \cdot ((c, d) + (e, f)) = (a, b) \cdot (c, d) + (a, b) \cdot (e, f)$</li>
+</ul>
+</li>
+<li>항등원
+<ul>
+<li>$(a, b) \cdot (1, 0) = (a, b)$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>복소수 곱셈 연산의 성질</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>연산의 성질</th>
+<th>만족 여부</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>곱셈에 대해 닫혀 있음</td>
+<td>O</td>
+</tr>
+<tr>
+<td>곱셈에 대한 결합법칙이 성립함</td>
+<td>O</td>
+</tr>
+<tr>
+<td>곱셈에 대한 교환법칙이 성립함</td>
+<td>O</td>
+</tr>
+<tr>
+<td>덧셈과 곱셈에 대한 분배법칙이 성립함</td>
+<td>O</td>
+</tr>
+<tr>
+<td>곱셈에 대한 항등원의 존재함</td>
+<td>O</td>
+</tr>
+<tr>
+<td>곱셈에 대한 역원이 존재함</td>
+<td>O (알아보자.)</td>
+</tr>
+</tbody>
+</table></div>
+<br />  
+<ul>
+<li>
+<p><strong>복소수의 크기</strong></p>
+<ul>
+<li>2차원 벡터와 동일하게 실수부와 허수부를 제곱해 더한 다음 제곱근을 취한다.</li>
+<li>절댓값 기호를 써서 나타내며 복소수의 <strong>노름(Norm)</strong> 이라고도 부른다.</li>
+<li>$$ |(a, b)| = |(a, -b)| = \sqrt{a^2 + b^2} $$</li>
+</ul>
+</li>
+<li>
+<p><strong>단위 복소수(Unit complex number)</strong></p>
+<ul>
+<li>크기가 1인 복소수이다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li><strong>켤레(Conjugate) 복소수</strong>
+<ul>
+<li>임의의 복소수를 $c$라고 하면 켤레 복소수는 $c^*$나 $\bar{c}$로 표시한다.</li>
+<li>$$ c = a + bi = (a, b) $$</li>
+<li>$$ c^* = a - bi = (a, -b) $$</li>
+<li>켤레 복소수는 다음곽 같은 성질이 있다.</li>
+<li>$$ (c^*)^* = c $$</li>
+<li>$$ c^*c = c^* $$</li>
+<li>$$ (c_1c_2)^* = c_2^*c_1^* $$</li>
+<li>어떤 복소수에 그 켤레 복소수를 곱하면 해당 복소수의 크기를 제곱한 값을 얻을 수 있다.</li>
+<li>$$ cc^* = (a + bi) \cdot (a - bi) = a^2 + b^2 = |c|^2 $$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>그러면 <strong>켤레 복소수를 이용해서 복소수의 역원을 구해보자.</strong>
+<ul>
+<li>$c$의 역원인 $c^{-1}$에 켤레 복소수를 곱해보자.</li>
+<li>$$ c^{-1} = \frac{1}{c} = \frac{c^*}{cc^*} $$</li>
+<li>$$ (a + bi)^{-1} = \frac{1}{(a + bi)} = \frac{(a - bi)}{(a + bi)(a - bi)} = \frac{(a - bi)}{(a^2 + b^2)} $$</li>
+<li>즉, $c$의 역원인 $c^{-1}$은 켤레 복소수에 복소수 크기에 관한 식으로 나타낼 수 있다.</li>
+<li>$$ c^{-1} = \frac{c^*}{|c|^2} $$</li>
+</ul>
+</li>
+<li>만약 <strong>단위 복소수</strong>라면?
+<ul>
+<li>단위 복소수는 크기가 $1$이므로, <strong>곱셈역원은 바로 켤레 복소수</strong>가 된다.</li>
+</ul>
+</li>
+</ul>
+<p><br />  <br /></p>
+<h2 id="복소평면">복소평면</h2>
+<ul>
+<li><strong>복소평면(Complex plane)</strong>
+<ul>
+<li>아래 그림 (a)와 같이 2차원 실벡터 공간 $\mathbb{R}^2$의 벡터 $(a, b)$를 표현하기 위해서 서로 직교하는 $x$, $y$축을 사용한 것처럼,</li>
+<li>복소수 역시 (b)와 같이 실수축과 허수축을 직각으로 교차시키는 방식으로 표현할 수 있다.</li>
+<li>이것을 복소평면이라고 한다.</li>
+<li>여기에 복소수 $(a, b)$를 평면 상에 다음과 같이 표현할 수 있겠다. <br /><br>
+<img src="/postimg/gamemath/14-02-plane.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="복소평면에서의 복소수 표현"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>크기가 $1$인 <strong>단위 복소수</strong>를 모아 복소평면에서 표현하면 <strong>단위원</strong>이 만들어진다. <br /><br>
+<img src="/postimg/gamemath/14-03-unit.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="복소평면에서의 단위 복소수"
+	
+	
+></li>
+</ul>
+<br />  
+<h3 id="단위-복소수와의-곱">단위 복소수와의 곱</h3>
+<ul>
+<li>허수부가 $0$인 임의의 복소수 $(a, 0)$에 $i$라는 <strong>단위 복소수를 곱해보자.</strong>
+<ul>
+<li>$$ (a + 0i) \cdot (0 + i) = (0 + ai) = (0, a) $$</li>
+<li>이것을 평면 상에 나타내보면, $(0, a)$는 복소수 $(a, 0)$를 $90^{\circ}$ 회전시킨 결과다.</li>
+<li>이 결과에 또 다시 단위 복소수 $(0, i)$를 곱하면 계속 $90^{\circ}$씩 회전한다. <br /><br>
+<img src="/postimg/gamemath/14-04-timesUnit.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="복소수 i를 연속으로 곱하면"
+	
+	
+></li>
+<li>따라서 임의의 복소수 $(a, b)$에 단위 복소수 $i$를 곱한 결과는 해당 복소수를 $90^{\circ}$ 회전시킨 결과와 같다.</li>
+<li>$$ (a, b) \cdot (0, 1) = (-b, a) $$</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>이것은 Chapter 5에서 보았던 좌표 평면에서의 $90^{\circ}$ 회전과 동일하다.
+<ul>
+<li>삼각함수 공식 $\cos^2\theta + \sin^2\theta = 1$를 이용해서 단위 복소수를 다음과 같이 표현할 수 있겠다. (참고로, 삼각함수를 사용하는 경우에는 허수의 $i$가 앞에 오는게 일반적이다.)</li>
+<li>$$ \cos\theta + i\sin\theta = (\cos\theta, \sin\theta) $$</li>
+<li>이렇게 삼각함수로 나타낸 단위 복소수에다가 임의의 복소수 $(x, y)$를 곱하면?</li>
+<li>$$ (\cos\theta, \sin\theta) \cdot (x, y) = (x\cos\theta - y\sin\theta, y\cos\theta + x\sin\theta) $$</li>
+<li>이것은 Chapter 5에서 다룬 2차원 공간의 회전행렬 R에 2차원 벡터 $(x, y)$를 곱한 결과와 같다.</li>
+<li>$$ R = \begin{bmatrix} \cos\theta &amp; -\sin\theta \\ \sin\theta &amp; \cos\theta \end{bmatrix} $$</li>
+<li>$$ \begin{bmatrix} \cos\theta &amp; -\sin\theta \\ \sin\theta &amp; \cos\theta \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} x\cos\theta - y\sin\theta \\ y\cos\theta + x\sin\theta \end{bmatrix} $$</li>
+<li>따라서, <strong>임의의 복소수에 단위 복소수를 곱하는 것</strong>은 <span style='background-color: #c293d8'>복소평면에서의 회전변환</span>을 의미한다. <br /><br>
+<img src="/postimg/gamemath/14-05-rotate.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="복소수를 회전시키는 단위 복소수와의 곱셈"
+	
+	
+></li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>이번에는 서로 다른 각을 갖는 2개의 복소수를 곱한 결과를 보자.
+<ul>
+<li>$$ (\cos\alpha, \sin\alpha) \cdot (\cos\beta, \sin\beta) = (\cos\alpha\cos\beta - \sin\alpha\sin\beta, \sin\alpha\cos\beta + \sin\beta\cos\alpha) $$</li>
+<li>Chapter 5에서 살펴본 삼각함수의 덧셈 정리를 사용하면 다음과 같이 정리할 수 있다.</li>
+<li>$$ (\cos(\alpha + \beta), sin(\alpha + \beta)) $$</li>
+<li>따라서, <strong>서로 다른 두 각을 회전 변환한 후 곱셈 연산을 하는 것</strong>은 <span style='background-color: #c293d8'>두 각의 합을 회전 변환하는 것</span>과 동일하다는 것을 알 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>이번에는 복소수 곱셈의 항등원인 $(1, 0)$의 의미를 생각해보자.
+<ul>
+<li>이것은 실수에서 곱셈의 항등원인 $1$과 동일하다. 복소수 $1$은 단위 복소수이다.</li>
+<li>삼각함수로 표현하면 다음과 같이 각 $0^{\circ}$에 대응하는 수다.</li>
+<li>$$ (1, 0) = (\cos0^{\circ}, \sin0^{\circ}) $$</li>
+<li>따라서, <strong>곱셈의 항등원을 곱한다</strong>는 것은 아무런 변환가 일어나지 않는 <span style='background-color: #c293d8'> $0^{\circ}$의 회전 변환</span>이라고 해석할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<h3 id="켤레-복소수의-회전-변환">켤레 복소수의 회전 변환</h3>
+<ul>
+<li>복소평면에서 켤레 복소수를 시각화해보자.
+<ul>
+<li>임의의 복소수 $(a, b)$의 켤레 복소수 $(a, -b)$는 다음과 같다. <br /><br>
+<img src="/postimg/gamemath/14-06-conjugate.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="복소평면에서 켤레 복소수의 표현"
+	
+	
+></li>
+<li>이것은 실수부 축($Re$)을 중심으로 서로 대칭된 형태이다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>이번에는 단위 복소수의 켤레 복소수를 생각해보자.
+<ul>
+<li>단위 복소수 $(\cos\theta, \sin\theta)$의 켤레 복소수는 $(\cos\theta, -\sin\theta)$이다.</li>
+<li>여기에 삼각함수의 성질을 활용하면 켤레 복소수를 다음과 같이 나타낼 수 있다.</li>
+<li>$$ (\cos\theta, -\sin\theta) = (\cos(-\theta), \sin(-\theta)) $$</li>
+<li>즉, 단위 복소수가 실수 축에 위치한 $(1, 0)$을 각 $\theta$만큼 회전한 수를 의미한다면, 켤레 복소수는 반대 방향인 $-\theta$만큼 회전한 수를 의미한다.</li>
+</ul>
+</li>
+</ul>
+<br />  
+<ul>
+<li>따라서, 임의의 복소수 $(a, b)$에 <strong>단위 복소수를 곱하면</strong> <span style='background-color: #c293d8'>반시게 방향</span>으로 회전이 발생하는데, <strong>단위 복소수의 켤레 복소수를 곱하면</strong> <span style='background-color: #c293d8'>시계 방향</span>의 회전이 발생한다. <br /><br>
+<img src="/postimg/gamemath/14-07-timesConjugate.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="단위 복소수와 켤레 복소수를 곱하면"
+	
+	
+></li>
+</ul>
+<br />  
+<ul>
+<li>단위 복소수와 켤레 복소수를 곱한 값은 복소수 크기의 제곱이므로 $1$이 된다.
+<ul>
+<li>$$ c \dot c^* = a^2 + b^2 = \sin^2\theta + \cos^2\theta = 1 $$</li>
+<li>이 식을 변환의 관점에서 보면 각 $\theta$만큼 회전한 후 바로 $-\theta$만큼 거꾸로 회전하는 변환을 의미한다.</li>
+<li>이 결과는 아무런 변화 없는 $0^{\circ}$ 회전 변환을 의미하므로 복소수 곱셈의 항등원 $(1, 0)$이 됨을 다시 한 번 확인할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<p><br />  <br /></p>
+<h2 id="복소수와-행렬의-관계">복소수와 행렬의 관계</h2>
+<ul>
+<li>복소수를 수의 관점이 아닌 변환에 관점에서 보자.
+<ul>
+<li>2차원 복소펼면 상의 복소수를 2차원 행렬에 대응할 수 있다.</li>
+<li>단위 복소수가 2차원의 회전 변환행렬과 같다고 해보자.</li>
+<li>$$ \cos\theta + i\sin\theta = \begin{bmatrix} \cos\theta &amp; -\sin\theta \\ \sin\theta &amp; \cos\theta \end{bmatrix} $$</li>
+<li>회전 변환행렬을 분리해 정리하면 다음과 같다.</li>
+<li>$$ \cos\theta + i\sin\theta = \cos\theta \cdot \begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 1 \end{bmatrix} + \sin\theta \cdot \begin{bmatrix} 0 &amp; -1 \\ 1 &amp; 0 \end{bmatrix}$$</li>
+<li>실수부에 대응하는 행렬을 $I$로 하고, 허수에 대응하는 행렬을 $J$라고 하자.</li>
+<li>$$ I = \begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 1 \end{bmatrix} $$</li>
+<li>$$ J = \begin{bmatrix} 0 &amp; -1 \\ 1 &amp; 0 \end{bmatrix} $$</li>
+<li>실수부 행렬 $I$는 항등행렬이지만, 허수부 행렬 $J$는 $90^{\circ}$ 회전 변환행렬이다.</li>
+<li>$J$를 두 번 곱하면 $-I$가 나오며 이것은 $-1$에 대응한다.</li>
+<li>$$ J \cdot J = \begin{bmatrix} -1 &amp; 0 \\ 0 &amp; -1 \end{bmatrix} = -I $$</li>
+<li>이는 두 번 곱하면 $-1$이 나오는 허수 단위의 성질과도 일치한다.</li>
+<li>$$ i \cdot i = -1 $$</li>
+</ul>
+</li>
+</ul>
+<p><br />  <br /></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/game-math/">Game Math</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/game-math-13-2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 13. 절두체: 최적화된 3차원 공간 (2) </h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/game-math-13-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 13. 절두체: 최적화된 3차원 공간 (1)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/game-math-12/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 12. 원근 투영: 화면에 현실감을 부여하는 변환</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/game-math-11/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 11. 외적: 3차원 공간의 분석과 응용</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/game-math-10/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">[Game Math] Chapter 10. 3차원 공간: 입체 공간의 생성</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Sopod
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.12.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#복소수">복소수</a>
+      <ol>
+        <li><a href="#허수">허수</a></li>
+        <li><a href="#복소수의-구조">복소수의 구조</a></li>
+      </ol>
+    </li>
+    <li><a href="#복소평면">복소평면</a>
+      <ol>
+        <li><a href="#단위-복소수와의-곱">단위 복소수와의 곱</a></li>
+        <li><a href="#켤레-복소수의-회전-변환">켤레 복소수의 회전 변환</a></li>
+      </ol>
+    </li>
+    <li><a href="#복소수와-행렬의-관계">복소수와 행렬의 관계</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

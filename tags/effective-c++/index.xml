@@ -8,10 +8,10 @@
         <language>en-us</language>
         <lastBuildDate>Tue, 29 Mar 2022 17:00:00 +0900</lastBuildDate><atom:link href="https://sopod.github.io/tags/effective-c++/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>[Effective C&#43;&#43;] Chapter 1. C&#43;&#43;의 법을 따릅시다 (3, 4)</title>
-        <link>https://sopod.github.io/init/effective-cpp-01-2/</link>
+        <link>https://sopod.github.io/p/effective-cpp-01-2/</link>
         <pubDate>Tue, 29 Mar 2022 17:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/effective-cpp-01-2/</guid>
+        <guid>https://sopod.github.io/p/effective-cpp-01-2/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;item-3-낌새만-보이면-const를-들이대-보자&#34;&gt;Item 3. 낌새만 보이면 const를 들이대 보자!&lt;/h2&gt;
@@ -620,10 +620,10 @@
         </item>
         <item>
         <title>[Effective C&#43;&#43;] Chapter 1. C&#43;&#43;의 법을 따릅시다 (1, 2)</title>
-        <link>https://sopod.github.io/init/effective-cpp-01-1/</link>
+        <link>https://sopod.github.io/p/effective-cpp-01-1/</link>
         <pubDate>Mon, 28 Mar 2022 17:00:00 +0900</pubDate>
         
-        <guid>https://sopod.github.io/init/effective-cpp-01-1/</guid>
+        <guid>https://sopod.github.io/p/effective-cpp-01-1/</guid>
         <description>&lt;hr&gt;
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;item-1-c를-언어들의-연합체로-바라보는-안목을-필수&#34;&gt;Item 1. C++를 언어들의 연합체로 바라보는 안목을 필수&lt;/h2&gt;
