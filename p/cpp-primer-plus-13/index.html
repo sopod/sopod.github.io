@@ -120,6 +120,27 @@
         
 
         <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
             <a href='/archives/' >
                 
                 
@@ -958,8 +979,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><blockquote>
-<p>일반적으로, 파괴자가 필요 없는 기초 클래스라 하더라도 가상 파괴자를 제공해야 한다.
-{: .prompt-tip }</p>
+<p>일반적으로, 파괴자가 필요 없는 기초 클래스라 하더라도 가상 파괴자를 제공해야 한다.</p>
 </blockquote>
 <p><br /><br /></p>
 <h2 id="정적-바인딩과-동적-바인딩">정적 바인딩과 동적 바인딩</h2>
@@ -1086,7 +1106,7 @@
 <ul>
 <li>그 숨겨진 멤버는 어떤 배열을 지시하는 포인터이다.</li>
 <li>배열에는 해당 클래스의 객체들을 위해 선언된 가상 함수들의 주소가 저장되어 있다.</li>
-<li>이 배열을 **가상 함수 테이블(virtual function table; vtbl)**이라고 한다.</li>
+<li>이 배열을 <strong>가상 함수 테이블(virtual function table; vtbl)</strong> 이라고 한다.</li>
 </ul>
 </li>
 <li>파생 클래스가 가상 함수를 다시 정의하지 않으면, vtbl은 그 함수의 오리지널 버전의 주소를 저장한다.
@@ -1343,7 +1363,7 @@
 </div>
 </div><br />
 <ul>
-<li><code>Area()</code>는 원과 타원 각각 다르게 구현해야 하므로 **순수 가상 함수(pure virual function)**로 만들었다.
+<li><code>Area()</code>는 원과 타원 각각 다르게 구현해야 하므로 <strong>순수 가상 함수(pure virual function)</strong> 로 만들었다.
 <ul>
 <li>순수 가상 함수는 함수 선언 뒤에 <code>=0</code>을 가진다.</li>
 <li>순수 가상 함수는 반드시 정의를 할 필요는 없다. 해도 되고, 안 해도 된다.</li>
@@ -1389,7 +1409,7 @@
 <li>
 <p>대입 연산자</p>
 <ul>
-<li>마친가지로, 기초 클래스의 대입 연산자를 사용하므로 파생 클래스는 명시적으로 대입 연산자를 정의하지 않아도 된다.</li>
+<li>마찬가지로, 기초 클래스의 대입 연산자를 사용하므로 파생 클래스는 명시적으로 대입 연산자를 정의하지 않아도 된다.</li>
 </ul>
 </li>
 </ul>
